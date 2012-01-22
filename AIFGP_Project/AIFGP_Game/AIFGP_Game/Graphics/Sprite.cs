@@ -7,24 +7,28 @@ namespace AIFGP_Game
 {
     /// <summary>
     /// Class that abstracts away loading, displaying, and manipulating
-    /// two-dimensional graphics as sprites.
+    /// two-dimensional graphics as sprites. The standard usage of this
+    /// class would be to set the position, add animation frames, set
+    /// the active animation frame and call Update/Draw as needed.
     /// </summary>
+    /// <typeparam name="T">Animation identifier type.</typeparam>
     public class Sprite<T> where T : new()
     {
         /// <summary>
         /// The <c>Texture2D</c> the <c>Sprite</c> is drawn from.
         /// </summary>
-        private Texture2D Texture;
+        public Texture2D Texture;
 
         private Vector2 topLeftPixel = Vector2.Zero;
+        private Vector2 localOrigin = Vector2.Zero;
         private float rotation = 0.0f;
-        private UInt16 spriteWidth = 0;
-        private UInt16 spriteHeight = 0;
+        private int spriteWidth = 0;
+        private int spriteHeight = 0;
 
         private Dictionary<T, List<Rectangle>> animationFrames = new Dictionary<T, List<Rectangle>>();
+        private Timer animationTimer = new Timer(0.1f);
         private T curAnimationId = new T();
         private int curAnimationFrame = 0;
-        private Timer animationTimer = new Timer(0.1f);
 
         private Color tint = Color.White;
 
@@ -32,6 +36,8 @@ namespace AIFGP_Game
         {
             Texture = texture;
             Position = position;
+
+            animationTimer.Start();
         }
 
         public Vector2 Position
@@ -42,11 +48,7 @@ namespace AIFGP_Game
 
         public Vector2 CenterPosition
         {
-            get
-            {
-                Vector2 scaleToCenter = new Vector2(spriteWidth / 2, spriteHeight / 2);
-                return topLeftPixel + scaleToCenter;
-            }
+            get { return topLeftPixel + localOrigin; }
         }
 
         public float RotationInDegrees
@@ -70,16 +72,23 @@ namespace AIFGP_Game
         public T ActiveAnimation
         {
             get { return curAnimationId; }
-            set { curAnimationId = value; }
+            set
+            {
+                curAnimationId = value;
+                curAnimationFrame = -1;
+            }
         }
 
         public Rectangle ActiveAnimationFrame
         {
+            // TODO: Error-checking for out-of-bounds access.
             get { return animationFrames[curAnimationId][curAnimationFrame]; }
         }
 
         public Rectangle BoundingBox
         {
+            // TODO: This is a weak bounding box as the actual sprite
+            // could be much smaller than the image rectangle.
             get
             {
                 int x = (int)topLeftPixel.X, y = (int)topLeftPixel.Y;
@@ -90,18 +99,39 @@ namespace AIFGP_Game
         public void AddAnimationFrame(T animationId, Rectangle frame)
         {
             animationFrames[animationId].Add(frame);
+
+            if (spriteWidth == 0 || spriteHeight == 0)
+            {
+                spriteWidth = frame.Width;
+                spriteHeight = frame.Height;
+                
+                localOrigin.X = spriteWidth / 2;
+                localOrigin.Y = spriteHeight / 2;
+            }
         }
 
         public void Update(GameTime gameTime)
         {
-
+            if (animationTimer.Expired(gameTime))
+            {
+                int numFrames = animationFrames[curAnimationId].Count;
+                curAnimationFrame = (curAnimationFrame + 1) % numFrames;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(Texture, CenterPosition, ActiveAnimationFrame,
-                tint, rotation, new Vector2(spriteWidth / 2, spriteHeight / 2),
-                1.0f, SpriteEffects.None, 0.0f);
+            spriteBatch.Draw(
+                Texture,
+                CenterPosition,
+                ActiveAnimationFrame,
+                tint,
+                rotation,
+                localOrigin,
+                1.0f,
+                SpriteEffects.None,
+                0.0f
+            );
         }
     }
 }

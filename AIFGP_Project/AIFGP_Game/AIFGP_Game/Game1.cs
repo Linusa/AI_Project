@@ -19,6 +19,11 @@ namespace AIFGP_Game
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        Texture2D spriteSheet;
+
+        Sprite<byte> sprite;
+        Vector2 spritePos;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
@@ -33,7 +38,9 @@ namespace AIFGP_Game
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            graphics.PreferredBackBufferWidth = 800;
+            graphics.PreferredBackBufferHeight = 600;
+            graphics.ApplyChanges();
 
             base.Initialize();
         }
@@ -47,7 +54,16 @@ namespace AIFGP_Game
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            spriteSheet = Content.Load<Texture2D>(@"Images\action1");
+
+            spritePos = new Vector2(Window.ClientBounds.Width / 2 - 16, Window.ClientBounds.Height / 2 - 16);
+
+            sprite = new Sprite<byte>(spriteSheet, spritePos);
+            Rectangle curFrame = new Rectangle(0, 68, 32, 32);
+            sprite.AddAnimationFrame(0, curFrame);
+            sprite.AddAnimationFrame(0, new Rectangle(curFrame.X, curFrame.Y + 32, 32, 32));
+            sprite.AnimationRate = 0.15f;
+            sprite.ActiveAnimation = 0;
         }
 
         /// <summary>
@@ -71,6 +87,7 @@ namespace AIFGP_Game
                 this.Exit();
 
             // TODO: Add your update logic here
+            sprite.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -84,6 +101,9 @@ namespace AIFGP_Game
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
             // TODO: Add your drawing code here
+            spriteBatch.Begin();
+            sprite.Draw(spriteBatch);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

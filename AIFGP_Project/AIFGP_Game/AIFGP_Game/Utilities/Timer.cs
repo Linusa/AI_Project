@@ -92,11 +92,6 @@ namespace AIFGP_Game
         public void Stop()
         {
             active = false;
-
-            if (time >= timeout)
-            {
-                time = 0.0f;
-            }
         }
 
         /// <summary>
@@ -118,7 +113,11 @@ namespace AIFGP_Game
             {
                 time += (float)gameTime.ElapsedGameTime.TotalSeconds;
                 timerExpired = time >= timeout;
-                time = 0.0f;
+
+                if (timerExpired)
+                {
+                    time = 0.0f;
+                }
             }
 
             return timerExpired;

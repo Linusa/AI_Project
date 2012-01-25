@@ -66,7 +66,7 @@ namespace AIFGP_Game
         public float AnimationRate
         {
             get { return animationTimer.Timeout; }
-            set { animationTimer.Timeout = MathHelper.Max(value, 0.01f); }
+            set { animationTimer.Timeout = MathHelper.Max(value, 0.025f); }
         }
 
         public T ActiveAnimation
@@ -75,7 +75,7 @@ namespace AIFGP_Game
             set
             {
                 curAnimationId = value;
-                curAnimationFrame = -1;
+                curAnimationFrame = 0;
             }
         }
 
@@ -98,6 +98,11 @@ namespace AIFGP_Game
 
         public void AddAnimationFrame(T animationId, Rectangle frame)
         {
+            if (!animationFrames.ContainsKey(animationId))
+            {
+                animationFrames.Add(animationId, new List<Rectangle>());
+            }
+
             animationFrames[animationId].Add(frame);
 
             if (spriteWidth == 0 || spriteHeight == 0)
@@ -126,7 +131,7 @@ namespace AIFGP_Game
                 CenterPosition,
                 ActiveAnimationFrame,
                 tint,
-                rotation,
+                RotationInRadians,
                 localOrigin,
                 1.0f,
                 SpriteEffects.None,

@@ -54,11 +54,16 @@ namespace AIFGP_Game
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
+            // Load sprite sheet into memory.
             spriteSheet = Content.Load<Texture2D>(@"Images\action1");
 
+            // Sprite's position (top-left pixel) will be the center of the screen.
             spritePos = new Vector2(Window.ClientBounds.Width / 2 - 16, Window.ClientBounds.Height / 2 - 16);
 
+            // Create a Sprite with byte as its animation identifier.
             sprite = new Sprite<byte>(spriteSheet, spritePos);
+
+            // Sprite is not usable until it has at least 1 animation frame. This adds a couple.
             Rectangle curFrame = new Rectangle(0, 68, 32, 32);
             sprite.AddAnimationFrame(0, curFrame);
             sprite.AddAnimationFrame(0, new Rectangle(curFrame.X, curFrame.Y + 32, 32, 32));
@@ -98,7 +103,7 @@ namespace AIFGP_Game
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();

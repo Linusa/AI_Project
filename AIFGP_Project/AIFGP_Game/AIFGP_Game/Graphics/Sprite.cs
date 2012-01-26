@@ -24,6 +24,7 @@ namespace AIFGP_Game
         private float rotation = 0.0f;
         private int spriteWidth = 0;
         private int spriteHeight = 0;
+        private float spriteScale = 1.0f;
 
         private Dictionary<T, List<Rectangle>> animationFrames = new Dictionary<T, List<Rectangle>>();
         private Timer animationTimer = new Timer(0.1f);
@@ -63,6 +64,12 @@ namespace AIFGP_Game
             set { rotation = value % MathHelper.TwoPi; }
         }
 
+        public float Scale
+        {
+            get { return spriteScale; }
+            set { spriteScale = MathHelper.Max(0.0f, value); }
+        }
+
         public float AnimationRate
         {
             get { return animationTimer.Timeout; }
@@ -75,7 +82,10 @@ namespace AIFGP_Game
             set
             {
                 curAnimationId = value;
-                curAnimationFrame = 0;
+                if (curAnimationFrame >= animationFrames[curAnimationId].Count)
+                {
+                    curAnimationFrame = 0;
+                }
             }
         }
 
@@ -133,7 +143,7 @@ namespace AIFGP_Game
                 tint,
                 RotationInRadians,
                 localOrigin,
-                1.0f,
+                Scale,
                 SpriteEffects.None,
                 0.0f
             );

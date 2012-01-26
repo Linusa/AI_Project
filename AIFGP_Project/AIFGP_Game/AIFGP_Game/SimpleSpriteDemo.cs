@@ -16,7 +16,6 @@
         private Sprite<string> playerSprite;
         private int playerSpriteSize = 30;
         private string[] animationIds = { "left", "right", "up", "down", "still" };
-        private Timer animationCycleTime = new Timer(3.0f);
 
         private Vector2 playerPosition = Vector2.Zero;
         private float playerSpeed = 2.5f;

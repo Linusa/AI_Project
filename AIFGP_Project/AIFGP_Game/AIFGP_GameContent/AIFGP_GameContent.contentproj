@@ -41,10 +41,9 @@
       <Private>False</Private>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
-    <Compile Include="Images\action1.png">
-      <Name>action1</Name>
+    <Compile Include="Images\sprites_each_30x30.png">
+      <Name>sprites_each_30x30</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
     </Compile>

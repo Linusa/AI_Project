@@ -20,9 +20,7 @@ namespace AIFGP_Game
         SpriteBatch spriteBatch;
 
         Texture2D spriteSheet;
-
-        Sprite<byte> sprite;
-        Vector2 spritePos;
+        SimplePlayer simplePlayer;
 
         public Game1()
         {
@@ -55,20 +53,13 @@ namespace AIFGP_Game
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // Load sprite sheet into memory.
-            spriteSheet = Content.Load<Texture2D>(@"Images\action1");
+            spriteSheet = Content.Load<Texture2D>(@"Images\sprites_each_30x30");
 
             // Sprite's position (top-left pixel) will be the center of the screen.
-            spritePos = new Vector2(Window.ClientBounds.Width / 2 - 16, Window.ClientBounds.Height / 2 - 16);
+            Vector2 spritePos = new Vector2(Window.ClientBounds.Width / 2 - 15, Window.ClientBounds.Height / 2 - 15);
 
-            // Create a Sprite with byte as its animation identifier.
-            sprite = new Sprite<byte>(spriteSheet, spritePos);
-
-            // Sprite is not usable until it has at least 1 animation frame. This adds a couple.
-            Rectangle curFrame = new Rectangle(0, 68, 32, 32);
-            sprite.AddAnimationFrame(0, curFrame);
-            sprite.AddAnimationFrame(0, new Rectangle(curFrame.X, curFrame.Y + 32, 32, 32));
-            sprite.AnimationRate = 0.15f;
-            sprite.ActiveAnimation = 0;
+            // Instantiate SimplePlayer.
+            simplePlayer = new SimplePlayer(spriteSheet, spritePos);
         }
 
         /// <summary>
@@ -92,7 +83,7 @@ namespace AIFGP_Game
                 this.Exit();
 
             // TODO: Add your update logic here
-            sprite.Update(gameTime);
+            simplePlayer.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -107,7 +98,7 @@ namespace AIFGP_Game
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            sprite.Draw(spriteBatch);
+            simplePlayer.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);

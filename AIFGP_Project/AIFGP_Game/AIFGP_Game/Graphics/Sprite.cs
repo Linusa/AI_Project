@@ -12,7 +12,7 @@ namespace AIFGP_Game
     /// the active animation frame and call Update/Draw as needed.
     /// </summary>
     /// <typeparam name="T">Animation identifier type.</typeparam>
-    public class Sprite<T> where T : new()
+    public class Sprite<T>
     {
         /// <summary>
         /// The <c>Texture2D</c> the <c>Sprite</c> is drawn from.
@@ -27,7 +27,7 @@ namespace AIFGP_Game
 
         private Dictionary<T, List<Rectangle>> animationFrames = new Dictionary<T, List<Rectangle>>();
         private Timer animationTimer = new Timer(0.1f);
-        private T curAnimationId = new T();
+        private T curAnimationId;
         private int curAnimationFrame = 0;
 
         private Color tint = Color.White;

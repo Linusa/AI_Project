@@ -37,8 +37,6 @@ namespace AIFGP_Game
         {
             Texture = texture;
             Position = position;
-
-            animationTimer.Start();
         }
 
         public Vector2 Position
@@ -123,6 +121,16 @@ namespace AIFGP_Game
                 localOrigin.X = spriteWidth / 2;
                 localOrigin.Y = spriteHeight / 2;
             }
+        }
+
+        public void PauseAnimation()
+        {
+            animationTimer.Stop();
+        }
+
+        public void PlayAnimation()
+        {
+            animationTimer.Start();
         }
 
         public void Update(GameTime gameTime)

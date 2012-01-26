@@ -15,7 +15,7 @@
     {
         private Sprite<string> playerSprite;
         private int playerSpriteSize = 30;
-        private string[] animationIds = { "left", "right", "up", "down", "still" };
+        private string[] animationIds = { "left", "right", "up", "down" };
 
         private Vector2 playerPosition = Vector2.Zero;
         private float playerSpeed = 2.5f;
@@ -27,27 +27,20 @@
 
             Rectangle startFrame = new Rectangle(0, 0, playerSpriteSize, playerSpriteSize);
 
-            for (int i = 0; i < animationIds.Length - 1; i++)
+            foreach (string id in animationIds)
             {
                 for (int j = 0; j < 2; j++)
                 {
                     int curX = startFrame.X;
                     int curY = startFrame.Y + (j * playerSpriteSize);
                     Rectangle curFrame = new Rectangle(curX, curY, playerSpriteSize, playerSpriteSize);
-                    playerSprite.AddAnimationFrame(animationIds[i], curFrame);
-
-                    // Hack to be sure we add in the "still" 1-frame animation.
-                    if (i == animationIds.Length - 2 && j == 1)
-                    {
-                        playerSprite.AddAnimationFrame(animationIds[i+1], curFrame);
-                        break;
-                    }
+                    playerSprite.AddAnimationFrame(id, curFrame);
                 }
 
                 startFrame.X += startFrame.Width;
             }
 
-            playerSprite.ActiveAnimation = "still";
+            playerSprite.ActiveAnimation = "down";
             playerSprite.AnimationRate = 0.1f;
             playerSprite.Scale = 1.25f;
         }
@@ -94,10 +87,11 @@
 
                 wrapPosition();
                 playerSprite.Position = playerPosition;
+                playerSprite.PlayAnimation();
             }
             else
             {
-                playerSprite.ActiveAnimation = "still";
+                playerSprite.PauseAnimation();
             }
         }
 

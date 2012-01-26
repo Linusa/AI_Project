@@ -93,7 +93,7 @@
                     playerSprite.ActiveAnimation = "down";
                 }
 
-                wrapPosition(ref playerPosition);
+                wrapPosition();
                 playerSprite.Position = playerPosition;
             }
             else
@@ -102,26 +102,26 @@
             }
         }
 
-        void wrapPosition(ref Vector2 pos)
+        void wrapPosition()
         {
             Rectangle bounds = new Rectangle(0, 0, 800, 600);
 
-            if (pos.X < bounds.X - playerSpriteSize)
+            if (playerPosition.X < bounds.X - playerSpriteSize)
             {
-                pos.X = bounds.Width;
+                playerPosition.X = bounds.Width;
             }
-            else if (pos.X > bounds.Width)
+            else if (playerPosition.X > bounds.Width)
             {
-                pos.X = bounds.X - playerSpriteSize;
+                playerPosition.X = bounds.X - playerSpriteSize;
             }
 
-            if (pos.Y < bounds.Y - playerSpriteSize)
+            if (playerPosition.Y < bounds.Y - playerSpriteSize)
             {
-                pos.Y = bounds.Height;
+                playerPosition.Y = bounds.Height;
             }
-            else if (pos.Y > bounds.Height)
+            else if (playerPosition.Y > bounds.Height)
             {
-                pos.Y = bounds.Y - playerSpriteSize;
+                playerPosition.Y = bounds.Y - playerSpriteSize;
             }
         }
     }

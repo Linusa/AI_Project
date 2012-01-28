@@ -9,14 +9,14 @@
     public abstract class BaseGameEntity : IGraphicalEntity
     {
         // Should never be adding more than 256 animations to a Sprite.
-        protected Sprite<byte> EntitySprite;
+        public Sprite<byte> EntitySprite;
 
         private Vector2 position = Vector2.Zero;
         private Vector2 heading = Vector2.Zero;
 
-        public BaseGameEntity(Texture2D texture, Vector2 position)
+        public BaseGameEntity(Texture2D texture, Vector2 position, Rectangle dimensions)
         {
-            EntitySprite = new Sprite<byte>(texture, position);
+            EntitySprite = new Sprite<byte>(texture, position, dimensions);
             Position = position;
 
             configureSprite();

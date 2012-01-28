@@ -15,21 +15,18 @@
             public const byte NoAnimation = 0;
         }
 
+        public static Rectangle Dimensions = new Rectangle(0, 0, 50, 50);
+
         public SimpleGameEntity(Texture2D texture, Vector2 position)
-            : base(texture, position)
+            : base(texture, position, Dimensions)
         {
-            // do nothing
+            Heading = new Vector2(1, 0);
         }
 
         protected override void configureSprite()
         {
-            const int spriteSize = 50;
-            Rectangle frame = new Rectangle(0, 0, spriteSize, spriteSize);
-
-            EntitySprite.AddAnimationFrame(AnimationIds.NoAnimation, frame);
+            EntitySprite.AddAnimationFrame(AnimationIds.NoAnimation, Dimensions);
             EntitySprite.ActiveAnimation = AnimationIds.NoAnimation;
-            //EntitySprite.AnimationRate = 0.1f;
-            //EntitySprite.Scale(1.25f);
         }
     }
 }

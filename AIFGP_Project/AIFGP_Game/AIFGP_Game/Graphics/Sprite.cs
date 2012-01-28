@@ -33,8 +33,11 @@
 
         private Color tint = Color.White;
 
-        public Sprite(Texture2D texture, Vector2 position)
+        public Sprite(Texture2D texture, Vector2 position, Rectangle dimensions)
         {
+            StoreSpriteDimensions(dimensions);
+            ComputeLocalOrigin();
+
             Texture = texture;
             CenterPosition = position;
         }
@@ -129,15 +132,6 @@
             }
 
             animationFrames[animationId].Add(frame);
-
-            if (spriteWidth == 0 || spriteHeight == 0)
-            {
-                spriteWidth = frame.Width;
-                spriteHeight = frame.Height;
-                
-                localOrigin.X = spriteWidth / 2;
-                localOrigin.Y = spriteHeight / 2;
-            }
         }
 
         public void PauseAnimation()
@@ -148,6 +142,18 @@
         public void PlayAnimation()
         {
             animationTimer.Start();
+        }
+
+        private void StoreSpriteDimensions(Rectangle dimensions)
+        {
+            spriteWidth = dimensions.Width;
+            spriteHeight = dimensions.Height;
+        }
+
+        private void ComputeLocalOrigin()
+        {
+            localOrigin.X = spriteWidth / 2;
+            localOrigin.Y = spriteHeight / 2;
         }
 
         public void Update(GameTime gameTime)

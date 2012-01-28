@@ -51,16 +51,12 @@ namespace AIFGP_Game
         /// </summary>
         protected override void LoadContent()
         {
-            // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // Load images into memory.
             playerSpriteSheet = Content.Load<Texture2D>(@"Images\player_arrow");
             npcSpriteSheet = Content.Load<Texture2D>(@"Images\npc_arrow");
 
-            // Sprite's position (top-left pixel) will be the center of the screen.
             Vector2 spritePos = new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2);
-
             player = new SimpleGameEntity(playerSpriteSheet, spritePos);
         }
 
@@ -86,6 +82,7 @@ namespace AIFGP_Game
 
             // TODO: Add your update logic here
             player.Update(gameTime);
+            this.Window.Title = "Position: " + player.EntitySprite.Position + " | Center: " + player.EntitySprite.CenterPosition;
 
             base.Update(gameTime);
         }

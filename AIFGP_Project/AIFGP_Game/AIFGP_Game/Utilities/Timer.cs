@@ -1,7 +1,7 @@
-﻿using Microsoft.Xna.Framework;
-
-namespace AIFGP_Game
+﻿namespace AIFGP_Game
 {
+    using Microsoft.Xna.Framework;
+
     /// <summary>
     /// This class provides a timing mechanism based on
     /// repeated <c>Microsoft.Xna.Framework.GameTime</c> readings.

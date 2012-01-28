@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-
-namespace AIFGP_Game
+﻿namespace AIFGP_Game
 {
+    using System;
+    using System.Collections.Generic;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+
     /// <summary>
     /// Class that abstracts away loading, displaying, and manipulating
     /// two-dimensional graphics as sprites. The standard usage of this
@@ -121,6 +121,11 @@ namespace AIFGP_Game
                 localOrigin.X = spriteWidth / 2;
                 localOrigin.Y = spriteHeight / 2;
             }
+        }
+
+        public void AddAnimationFrames(T animationId, List<Rectangle> frames)
+        {
+            //animationFrames = anims;
         }
 
         public void PauseAnimation()

@@ -107,6 +107,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Game\BaseGameEntity.cs" />
+    <Compile Include="Graphics\BaseSpriteLoader.cs" />
+    <Compile Include="Graphics\ISpriteLoader.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />

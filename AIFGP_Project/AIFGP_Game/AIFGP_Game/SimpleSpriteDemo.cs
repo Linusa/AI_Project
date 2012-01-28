@@ -61,9 +61,9 @@
         public void Draw(SpriteBatch spriteBatch)
         {
             Vector2 tempPos = Vector2.Zero;
-            for (int i = 0; i < 600 / 29 + 2; i++)
+            for (int i = 0; i <= 600 / 28; i++)
             {
-                for (int j = 0; j < 800 / 29 + 2; j++)
+                for (int j = 0; j <= 800 / 28; j++)
                 {
                     backgroundTile.Draw(spriteBatch);
                     backgroundTile.Position += new Vector2(28, 0);

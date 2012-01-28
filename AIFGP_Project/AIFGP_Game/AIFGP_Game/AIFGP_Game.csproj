@@ -111,7 +111,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Game1.cs" />
     <Compile Include="Graphics\Sprite.cs" />
-    <Compile Include="SimpleSpriteDemo.cs" />
     <Compile Include="Utilities\Timer.cs" />
   </ItemGroup>
   <ItemGroup>

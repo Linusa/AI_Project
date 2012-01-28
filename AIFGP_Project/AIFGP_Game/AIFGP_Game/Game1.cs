@@ -20,7 +20,6 @@ namespace AIFGP_Game
         SpriteBatch spriteBatch;
 
         Texture2D spriteSheet;
-        SimpleSpriteDemo simpleSpriteDemo;
 
         public Game1()
         {
@@ -57,9 +56,6 @@ namespace AIFGP_Game
 
             // Sprite's position (top-left pixel) will be the center of the screen.
             Vector2 spritePos = new Vector2(Window.ClientBounds.Width / 2 - 15, Window.ClientBounds.Height / 2 - 15);
-
-            // Instantiate simpleSpriteDemo.
-            simpleSpriteDemo = new SimpleSpriteDemo(spriteSheet, spritePos);
         }
 
         /// <summary>
@@ -83,7 +79,6 @@ namespace AIFGP_Game
                 this.Exit();
 
             // TODO: Add your update logic here
-            simpleSpriteDemo.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -97,9 +92,8 @@ namespace AIFGP_Game
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-            spriteBatch.Begin();
-            simpleSpriteDemo.Draw(spriteBatch);
-            spriteBatch.End();
+            //spriteBatch.Begin();
+            //spriteBatch.End();
 
             base.Draw(gameTime);
         }

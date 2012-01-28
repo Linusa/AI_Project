@@ -19,7 +19,10 @@ namespace AIFGP_Game
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Texture2D spriteSheet;
+        Texture2D playerSpriteSheet;
+        Texture2D npcSpriteSheet;
+
+        SimpleGameEntity player;
 
         public Game1()
         {
@@ -51,11 +54,14 @@ namespace AIFGP_Game
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // Load sprite sheet into memory.
-            spriteSheet = Content.Load<Texture2D>(@"Images\sprites_each_30x30");
+            // Load images into memory.
+            playerSpriteSheet = Content.Load<Texture2D>(@"Images\player_arrow");
+            npcSpriteSheet = Content.Load<Texture2D>(@"Images\npc_arrow");
 
             // Sprite's position (top-left pixel) will be the center of the screen.
-            Vector2 spritePos = new Vector2(Window.ClientBounds.Width / 2 - 15, Window.ClientBounds.Height / 2 - 15);
+            Vector2 spritePos = new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2);
+
+            player = new SimpleGameEntity(playerSpriteSheet, spritePos);
         }
 
         /// <summary>
@@ -79,6 +85,7 @@ namespace AIFGP_Game
                 this.Exit();
 
             // TODO: Add your update logic here
+            player.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -92,8 +99,9 @@ namespace AIFGP_Game
             GraphicsDevice.Clear(Color.Black);
 
             // TODO: Add your drawing code here
-            //spriteBatch.Begin();
-            //spriteBatch.End();
+            spriteBatch.Begin();
+            player.Draw(spriteBatch);
+            spriteBatch.End();
 
             base.Draw(gameTime);
         }

@@ -1,6 +1,5 @@
 ﻿namespace AIFGP_Game
 {
-    using System;
     using System.Collections.Generic;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
@@ -12,7 +11,7 @@
     /// the active animation frame and call Update/Draw as needed.
     /// </summary>
     /// <typeparam name="T">Animation identifier type.</typeparam>
-    public class Sprite<T>
+    public class Sprite<T> : IGraphicalEntity
     {
         /// <summary>
         /// The <c>Texture2D</c> the <c>Sprite</c> is drawn from.
@@ -24,7 +23,8 @@
         private float rotation = 0.0f;
         private int spriteWidth = 0;
         private int spriteHeight = 0;
-        private float spriteScale = 1.0f;
+        //private float spriteScale = 1.0f;
+        private Vector2 spriteScale = Vector2.One;
 
         private Dictionary<T, List<Rectangle>> animationFrames = new Dictionary<T, List<Rectangle>>();
         private Timer animationTimer = new Timer(0.1f);
@@ -36,7 +36,7 @@
         public Sprite(Texture2D texture, Vector2 position)
         {
             Texture = texture;
-            Position = position;
+            CenterPosition = position;
         }
 
         public Vector2 Position
@@ -48,6 +48,18 @@
         public Vector2 CenterPosition
         {
             get { return topLeftPixel + localOrigin; }
+            set { topLeftPixel = value - localOrigin; }
+        }
+
+        public void Translate(Vector2 offset)
+        {
+            Position += offset;
+        }
+
+        public void Translate(int x, int y)
+        {
+            Vector2 offset = new Vector2(x, y);
+            Position += offset;
         }
 
         public float RotationInDegrees
@@ -62,10 +74,15 @@
             set { rotation = value % MathHelper.TwoPi; }
         }
 
-        public float Scale
+        public void Scale(Vector2 scale)
         {
-            get { return spriteScale; }
-            set { spriteScale = MathHelper.Max(0.0f, value); }
+            spriteScale.X = MathHelper.Max(0.0f, scale.X);
+            spriteScale.Y = MathHelper.Max(0.0f, scale.Y);
+        }
+
+        public void Scale(float scale)
+        {
+            Scale(new Vector2(scale));
         }
 
         public float AnimationRate
@@ -123,11 +140,6 @@
             }
         }
 
-        public void AddAnimationFrames(T animationId, List<Rectangle> frames)
-        {
-            //animationFrames = anims;
-        }
-
         public void PauseAnimation()
         {
             animationTimer.Stop();
@@ -156,7 +168,7 @@
                 tint,
                 RotationInRadians,
                 localOrigin,
-                Scale,
+                spriteScale,
                 SpriteEffects.None,
                 0.0f
             );

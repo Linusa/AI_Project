@@ -14,17 +14,21 @@ namespace AIFGP_Game
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game1 : Microsoft.Xna.Framework.Game
+    public class SensorsGame : Microsoft.Xna.Framework.Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        Texture2D playerSpriteSheet;
-        Texture2D npcSpriteSheet;
+        public static Rectangle ScreenDimensions = new Rectangle(0, 0, 800, 600);
+        public static Vector2 ScreenCenter = new Vector2(ScreenDimensions.Width,
+            ScreenDimensions.Height) / 2;
 
-        SimpleGameEntity player;
+        private Texture2D playerSpriteSheet;
+        private Texture2D npcSpriteSheet;
 
-        public Game1()
+        private PlayerManager playerManager;
+
+        public SensorsGame()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -38,8 +42,8 @@ namespace AIFGP_Game
         /// </summary>
         protected override void Initialize()
         {
-            graphics.PreferredBackBufferWidth = 800;
-            graphics.PreferredBackBufferHeight = 600;
+            graphics.PreferredBackBufferWidth = ScreenDimensions.Width;
+            graphics.PreferredBackBufferHeight = ScreenDimensions.Height;
             graphics.ApplyChanges();
 
             base.Initialize();
@@ -56,8 +60,7 @@ namespace AIFGP_Game
             playerSpriteSheet = Content.Load<Texture2D>(@"Images\player_arrow");
             npcSpriteSheet = Content.Load<Texture2D>(@"Images\npc_arrow");
 
-            Vector2 spritePos = new Vector2(Window.ClientBounds.Width / 2, Window.ClientBounds.Height / 2);
-            player = new SimpleGameEntity(playerSpriteSheet, spritePos);
+            playerManager = new PlayerManager(playerSpriteSheet);
         }
 
         /// <summary>
@@ -81,8 +84,10 @@ namespace AIFGP_Game
                 this.Exit();
 
             // TODO: Add your update logic here
-            player.Update(gameTime);
-            this.Window.Title = "Position: " + player.EntitySprite.Position + " | Center: " + player.EntitySprite.CenterPosition;
+            playerManager.Update(gameTime);
+            this.Window.Title = "Position: " + playerManager.Player.Position + " | "
+                + "Center: " + playerManager.Player.EntitySprite.CenterPosition + " | "
+                + "Heading: " + playerManager.Player.Heading;
 
             base.Update(gameTime);
         }
@@ -97,10 +102,52 @@ namespace AIFGP_Game
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            player.Draw(spriteBatch);
+            playerManager.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        /// <summary>
+        /// This should be stored in some utilities class, but for now,
+        /// this is fine.
+        /// </summary>
+        /// <param name="entity"></param>
+        public static void WrapPosition(ref SimpleGameEntity entity)
+        {
+            Vector2 position = entity.Position;
+
+            int spriteWidth = entity.EntitySprite.Dimensions.Width;
+            int spriteHeight = entity.EntitySprite.Dimensions.Height;
+
+            Rectangle bounds = ScreenDimensions;
+            bounds.X -= spriteWidth;
+            bounds.Y -= spriteHeight;
+            bounds.Width += spriteWidth;
+            bounds.Height += spriteHeight;
+
+            if (position.X < bounds.X)
+            {
+                position.X = bounds.Width;
+            }
+            else if (position.X > bounds.Width)
+            {
+                position.X = bounds.X;
+            }
+
+            if (position.Y < bounds.Y)
+            {
+                position.Y = bounds.Height;
+            }
+            else if (position.Y > bounds.Height)
+            {
+                position.Y = bounds.Y;
+            }
+
+            if (entity.Position != position)
+            {
+                entity.Position = position;
+            }
         }
     }
 }

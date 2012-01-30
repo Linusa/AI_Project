@@ -6,7 +6,7 @@
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public abstract class BaseGameEntity : IGraphicalEntity
+    public abstract class BaseGameEntity : IGameEntity
     {
         // Should never be adding more than 256 animations to a Sprite.
         public Sprite<byte> EntitySprite;
@@ -49,22 +49,15 @@
             Position += offset;
         }
 
-        public float RotationInRadians
+        public void RotateInRadians(float radians)
         {
-            get { return EntitySprite.RotationInRadians; }
-            set
-            {
-                EntitySprite.RotationInRadians += value;
-
-                Quaternion rotQuat = Quaternion.CreateFromAxisAngle(Vector3.Up, value);
-                Heading = Vector2.Transform(heading, rotQuat);
-            }
+            EntitySprite.RotateInRadians(radians);
+            Heading = Vector2.Transform(heading, Matrix.CreateRotationZ(radians));
         }
 
-        public float RotationInDegrees
+        public void RotateInDegrees(float degrees)
         {
-            get { return EntitySprite.RotationInDegrees; }
-            set { RotationInRadians = MathHelper.ToRadians(value); }
+            RotateInRadians(MathHelper.ToRadians(degrees));
         }
 
         public void Scale(float scale)

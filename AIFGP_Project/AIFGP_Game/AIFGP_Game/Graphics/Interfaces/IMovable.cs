@@ -7,12 +7,6 @@
     /// </summary>
     public interface IMovable
     {
-        Vector2 Position
-        {
-            get;
-            set;
-        }
-
         void Translate(Vector2 offset);
         void Translate(int x, int y);
     }

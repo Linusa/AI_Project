@@ -1,17 +1,13 @@
 ﻿namespace AIFGP_Game
 {
+    using Microsoft.Xna.Framework;
+
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public interface IRotatable
+    public interface IGameEntity : ISpatialEntity, IUpdateable, IDrawable
     {
-        float RotationInRadians
-        {
-            get;
-            set;
-        }
-
-        float RotationInDegrees
+        Vector2 Heading
         {
             get;
             set;

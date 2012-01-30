@@ -11,7 +11,7 @@
     /// the active animation frame and call Update/Draw as needed.
     /// </summary>
     /// <typeparam name="T">Animation identifier type.</typeparam>
-    public class Sprite<T> : IGraphicalEntity
+    public class Sprite<T> : ISpatialEntity, IUpdateable, IDrawable
     {
         /// <summary>
         /// The <c>Texture2D</c> the <c>Sprite</c> is drawn from.
@@ -35,11 +35,11 @@
 
         public Sprite(Texture2D texture, Vector2 position, Rectangle dimensions)
         {
-            StoreSpriteDimensions(dimensions);
-            ComputeLocalOrigin();
-
+            Dimensions = dimensions;
             Texture = texture;
             CenterPosition = position;
+
+            ComputeLocalOrigin();
         }
 
         public Vector2 Position
@@ -65,16 +65,19 @@
             Position += offset;
         }
 
-        public float RotationInDegrees
+        public void RotateInDegrees(float degrees)
         {
-            get { return MathHelper.ToDegrees(rotation); }
-            set { rotation = MathHelper.ToRadians(value) % MathHelper.TwoPi; }
+            RotateInRadians(MathHelper.ToRadians(degrees));
         }
 
-        public float RotationInRadians
+        public void RotateInRadians(float radians)
         {
-            get { return rotation; }
-            set { rotation = value % MathHelper.TwoPi; }
+            while (radians < 0.0f)
+            {
+                radians += MathHelper.TwoPi;
+            }
+
+            rotation = (rotation + radians) % MathHelper.TwoPi;
         }
 
         public void Scale(Vector2 scale)
@@ -113,6 +116,16 @@
             get { return animationFrames[curAnimationId][curAnimationFrame]; }
         }
 
+        public Rectangle Dimensions
+        {
+            get { return new Rectangle(0, 0, spriteWidth, spriteHeight); }
+            set
+            {
+                spriteWidth = value.Width;
+                spriteHeight = value.Height;
+            }
+        }
+
         public Rectangle BoundingBox
         {
             // TODO: This is a weak bounding box as the actual sprite
@@ -144,12 +157,6 @@
             animationTimer.Start();
         }
 
-        private void StoreSpriteDimensions(Rectangle dimensions)
-        {
-            spriteWidth = dimensions.Width;
-            spriteHeight = dimensions.Height;
-        }
-
         private void ComputeLocalOrigin()
         {
             localOrigin.X = spriteWidth / 2;
@@ -172,7 +179,7 @@
                 CenterPosition,
                 ActiveAnimationFrame,
                 tint,
-                RotationInRadians,
+                rotation,
                 localOrigin,
                 spriteScale,
                 SpriteEffects.None,

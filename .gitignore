@@ -52,3 +52,4 @@ ipch/
 [Dd]ebug*/
 [Rr]elease*/
 *.csproj.Debug.cachefile
+*.csproj.Release.cachefile

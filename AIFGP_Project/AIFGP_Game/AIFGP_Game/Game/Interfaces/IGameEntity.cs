@@ -5,7 +5,7 @@
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public interface IGameEntity : ISpatialEntity, IUpdateable, IDrawable
+    public interface IGameEntity : ISpatialEntity, ICollidable, IUpdateable, IDrawable
     {
         Vector2 Heading
         {

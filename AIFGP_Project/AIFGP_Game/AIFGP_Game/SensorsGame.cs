@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
@@ -27,6 +28,9 @@ namespace AIFGP_Game
         private Texture2D npcSpriteSheet;
 
         private PlayerManager playerManager;
+        private EnemyManager enemyManager;
+
+        public static SpriteFont DebugFont;
 
         public SensorsGame()
         {
@@ -46,6 +50,11 @@ namespace AIFGP_Game
             graphics.PreferredBackBufferHeight = ScreenDimensions.Height;
             graphics.ApplyChanges();
 
+            IsMouseVisible = true;
+
+            // Hot-fix for the every-second or so stuttering.
+            IsFixedTimeStep = false;
+
             base.Initialize();
         }
 
@@ -61,6 +70,9 @@ namespace AIFGP_Game
             npcSpriteSheet = Content.Load<Texture2D>(@"Images\npc_arrow");
 
             playerManager = new PlayerManager(playerSpriteSheet);
+            enemyManager = new EnemyManager(npcSpriteSheet);
+
+            DebugFont = Content.Load<SpriteFont>(@"Fonts\Debug");
         }
 
         /// <summary>
@@ -80,14 +92,13 @@ namespace AIFGP_Game
         protected override void Update(GameTime gameTime)
         {
             // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
+                || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
             // TODO: Add your update logic here
             playerManager.Update(gameTime);
-            this.Window.Title = "Position: " + playerManager.Player.Position + " | "
-                + "Center: " + playerManager.Player.EntitySprite.CenterPosition + " | "
-                + "Heading: " + playerManager.Player.Heading;
+            enemyManager.Update(gameTime);
 
             base.Update(gameTime);
         }
@@ -102,8 +113,11 @@ namespace AIFGP_Game
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
-            playerManager.Draw(spriteBatch);
+                playerManager.Draw(spriteBatch);
+                enemyManager.Draw(spriteBatch);
             spriteBatch.End();
+
+            //strBuilder.Clear();
 
             base.Draw(gameTime);
         }
@@ -113,12 +127,12 @@ namespace AIFGP_Game
         /// this is fine.
         /// </summary>
         /// <param name="entity"></param>
-        public static void WrapPosition(ref SimpleGameEntity entity)
+        public static void WrapPosition(ref IGameEntity entity)
         {
             Vector2 position = entity.Position;
 
-            int spriteWidth = entity.EntitySprite.Dimensions.Width;
-            int spriteHeight = entity.EntitySprite.Dimensions.Height;
+            int spriteWidth = entity.BoundingBox.Width;
+            int spriteHeight = entity.BoundingBox.Height;
 
             Rectangle bounds = ScreenDimensions;
             bounds.X -= spriteWidth;

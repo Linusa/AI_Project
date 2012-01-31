@@ -13,12 +13,24 @@
             public const byte NoAnimation = 0;
         }
 
+        // NOTE: Hard-coded based on 50x50 arrow pics.
         public static Rectangle Dimensions = new Rectangle(0, 0, 50, 50);
 
         public SimpleGameEntity(Texture2D texture, Vector2 position)
             : base(texture, position, Dimensions)
         {
-            Heading = new Vector2(1, 0);
+            Heading = new Vector2(1.0f, 0.0f);
+        }
+
+        public override Rectangle BoundingBox
+        {
+            get {return EntitySprite.BoundingBox; }
+        }
+
+        // NOTE: Hard-coded based on 50x50 arrow pics.
+        public override float BoundingRadius
+        {
+            get { return 24.0f; }
         }
 
         protected override void configureSprite()

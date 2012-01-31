@@ -13,15 +13,17 @@
     /// </summary>
     public class PlayerManager : IUpdateable, IDrawable
     {
-        public SimpleGameEntity Player;
+        public IGameEntity Player;
         private float playerSpeed = 4.0f;
 
-        private Timer inputTimer = new Timer(0.25f);
+        // DEBUG MEMBERS
+        private bool debugOutput = false;
+        private StringBuilder debugStringBuilder = new StringBuilder();
+        // END DEBUG MEMBERS
 
         public PlayerManager(Texture2D texture)
         {
             Player = new SimpleGameEntity(texture, SensorsGame.ScreenCenter);
-            inputTimer.Start();
         }
 
         private void handleInput()
@@ -30,42 +32,68 @@
 
             if (keyboardState.IsKeyDown(Keys.Up))
             {
-                //Player.Translate(Player.Heading * playerSpeed);
                 Player.Position += (Player.Heading * playerSpeed);
-                //SensorsGame.WrapPosition(ref player);
             }
 
             if (keyboardState.IsKeyDown(Keys.Down))
             {
-                //Player.Translate(-Player.Heading * playerSpeed);
                 Player.Position -= (Player.Heading * playerSpeed);
-                //SensorsGame.WrapPosition(ref player);
             }
 
-            //if (inputTimer.Expired(gameTime))
-            //{
-                if (keyboardState.IsKeyDown(Keys.Left))
-                {
-                    Player.RotateInDegrees(-3.0f);
-                }
+            if (keyboardState.IsKeyDown(Keys.Left))
+            {
+                Player.RotateInDegrees(-3.0f);
+            }
 
-                if (keyboardState.IsKeyDown(Keys.Right))
+            if (keyboardState.IsKeyDown(Keys.Right))
+            {
+                Player.RotateInDegrees(3.0f);
+            }
+
+            // DEBUG KEY CHECKS
+            if (keyboardState.IsKeyDown(Keys.LeftAlt))
+            {
+                debugOutput = true;
+                debugStringBuilder.Clear();
+                debugStringBuilder.AppendFormat("Pos: {0}\nDir: {1}",
+                    Player.Position,
+                    Player.Heading
+                );
+            }
+            else if (keyboardState.IsKeyUp(Keys.LeftAlt))
+            {
+                if (debugOutput)
                 {
-                    Player.RotateInDegrees(3.0f);
+                    debugOutput = false;
                 }
-            //}
+            }
+            // END DEBUG KEY CHECKS
         }
 
         public void Update(GameTime gameTime)
         {
             handleInput();
-
-            //player.Update(gameTime);
+            Player.Update(gameTime);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             Player.Draw(spriteBatch);
+
+            // DEBUG OUTPUT
+            if (debugOutput)
+            {
+                Vector2 offset = new Vector2(Player.BoundingBox.Width + 10, -Player.BoundingBox.Height + 10) / 2.0f;
+                if (Player.Position.X > SensorsGame.ScreenCenter.X)
+                {
+                    Vector2 stringSize = SensorsGame.DebugFont.MeasureString(debugStringBuilder);
+                    offset.X -= stringSize.X + Player.BoundingBox.Width + 10;
+                }
+
+                spriteBatch.DrawString(SensorsGame.DebugFont, debugStringBuilder.ToString(),
+                    Player.Position + offset, Color.Yellow);
+            }
+            // END DEBUG OUTPUT
         }
     }
 }

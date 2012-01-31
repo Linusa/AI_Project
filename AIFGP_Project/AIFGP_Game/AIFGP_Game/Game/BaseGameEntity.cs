@@ -11,7 +11,6 @@
         // Should never be adding more than 256 animations to a Sprite.
         public Sprite<byte> EntitySprite;
 
-        private Vector2 position = Vector2.Zero;
         private Vector2 heading = Vector2.Zero;
 
         public BaseGameEntity(Texture2D texture, Vector2 position, Rectangle dimensions)
@@ -24,12 +23,8 @@
 
         public Vector2 Position
         {
-            get { return position; }
-            set
-            {
-                EntitySprite.CenterPosition = value;
-                position = value;
-            }
+            get { return EntitySprite.CenterPosition; }
+            set { EntitySprite.CenterPosition = value; }
         }
 
         public Vector2 Heading
@@ -78,6 +73,16 @@
         public virtual void Draw(SpriteBatch spriteBatch)
         {
             EntitySprite.Draw(spriteBatch);
+        }
+
+        public abstract Rectangle BoundingBox
+        {
+            get;
+        }
+
+        public abstract float BoundingRadius
+        {
+            get;
         }
 
         protected abstract void configureSprite();

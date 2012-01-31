@@ -108,6 +108,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Game\BaseGameEntity.cs" />
+    <Compile Include="Game\EnemyManager.cs" />
+    <Compile Include="Game\Interfaces\ICollidable.cs" />
     <Compile Include="Graphics\Interfaces\IDrawable.cs" />
     <Compile Include="Game\Interfaces\IGameEntity.cs" />
     <Compile Include="Game\Interfaces\IUpdateable.cs" />

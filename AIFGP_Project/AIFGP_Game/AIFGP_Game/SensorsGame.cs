@@ -56,7 +56,7 @@ namespace AIFGP_Game
             IsMouseVisible = true;
 
             // Hot-fix for the every-second or so stuttering.
-            IsFixedTimeStep = false;
+            //IsFixedTimeStep = false;
 
             base.Initialize();
         }

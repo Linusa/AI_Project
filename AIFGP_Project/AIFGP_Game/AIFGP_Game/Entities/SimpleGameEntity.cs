@@ -10,7 +10,7 @@
     {
         public struct AnimationIds
         {
-            public const byte NoAnimation = 0;
+            public const byte Effects = 0;
         }
 
         // NOTE: Hard-coded based on 50x50 arrow pics.
@@ -35,8 +35,19 @@
 
         protected override void configureSprite()
         {
+            /*
             EntitySprite.AddAnimationFrame(AnimationIds.NoAnimation, Dimensions);
             EntitySprite.ActiveAnimation = AnimationIds.NoAnimation;
+            */
+            Rectangle curFrame = Dimensions;
+            for (int i = 0; i < 9; i++)
+            {
+                EntitySprite.AddAnimationFrame(AnimationIds.Effects, curFrame);
+                curFrame.X += curFrame.Width;
+            }
+
+            EntitySprite.ActiveAnimation = AnimationIds.Effects;
+            EntitySprite.PlayAnimation();
         }
     }
 }

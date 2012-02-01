@@ -107,18 +107,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Game\BaseGameEntity.cs" />
-    <Compile Include="Game\EnemyManager.cs" />
-    <Compile Include="Game\Interfaces\ICollidable.cs" />
+    <Compile Include="Entities\BaseGameEntity.cs" />
+    <Compile Include="EnemyManager.cs" />
+    <Compile Include="Entities\Interfaces\ICollidable.cs" />
     <Compile Include="Graphics\Interfaces\IDrawable.cs" />
-    <Compile Include="Game\Interfaces\IGameEntity.cs" />
-    <Compile Include="Game\Interfaces\IUpdateable.cs" />
+    <Compile Include="Entities\Interfaces\IGameEntity.cs" />
+    <Compile Include="Entities\Interfaces\IUpdateable.cs" />
     <Compile Include="Graphics\Interfaces\ISpatialEntity.cs" />
     <Compile Include="Graphics\Interfaces\IMovable.cs" />
     <Compile Include="Graphics\Interfaces\IRotatable.cs" />
     <Compile Include="Graphics\Interfaces\IScalable.cs" />
-    <Compile Include="Game\PlayerManager.cs" />
-    <Compile Include="Game\SimpleGameEntity.cs" />
+    <Compile Include="Map\Map.cs" />
+    <Compile Include="PlayerManager.cs" />
+    <Compile Include="Entities\SimpleGameEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="SensorsGame.cs" />

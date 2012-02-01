@@ -26,6 +26,9 @@ namespace AIFGP_Game
 
         private Texture2D playerSpriteSheet;
         private Texture2D npcSpriteSheet;
+        private Texture2D grassTile;
+
+        private Map map;
 
         private PlayerManager playerManager;
         private EnemyManager enemyManager;
@@ -66,9 +69,11 @@ namespace AIFGP_Game
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            playerSpriteSheet = Content.Load<Texture2D>(@"Images\player_arrow");
-            npcSpriteSheet = Content.Load<Texture2D>(@"Images\npc_arrow");
+            playerSpriteSheet = Content.Load<Texture2D>(@"Images\player_arrow_with_effects");
+            npcSpriteSheet = Content.Load<Texture2D>(@"Images\npc_arrow_with_effects");
+            grassTile = Content.Load<Texture2D>(@"Images\grass_tile");
 
+            map = new Map(grassTile);
             playerManager = new PlayerManager(playerSpriteSheet);
             enemyManager = new EnemyManager(npcSpriteSheet);
 
@@ -113,6 +118,7 @@ namespace AIFGP_Game
 
             // TODO: Add your drawing code here
             spriteBatch.Begin();
+                map.Draw(spriteBatch);
                 playerManager.Draw(spriteBatch);
                 enemyManager.Draw(spriteBatch);
             spriteBatch.End();

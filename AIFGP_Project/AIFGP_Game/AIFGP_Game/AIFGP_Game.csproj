@@ -107,9 +107,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AI\Sensors\ISensor.cs" />
     <Compile Include="AI\Sensors\PieSliceSensor.cs" />
     <Compile Include="AI\Sensors\Radar.cs" />
     <Compile Include="AI\Sensors\Rangefinder.cs" />
+    <Compile Include="AI\Sensors\SensorFactory.cs" />
     <Compile Include="Entities\BaseGameEntity.cs" />
     <Compile Include="EnemyManager.cs" />
     <Compile Include="Entities\Interfaces\ICollidable.cs" />

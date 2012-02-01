@@ -6,9 +6,9 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
-    public class Rangefinder : IUpdateable, IDrawable
+    public class Rangefinder : ISensor
     {
-        public Rangefinder(Texture2D texture)
+        public Rangefinder(/*Texture2D texture*/)
         {
             // do nothing...at the moment
         }

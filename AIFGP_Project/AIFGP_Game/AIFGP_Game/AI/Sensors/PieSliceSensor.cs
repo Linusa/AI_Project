@@ -6,9 +6,9 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
-    public class PieSliceSensor : IUpdateable, IDrawable
+    public class PieSliceSensor : ISensor
     {
-        public PieSliceSensor(Texture2D texture)
+        public PieSliceSensor(/*Texture2D texture*/)
         {
             // do nothing... at the moment
         }

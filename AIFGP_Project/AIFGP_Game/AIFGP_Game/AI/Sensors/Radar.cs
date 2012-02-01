@@ -6,9 +6,9 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
-    public class Radar : IUpdateable, IDrawable
+    public class Radar : ISensor
     {
-        public Radar(Texture2D texture)
+        public Radar(/*Texture2D texture*/)
         {
             // do nothing...at the moment
         }

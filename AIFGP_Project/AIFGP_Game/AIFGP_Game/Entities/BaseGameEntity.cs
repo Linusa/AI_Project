@@ -15,6 +15,9 @@
 
         public BaseGameEntity(Texture2D texture, Vector2 position, Rectangle dimensions)
         {
+            // Make sure to register this entity with the entity manager.
+            EntityManager.Instance.RegisterEntity(this);
+
             EntitySprite = new Sprite<byte>(texture, position, dimensions);
             Position = position;
 

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Text;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
@@ -12,12 +13,19 @@
         private static Rectangle dimensions = new Rectangle(0, 0, 250, 250);
 
         private IGameEntity sensingEntity;
+        private float entityRangeSquared = 15625.0f; // 125 * 125
 
         private Vector2 scaleUp = new Vector2(0.025f);
         private Vector2 scaleMax = new Vector2(1.0f);
         private Timer scaleUpTimer = new Timer(0.01f);
 
         private bool enabled = false;
+
+        // DEBUG MEMBERS
+        Vector2 debugLoc = new Vector2(15.0f);
+        private StringBuilder debugStringBuilder = new StringBuilder();
+        List<IGameEntity> debugAdjacentEntityList = new List<IGameEntity>();
+        // END DEBUG MEMBERS
 
         public Radar(IGameEntity entity)
         {
@@ -28,6 +36,36 @@
             radarSprite.ActiveAnimation = 0;
 
             resetScaleUp();
+        }
+
+        public void AdjacentEntities(out List<IGameEntity> adjacentEntities)
+        {
+            adjacentEntities = new List<IGameEntity>();
+
+            debugStringBuilder.Clear();
+            foreach (IGameEntity entity in EntityManager.Instance.Entities)
+            {
+                // Do not check if we are comparing the same entity.
+                if (entity == sensingEntity)
+                {
+                    continue;
+                }
+
+                Vector2 vecToCurrentEntity = entity.Position - sensingEntity.Position;
+                float distSquaredToCurrentEntity = vecToCurrentEntity.LengthSquared();
+                if (distSquaredToCurrentEntity < entityRangeSquared)
+                {
+                    adjacentEntities.Add(entity);
+
+                    // DEBUGGING TEXT
+                    debugStringBuilder.AppendFormat("Entity {0} |\nPos: {1}\nDir: {2}\n\n",
+                        entity.GetHashCode(),
+                        entity.Position,
+                        entity.Heading
+                    );
+                    // END DEBUGGING TEXT
+                }
+            }
         }
 
         public bool IsSensingEnabled
@@ -75,6 +113,7 @@
 
         public void Update(GameTime gameTime)
         {
+            // Press '2' to turn on, '0' to disable.
             KeyboardState keyboardState = Keyboard.GetState();
             if (keyboardState.IsKeyDown(Keys.D2))
             {
@@ -90,6 +129,8 @@
             {
                 Position = sensingEntity.Position;
                 updateRadarScaleUp(gameTime);
+
+                AdjacentEntities(out debugAdjacentEntityList);
             }
         }
 
@@ -98,6 +139,11 @@
             if (IsSensingEnabled)
             {
                 radarSprite.Draw(spriteBatch);
+
+                // DEBUGGING TEXT DISPLAY
+                spriteBatch.DrawString(SensorsGame.DebugFont, debugStringBuilder,
+                    debugLoc, Color.Yellow);
+                // END DEBUGGING TEXT DISPLAY
             }
         }
 
@@ -107,12 +153,15 @@
             {
                 scaleUp = scaleMax;
             }
-
-            if (scaleUpTimer.Expired(gameTime))
+            else
             {
-                scaleUp += new Vector2(0.04f);
-                radarSprite.Scale(scaleUp);
+                if (scaleUpTimer.Expired(gameTime))
+                {
+                    scaleUp += new Vector2(0.04f);
+                }
             }
+            
+            radarSprite.Scale(scaleUp);
         }
 
         private void resetScaleUp()

@@ -110,11 +110,11 @@
     <Compile Include="AI\Sensors\PieSlice.cs" />
     <Compile Include="AI\Sensors\Radar.cs" />
     <Compile Include="AI\Sensors\Rangefinder.cs" />
-    <Compile Include="AI\Sensors\SensorFactory.cs" />
     <Compile Include="Entities\BaseGameEntity.cs" />
     <Compile Include="EnemyManager.cs" />
     <Compile Include="Entities\Interfaces\ICollidable.cs" />
     <Compile Include="Entities\SimpleSensingGameEntity.cs" />
+    <Compile Include="EntityManager.cs" />
     <Compile Include="Graphics\Interfaces\IDrawable.cs" />
     <Compile Include="Entities\Interfaces\IGameEntity.cs" />
     <Compile Include="Entities\Interfaces\IUpdateable.cs" />

@@ -16,8 +16,7 @@
         private float playerSpeed = 4.0f;
 
         // DEBUG MEMBERS
-        private bool debugOutputKB = false;
-        private bool debugOutputGP = false;
+        private bool debugOutput = false;
         Vector2 debugLoc = Vector2.Zero;
         private StringBuilder debugStringBuilder = new StringBuilder();
         // END DEBUG MEMBERS
@@ -54,7 +53,7 @@
             #region KEY CHECKS FOR DEBUG OUTPUT
             if (keyboardState.IsKeyDown(Keys.LeftAlt))
             {
-                debugOutputKB = true;
+                debugOutput = true;
                 debugStringBuilder.Clear();
                 debugStringBuilder.AppendFormat("Pos: {0}\nDir: {1}",
                     Player.Position,
@@ -72,58 +71,7 @@
             }
             else if (keyboardState.IsKeyUp(Keys.LeftAlt))
             {
-                debugOutputKB = false;
-            }
-            #endregion
-        }
-
-        private void checkController()
-        {
-            GamePadState controllerState = GamePad.GetState(PlayerIndex.One);
-
-            float xVal = controllerState.ThumbSticks.Right.X;
-            float yVal = controllerState.ThumbSticks.Left.Y;
-
-            if (xVal < 0)
-            {
-                Player.RotateInDegrees(-3.0f);
-            }
-            else if (xVal > 0)
-            {
-                Player.RotateInDegrees(3.0f);
-            }
-
-            if (yVal > 0)
-            {
-                Player.Position += (Player.Heading * playerSpeed);
-            }
-            else if (yVal < 0)
-            {
-                Player.Position -= (Player.Heading * playerSpeed);
-            }
-
-            #region CONTROLLER CHECKS FOR DEBUG OUTPUT
-            if (controllerState.IsButtonDown(Buttons.LeftStick))
-            {
-                debugOutputGP = true;
-                debugStringBuilder.Clear();
-                debugStringBuilder.AppendFormat("Pos: {0}\nDir: {1}",
-                    Player.Position,
-                    Player.Heading
-                );
-
-                Vector2 offset = new Vector2(Player.BoundingBox.Width + 10, -Player.BoundingBox.Height + 10) / 2.0f;
-                if (Player.Position.X > SensorsGame.ScreenCenter.X)
-                {
-                    Vector2 stringSize = SensorsGame.DebugFont.MeasureString(debugStringBuilder);
-                    offset.X -= stringSize.X + Player.BoundingBox.Width + 10;
-                }
-
-                debugLoc = Player.Position + offset;
-            }
-            else if (controllerState.IsButtonUp(Buttons.LeftStick))
-            {
-                debugOutputGP = false;
+                debugOutput = false;
             }
             #endregion
         }
@@ -131,7 +79,6 @@
         public void Update(GameTime gameTime)
         {
             checkKeyboard();
-            checkController();
             Player.Update(gameTime);
         }
 
@@ -140,7 +87,7 @@
             Player.Draw(spriteBatch);
 
             #region DEBUG OUTPUT
-            if (debugOutputKB || debugOutputGP)
+            if (debugOutput)
             {
                 spriteBatch.DrawString(SensorsGame.DebugFont, debugStringBuilder,
                     debugLoc, Color.Yellow);

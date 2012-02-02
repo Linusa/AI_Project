@@ -91,6 +91,12 @@
             Scale(new Vector2(scale));
         }
 
+        public Color Color
+        {
+            get { return tint; }
+            set { tint = value; }
+        }
+
         public float AnimationRate
         {
             get { return animationTimer.Timeout; }

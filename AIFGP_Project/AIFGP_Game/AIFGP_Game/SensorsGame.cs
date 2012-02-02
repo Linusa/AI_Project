@@ -17,16 +17,17 @@ namespace AIFGP_Game
     /// </summary>
     public class SensorsGame : Microsoft.Xna.Framework.Game
     {
-        GraphicsDeviceManager graphics;
+        public GraphicsDeviceManager Graphics;
         SpriteBatch spriteBatch;
 
         public static Rectangle ScreenDimensions = new Rectangle(0, 0, 800, 600);
         public static Vector2 ScreenCenter = new Vector2(ScreenDimensions.Width,
             ScreenDimensions.Height) / 2;
 
-        private Texture2D playerSpriteSheet;
-        private Texture2D npcSpriteSheet;
-        private Texture2D grassTile;
+        public static Texture2D PlayerSpriteSheet;
+        public static Texture2D NpcSpriteSheet;
+        public static Texture2D GrassTile;
+        public static Texture2D RadarCircle;
 
         private Map map;
 
@@ -37,7 +38,7 @@ namespace AIFGP_Game
 
         public SensorsGame()
         {
-            graphics = new GraphicsDeviceManager(this);
+            Graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
@@ -49,9 +50,10 @@ namespace AIFGP_Game
         /// </summary>
         protected override void Initialize()
         {
-            graphics.PreferredBackBufferWidth = ScreenDimensions.Width;
-            graphics.PreferredBackBufferHeight = ScreenDimensions.Height;
-            graphics.ApplyChanges();
+            Graphics.PreferredBackBufferWidth = ScreenDimensions.Width;
+            Graphics.PreferredBackBufferHeight = ScreenDimensions.Height;
+            //graphics.IsFullScreen = true;
+            Graphics.ApplyChanges();
 
             IsMouseVisible = true;
 
@@ -69,13 +71,14 @@ namespace AIFGP_Game
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            playerSpriteSheet = Content.Load<Texture2D>(@"Images\player_arrow_with_effects");
-            npcSpriteSheet = Content.Load<Texture2D>(@"Images\npc_arrow_with_effects");
-            grassTile = Content.Load<Texture2D>(@"Images\grass_tile");
+            PlayerSpriteSheet = Content.Load<Texture2D>(@"Images\player_arrow_with_effects");
+            NpcSpriteSheet = Content.Load<Texture2D>(@"Images\npc_arrow_with_effects");
+            GrassTile = Content.Load<Texture2D>(@"Images\grass_tile");
+            RadarCircle = Content.Load<Texture2D>(@"Images\circle");
 
-            map = new Map(grassTile);
-            playerManager = new PlayerManager(playerSpriteSheet);
-            enemyManager = new EnemyManager(npcSpriteSheet);
+            map = new Map();
+            playerManager = new PlayerManager();
+            enemyManager = new EnemyManager();
 
             DebugFont = Content.Load<SpriteFont>(@"Fonts\Debug");
         }

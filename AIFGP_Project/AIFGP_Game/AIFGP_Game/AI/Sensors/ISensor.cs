@@ -5,8 +5,12 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
-    public interface ISensor : IUpdateable, IDrawable
+    public interface ISensor : ISpatialEntity, IUpdateable, IDrawable
     {
-
+        bool IsSensingEnabled
+        {
+            get;
+            set;
+        }
     }
 }

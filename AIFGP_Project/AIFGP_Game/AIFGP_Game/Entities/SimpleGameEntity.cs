@@ -1,5 +1,7 @@
 ﻿namespace AIFGP_Game
 {
+    using System;
+    using System.Collections.Generic;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
@@ -33,12 +35,18 @@
             get { return 24.0f; }
         }
 
+        public override void Update(GameTime gameTime)
+        {
+            EntitySprite.Update(gameTime);
+        }
+
+        public override void Draw(SpriteBatch spriteBatch)
+        {
+            EntitySprite.Draw(spriteBatch);
+        }
+
         protected override void configureSprite()
         {
-            /*
-            EntitySprite.AddAnimationFrame(AnimationIds.NoAnimation, Dimensions);
-            EntitySprite.ActiveAnimation = AnimationIds.NoAnimation;
-            */
             Rectangle curFrame = Dimensions;
             for (int i = 0; i < 9; i++)
             {

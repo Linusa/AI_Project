@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Text;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
@@ -23,9 +22,9 @@
         private StringBuilder debugStringBuilder = new StringBuilder();
         // END DEBUG MEMBERS
 
-        public PlayerManager(Texture2D texture)
+        public PlayerManager()
         {
-            Player = new SimpleGameEntity(texture, SensorsGame.ScreenCenter);
+            Player = new SimpleSensingGameEntity(SensorsGame.PlayerSpriteSheet, SensorsGame.ScreenCenter);
         }
 
         private void checkKeyboard()
@@ -143,7 +142,7 @@
             #region DEBUG OUTPUT
             if (debugOutputKB || debugOutputGP)
             {
-                spriteBatch.DrawString(SensorsGame.DebugFont, debugStringBuilder.ToString(),
+                spriteBatch.DrawString(SensorsGame.DebugFont, debugStringBuilder,
                     debugLoc, Color.Yellow);
             }
             #endregion

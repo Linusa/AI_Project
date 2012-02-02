@@ -18,15 +18,14 @@
             PieSlice
         }
 
-        private static SensorFactory sensorFactory;
-
+        /*
         public ISensor CreateSensor(SensorTypes type)
         {
             ISensor sensor = new Rangefinder();
 
             if (type == SensorTypes.Rangefinder)
             {
-                sensor = createRangefinderSensor();
+                //sensor = createRangefinderSensor();
             }
             else if (type == SensorTypes.Radar)
             {
@@ -34,31 +33,40 @@
             }
             else if (type == SensorTypes.PieSlice)
             {
-                sensor = createPieSliceSensor();
+                //sensor = createPieSliceSensor();
             }
 
             return sensor;
         }
+        */
 
         public void Initialize(ContentManager content)
         {
             
         }
 
+        /*
         private ISensor createRangefinderSensor()
         {
             return new Rangefinder();
         }
+        */
 
+        /*
         private ISensor createRadarSensor()
         {
             return new Radar();
         }
+        */
 
+        /*
         private ISensor createPieSliceSensor()
         {
-            return new PieSliceSensor();
+            return new PieSlice();
         }
+        */
+
+        private static SensorFactory sensorFactory;
 
         public static SensorFactory Instance
         {

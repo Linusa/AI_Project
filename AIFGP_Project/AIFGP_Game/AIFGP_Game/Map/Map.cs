@@ -17,7 +17,7 @@
         public int TilesAcross;
         public int TilesDown;
 
-        public Map(Texture2D texture)
+        public Map()
         {
             // Grass tile is 28x28 in px.
             Rectangle frameRect = new Rectangle(0, 0, 28, 28);
@@ -35,7 +35,7 @@
                 {
                     curTilePos.X = curRect.X;
                     curTilePos.Y = curRect.Y;
-                    Sprite<byte> curTile = new Sprite<byte>(texture, curTilePos, frameRect);
+                    Sprite<byte> curTile = new Sprite<byte>(SensorsGame.GrassTile, curTilePos, frameRect);
                     curTile.AddAnimationFrame(0, frameRect);
                     curTile.ActiveAnimation = 0;
                     backgroundTiles[j - 1, i - 1] = curTile;

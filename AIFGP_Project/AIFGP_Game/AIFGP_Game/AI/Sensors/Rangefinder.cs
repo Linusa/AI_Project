@@ -6,7 +6,7 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
-    public class Rangefinder : ISensor
+    public class Rangefinder// : ISensor
     {
         public Rangefinder(/*Texture2D texture*/)
         {

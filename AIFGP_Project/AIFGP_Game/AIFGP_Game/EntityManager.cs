@@ -7,11 +7,16 @@ namespace AIFGP_Game
     // EntityManager implemented as singleton.
     public class EntityManager
     {
-        public List<IGameEntity> Entities = new List<IGameEntity>();
+        public Dictionary<Guid, IGameEntity> Entities = new Dictionary<Guid, IGameEntity>();
 
         public void RegisterEntity(IGameEntity entity)
         {
-            Entities.Add(entity);
+            Entities.Add(entity.ID, entity);
+        }
+
+        public IGameEntity GetEntity(Guid id)
+        {
+            return Entities[id];
         }
 
         public static EntityManager Instance
@@ -27,10 +32,10 @@ namespace AIFGP_Game
             }
         }
 
-        // Private constructor.
-        private EntityManager() { }
-
         // Single instance.
         private static EntityManager instance;
+
+        // Private constructor.
+        private EntityManager() { }
     }
 }

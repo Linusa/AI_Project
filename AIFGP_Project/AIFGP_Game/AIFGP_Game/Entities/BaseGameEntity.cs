@@ -1,5 +1,6 @@
 ﻿namespace AIFGP_Game
 {
+    using System;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
@@ -11,17 +12,30 @@
         // Should never be adding more than 256 animations to a Sprite.
         public Sprite<byte> EntitySprite;
 
+        // GUID for the entity.
+        private Guid id;
+
         private Vector2 heading = Vector2.Zero;
 
         public BaseGameEntity(Texture2D texture, Vector2 position, Rectangle dimensions)
         {
-            // Make sure to register this entity with the entity manager.
-            EntityManager.Instance.RegisterEntity(this);
-
             EntitySprite = new Sprite<byte>(texture, position, dimensions);
             Position = position;
 
             configureSprite();
+
+            // Store a new GUID for the entity and make sure it is not empty.
+            id = Guid.NewGuid();
+            while (id == Guid.Empty)
+                id = Guid.NewGuid();
+
+            // Make sure to register this entity with the EntityManager.
+            EntityManager.Instance.RegisterEntity(this);
+        }
+
+        public Guid ID
+        {
+            get { return id; }
         }
 
         public Vector2 Position

@@ -55,7 +55,8 @@
             {
                 debugOutput = true;
                 debugStringBuilder.Clear();
-                debugStringBuilder.AppendFormat("Pos: {0}\nDir: {1}",
+                debugStringBuilder.AppendFormat("Player: {0}...\nPos: {1}\nDir: {2}\n\n",
+                    Player.ID.ToString().Substring(0, 8),
                     Player.Position,
                     Player.Heading
                 );

@@ -13,7 +13,7 @@
         private static Rectangle dimensions = new Rectangle(0, 0, 250, 250);
 
         private IGameEntity sensingEntity;
-        private float entityRangeSquared = 15625.0f; // 125 * 125
+        private float entityRange = 125.0f;
 
         private Vector2 scaleUp = new Vector2(0.025f);
         private Vector2 scaleMax = new Vector2(1.0f);
@@ -43,7 +43,7 @@
             adjacentEntities = new List<IGameEntity>();
 
             debugStringBuilder.Clear();
-            foreach (IGameEntity entity in EntityManager.Instance.Entities)
+            foreach (IGameEntity entity in EntityManager.Instance.Entities.Values)
             {
                 // Do not check if we are comparing the same entity.
                 if (entity == sensingEntity)
@@ -51,17 +51,24 @@
                     continue;
                 }
 
+                
                 Vector2 vecToCurrentEntity = entity.Position - sensingEntity.Position;
-                float distSquaredToCurrentEntity = vecToCurrentEntity.LengthSquared();
-                if (distSquaredToCurrentEntity < entityRangeSquared)
+                float distToCurrentEntity = vecToCurrentEntity.Length();
+
+                vecToCurrentEntity.Normalize();
+                float relativeAngle = (float)Math.Acos(Vector2.Dot(vecToCurrentEntity, sensingEntity.Heading));
+                
+                if (distToCurrentEntity < entityRange)
                 {
                     adjacentEntities.Add(entity);
 
                     // DEBUGGING TEXT
-                    debugStringBuilder.AppendFormat("Entity {0} |\nPos: {1}\nDir: {2}\n\n",
-                        entity.GetHashCode(),
+                    debugStringBuilder.AppendFormat("Entity: {0}...\nPos: {1}\nDir: {2}\nDist: {3}\nAngle: {4}\n================\n",
+                        entity.ID.ToString().Substring(0, 8),
                         entity.Position,
-                        entity.Heading
+                        entity.Heading,
+                        distToCurrentEntity,
+                        MathHelper.ToDegrees(relativeAngle)
                     );
                     // END DEBUGGING TEXT
                 }

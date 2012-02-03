@@ -130,6 +130,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="SensorsGame.cs" />
     <Compile Include="Graphics\Sprite.cs" />
+    <Compile Include="Utilities\Angles.cs" />
     <Compile Include="Utilities\Timer.cs" />
   </ItemGroup>
   <ItemGroup>

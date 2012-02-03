@@ -54,12 +54,12 @@
                 
                 Vector2 vecToCurrentEntity = entity.Position - sensingEntity.Position;
                 float distToCurrentEntity = vecToCurrentEntity.Length();
-
-                vecToCurrentEntity.Normalize();
-                float relativeAngle = (float)Math.Acos(Vector2.Dot(vecToCurrentEntity, sensingEntity.Heading));
                 
                 if (distToCurrentEntity < entityRange)
                 {
+                    vecToCurrentEntity.Normalize();
+                    float relativeAngle = (float)Angles.AngleFromUToV(sensingEntity.Heading, vecToCurrentEntity);
+
                     adjacentEntities.Add(entity);
 
                     // DEBUGGING TEXT

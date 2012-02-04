@@ -16,12 +16,37 @@
             : base(texture, position)
         {
             sensors.Add(new Radar(this));
+            sensors.Add(new PieSlice((Radar)sensors[0]));
+        }
+
+        public override void RotateInRadians(float radians)
+        {
+            EntitySprite.RotateInRadians(radians);
+            Heading = Vector2.Transform(Heading, Matrix.CreateRotationZ(radians));
+
+            foreach (ISensor sensor in sensors)
+            {
+                // Sprite used for radar is not perfect circle so it
+                // looks funky when rotated.
+                if (sensor is Radar)
+                {
+                    continue;
+                }
+
+                sensor.RotateInRadians(radians);
+            }
+        }
+
+        public override void RotateInDegrees(float degrees)
+        {
+            RotateInRadians(MathHelper.ToRadians(degrees));
         }
 
         public override void Update(GameTime gameTime)
         {
             foreach (ISensor sensor in sensors)
             {
+                sensor.Position = Position;
                 sensor.Update(gameTime);
             }
 

@@ -123,6 +123,7 @@
     <Compile Include="Graphics\Interfaces\IMovable.cs" />
     <Compile Include="Graphics\Interfaces\IRotatable.cs" />
     <Compile Include="Graphics\Interfaces\IScalable.cs" />
+    <Compile Include="Graphics\Line.cs" />
     <Compile Include="Map\Map.cs" />
     <Compile Include="PlayerManager.cs" />
     <Compile Include="Entities\SimpleGameEntity.cs" />

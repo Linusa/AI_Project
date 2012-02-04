@@ -6,21 +6,12 @@
     public static class Angles
     {
         /// <summary>
-        /// Compute the angle in radians needed to rotate U so that U's
+        /// Compute the angle in radians needed to rotate U in the direction
+        /// of V.
         /// </summary>
-        /// <param name="U"></param>
-        /// <param name="V"></param>
-        /// <returns></returns>
-        //public static double AngleFromUToV(Vector2 U, Vector2 V)
-        //{
-        //    Vector2 perpU = new Vector2(-U.Y, U.X);
-
-        //    double dotResult1 = Vector2.Dot(perpU, V);
-        //    double dotResult2 = Vector2.Dot(U, V);
-
-        //    return Math.Atan2(dotResult1, dotResult2);
-        //}
-
+        /// <param name="U">Must be normalized.</param>
+        /// <param name="V">Must be normalized.</param>
+        /// <returns>Angle from U to V.</returns>
         public static double AngleFromUToV(Vector2 U, Vector2 V)
         {
             Vector2 perpV = new Vector2(-V.Y, V.X);
@@ -28,7 +19,7 @@
             double dotResult1 = Vector2.Dot(U, perpV);
             double dotResult2 = Vector2.Dot(U, V);
 
-            return Math.Atan2(dotResult1, dotResult2);
+            return -Math.Atan2(dotResult1, dotResult2);
         }
     }
 }

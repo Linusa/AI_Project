@@ -9,11 +9,12 @@
 
     public class Radar : ISensor
     {
-        private Sprite<byte> radarSprite;
-        private static Rectangle dimensions = new Rectangle(0, 0, 250, 250);
+        public IGameEntity SensingEntity;
+        public Sprite<byte> Sprite;
 
-        private IGameEntity sensingEntity;
-        private float entityRange = 125.0f;
+        public float EntityRange = 125.0f;
+
+        private static Rectangle dimensions = new Rectangle(0, 0, 250, 250);
 
         private Vector2 scaleUp = new Vector2(0.025f);
         private Vector2 scaleMax = new Vector2(1.0f);
@@ -24,49 +25,48 @@
         // DEBUG MEMBERS
         Vector2 debugLoc = new Vector2(15.0f);
         private StringBuilder debugStringBuilder = new StringBuilder();
-        List<IGameEntity> debugAdjacentEntityList = new List<IGameEntity>();
+        List<RadarInfo> debugAdjacentEntityList = new List<RadarInfo>();
         // END DEBUG MEMBERS
 
         public Radar(IGameEntity entity)
         {
-            sensingEntity = entity;
+            SensingEntity = entity;
 
-            radarSprite = new Sprite<byte>(SensorsGame.RadarCircle, Vector2.Zero, dimensions);
-            radarSprite.AddAnimationFrame(0, dimensions);
-            radarSprite.ActiveAnimation = 0;
+            Sprite = new Sprite<byte>(SensorsGame.RadarCircle, Vector2.Zero, dimensions);
+            Sprite.AddAnimationFrame(0, dimensions);
+            Sprite.ActiveAnimation = 0;
 
             resetScaleUp();
         }
 
-        public void AdjacentEntities(out List<IGameEntity> adjacentEntities)
+        public void AdjacentEntities(out List<RadarInfo> adjacentEntities)
         {
-            adjacentEntities = new List<IGameEntity>();
+            adjacentEntities = new List<RadarInfo>();
 
             debugStringBuilder.Clear();
-            foreach (IGameEntity entity in EntityManager.Instance.Entities.Values)
+            foreach (IGameEntity curEntity in EntityManager.Instance.Entities.Values)
             {
                 // Do not check if we are comparing the same entity.
-                if (entity == sensingEntity)
+                if (curEntity == SensingEntity)
                 {
                     continue;
                 }
-
                 
-                Vector2 vecToCurrentEntity = entity.Position - sensingEntity.Position;
+                Vector2 vecToCurrentEntity = curEntity.Position - SensingEntity.Position;
                 float distToCurrentEntity = vecToCurrentEntity.Length();
                 
-                if (distToCurrentEntity < entityRange)
+                if (distToCurrentEntity < EntityRange)
                 {
                     vecToCurrentEntity.Normalize();
-                    float relativeAngle = (float)Angles.AngleFromUToV(sensingEntity.Heading, vecToCurrentEntity);
+                    float relativeAngle = (float)Angles.AngleFromUToV(SensingEntity.Heading, vecToCurrentEntity);
 
-                    adjacentEntities.Add(entity);
+                    adjacentEntities.Add(new RadarInfo(curEntity.ID, distToCurrentEntity, relativeAngle));
 
                     // DEBUGGING TEXT
-                    debugStringBuilder.AppendFormat("Entity: {0}...\nPos: {1}\nDir: {2}\nDist: {3}\nAngle: {4}\n================\n",
-                        entity.ID.ToString().Substring(0, 8),
-                        entity.Position,
-                        entity.Heading,
+                    debugStringBuilder.AppendFormat("RADAR\nEntity: {0}...\nPos: {1}\nDir: {2}\nDist: {3}\nAngle: {4}\n================\n",
+                        curEntity.ID.ToString().Substring(0, 8),
+                        curEntity.Position,
+                        curEntity.Heading,
                         distToCurrentEntity,
                         MathHelper.ToDegrees(relativeAngle)
                     );
@@ -83,8 +83,8 @@
 
         public Vector2 Position
         {
-            get { return radarSprite.CenterPosition; }
-            set { radarSprite.CenterPosition = value; }
+            get { return Sprite.CenterPosition; }
+            set { Sprite.CenterPosition = value; }
         }
 
         public void Translate(Vector2 offset)
@@ -100,7 +100,7 @@
 
         public void RotateInRadians(float radians)
         {
-            radarSprite.RotateInRadians(radians);
+            Sprite.RotateInRadians(radians);
         }
 
         public void RotateInDegrees(float degrees)
@@ -110,12 +110,12 @@
 
         public void Scale(Vector2 scale)
         {
-            radarSprite.Scale(scale);
+            Sprite.Scale(scale);
         }
 
         public void Scale(float scale)
         {
-            radarSprite.Scale(scale);
+            Sprite.Scale(scale);
         }
 
         public void Update(GameTime gameTime)
@@ -134,9 +134,7 @@
 
             if (IsSensingEnabled)
             {
-                Position = sensingEntity.Position;
                 updateRadarScaleUp(gameTime);
-
                 AdjacentEntities(out debugAdjacentEntityList);
             }
         }
@@ -145,7 +143,7 @@
         {
             if (IsSensingEnabled)
             {
-                radarSprite.Draw(spriteBatch);
+                Sprite.Draw(spriteBatch);
 
                 // DEBUGGING TEXT DISPLAY
                 spriteBatch.DrawString(SensorsGame.DebugFont, debugStringBuilder,
@@ -168,13 +166,13 @@
                 }
             }
             
-            radarSprite.Scale(scaleUp);
+            Sprite.Scale(scaleUp);
         }
 
         private void resetScaleUp()
         {
             scaleUp = Vector2.Zero;
-            radarSprite.Scale(scaleUp);
+            Sprite.Scale(scaleUp);
             scaleUpTimer.Restart();
         }
     }

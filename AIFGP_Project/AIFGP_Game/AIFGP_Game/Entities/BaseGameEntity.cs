@@ -50,34 +50,34 @@
             set { heading = Vector2.Normalize(value); }
         }
 
-        public void Translate(Vector2 offset)
+        public virtual void Translate(Vector2 offset)
         {
             Position += offset;
         }
 
-        public void Translate(int x, int y)
+        public virtual void Translate(int x, int y)
         {
             Vector2 offset = new Vector2(x, y);
             Position += offset;
         }
 
-        public void RotateInRadians(float radians)
+        public virtual void RotateInRadians(float radians)
         {
             EntitySprite.RotateInRadians(radians);
             Heading = Vector2.Transform(heading, Matrix.CreateRotationZ(radians));
         }
 
-        public void RotateInDegrees(float degrees)
+        public virtual void RotateInDegrees(float degrees)
         {
             RotateInRadians(MathHelper.ToRadians(degrees));
         }
 
-        public void Scale(float scale)
+        public virtual void Scale(float scale)
         {
             EntitySprite.Scale(scale);
         }
 
-        public void Scale(Vector2 scale)
+        public virtual void Scale(Vector2 scale)
         {
             EntitySprite.Scale(scale);
         }

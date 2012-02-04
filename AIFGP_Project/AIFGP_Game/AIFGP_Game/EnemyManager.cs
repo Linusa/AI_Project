@@ -15,17 +15,24 @@
 
         public EnemyManager()
         {
-            int basePad = 15;
-            int xPad = SimpleGameEntity.Dimensions.Width + basePad;
-            int yPad = SimpleGameEntity.Dimensions.Height + basePad;
+            int xBasePad = 180;
+            int xPad = SimpleGameEntity.Dimensions.Width;
+            int yPad = SimpleGameEntity.Dimensions.Height;
 
-            Vector2 paddedTopLeft = new Vector2(xPad, yPad);
-            Vector2 paddedTopRight = new Vector2(SensorsGame.ScreenDimensions.Width - xPad, yPad);
-            Vector2 paddedBottomLeft = new Vector2(xPad, SensorsGame.ScreenDimensions.Height - yPad);
+            Vector2 startLocation = new Vector2(xBasePad + xPad, yPad);
+            Vector2 curEnemyPosition = startLocation;
 
+            for (int i = 1; i <= 10; i++)
+            {
+                Enemies.Add(new SimpleGameEntity(SensorsGame.NpcSpriteSheet, curEnemyPosition));
+                curEnemyPosition.X += xPad;
+            }
+
+            /*
             Enemies.Add(new SimpleGameEntity(SensorsGame.NpcSpriteSheet, paddedTopLeft));
             Enemies.Add(new SimpleGameEntity(SensorsGame.NpcSpriteSheet, paddedTopRight));
             Enemies.Add(new SimpleGameEntity(SensorsGame.NpcSpriteSheet, paddedBottomLeft));
+            */
         }
 
         public void Update(GameTime gameTime)

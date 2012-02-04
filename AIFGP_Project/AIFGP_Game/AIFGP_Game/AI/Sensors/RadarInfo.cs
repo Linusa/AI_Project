@@ -9,11 +9,13 @@
     public struct RadarInfo
     {
         public Guid EntityId;
+        public float Distance;
         public float RelativeAngle;
 
-        public RadarInfo(Guid id, float angle)
+        public RadarInfo(Guid id, float distance, float angle)
         {
             EntityId = id;
+            Distance = distance;
             RelativeAngle = angle;
         }
     }

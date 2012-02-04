@@ -18,7 +18,7 @@ namespace AIFGP_Game
     public class SensorsGame : Microsoft.Xna.Framework.Game
     {
         public GraphicsDeviceManager Graphics;
-        SpriteBatch spriteBatch;
+        private SpriteBatch spriteBatch;
 
         public static Rectangle ScreenDimensions = new Rectangle(0, 0, 800, 600);
         public static Vector2 ScreenCenter = new Vector2(ScreenDimensions.Width,
@@ -28,6 +28,7 @@ namespace AIFGP_Game
         public static Texture2D NpcSpriteSheet;
         public static Texture2D GrassTile;
         public static Texture2D RadarCircle;
+        public static Texture2D SingleWhitePixel;
 
         private Map map;
 
@@ -52,7 +53,7 @@ namespace AIFGP_Game
         {
             Graphics.PreferredBackBufferWidth = ScreenDimensions.Width;
             Graphics.PreferredBackBufferHeight = ScreenDimensions.Height;
-            //graphics.IsFullScreen = true;
+            //Graphics.IsFullScreen = true;
             Graphics.ApplyChanges();
 
             IsMouseVisible = true;
@@ -75,6 +76,9 @@ namespace AIFGP_Game
             NpcSpriteSheet = Content.Load<Texture2D>(@"Images\npc_arrow_with_effects");
             GrassTile = Content.Load<Texture2D>(@"Images\grass_tile");
             RadarCircle = Content.Load<Texture2D>(@"Images\circle");
+
+            SingleWhitePixel = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
+            SingleWhitePixel.SetData<Color>(new Color[1] { Color.White }); 
 
             map = new Map();
             playerManager = new PlayerManager();

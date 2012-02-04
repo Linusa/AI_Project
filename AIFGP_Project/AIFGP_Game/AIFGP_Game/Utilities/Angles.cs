@@ -11,7 +11,11 @@
         /// </summary>
         /// <param name="U">Must be normalized.</param>
         /// <param name="V">Must be normalized.</param>
-        /// <returns>Angle from U to V.</returns>
+        /// <returns>
+        /// Angle from U to V. Result will be from 0 to pi if the closest
+        /// rotation of U to V is clockwise. Result will be from 0 to -pi
+        /// if the closest rotation of U to V is counter-clockwise.
+        /// </returns>
         public static double AngleFromUToV(Vector2 U, Vector2 V)
         {
             Vector2 perpV = new Vector2(-V.Y, V.X);

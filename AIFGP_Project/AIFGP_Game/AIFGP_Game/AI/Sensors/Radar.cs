@@ -51,6 +51,11 @@
                 {
                     continue;
                 }
+
+                // DEBUGGING COLOR CHANGE
+                BaseGameEntity curBaseGameEntity = curEntity as BaseGameEntity;
+                curBaseGameEntity.EntitySprite.Color = Color.White;
+                // END DEBUGGING COLOR CHANGE
                 
                 Vector2 vecToCurrentEntity = curEntity.Position - SensingEntity.Position;
                 float distToCurrentEntity = vecToCurrentEntity.Length();
@@ -61,6 +66,10 @@
                     float relativeAngle = (float)Angles.AngleFromUToV(SensingEntity.Heading, vecToCurrentEntity);
 
                     adjacentEntities.Add(new RadarInfo(curEntity.ID, distToCurrentEntity, relativeAngle));
+
+                    // DEBUGGING COLOR CHANGE
+                    curBaseGameEntity.EntitySprite.Color = Color.Magenta;
+                    // END DEBUGGING COLOR CHANGE
 
                     // DEBUGGING TEXT
                     debugStringBuilder.AppendFormat("RADAR\nEntity: {0}...\nPos: {1}\nDir: {2}\nDist: {3}\nAngle: {4}\n================\n",

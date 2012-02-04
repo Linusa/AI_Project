@@ -57,6 +57,45 @@
             Position = radar.SensingEntity.Position;
         }
 
+        public void ActivationLevels(out Dictionary<PieSliceLocation, int> levels)
+        {
+            levels = new Dictionary<PieSliceLocation, int>(4);
+
+            radar.AdjacentEntities(out adjacentEntities);
+
+            // Store locations for debug printing.
+            float vecScale = 100.0f;
+            aheadVec = radar.SensingEntity.Heading;
+            behindVec = -radar.SensingEntity.Heading;
+            leftVec = new Vector2(aheadVec.Y, -aheadVec.X);
+            rightVec = new Vector2(-aheadVec.Y, aheadVec.X);
+
+            // Scale/position locations for debug printing.
+            aheadVec = radar.SensingEntity.Position + aheadVec * vecScale;
+            behindVec = radar.SensingEntity.Position + behindVec * vecScale;
+            leftVec = radar.SensingEntity.Position + leftVec * vecScale;
+            rightVec = radar.SensingEntity.Position + rightVec * vecScale;
+
+            levels.Add(PieSliceLocation.Ahead, 0);
+            levels.Add(PieSliceLocation.Behind, 0);
+            levels.Add(PieSliceLocation.Left, 0);
+            levels.Add(PieSliceLocation.Right, 0);
+
+            foreach (RadarInfo curRadarInfo in adjacentEntities)
+            {
+                float curAngle = MathHelper.ToDegrees(curRadarInfo.RelativeAngle);
+
+                if (curAngle > aheadQuadrantStart && curAngle <= rightQuadrantStart)
+                    levels[PieSliceLocation.Ahead]++;
+                else if (curAngle > rightQuadrantStart && curAngle <= behindQuadrantStart)
+                    levels[PieSliceLocation.Right]++;
+                else if (curAngle > behindQuadrantStart || curAngle <= leftQuadrantStart)
+                    levels[PieSliceLocation.Behind]++;
+                else if (curAngle > leftQuadrantStart && curAngle <= aheadQuadrantStart)
+                    levels[PieSliceLocation.Left]++;
+            }
+        }
+
         public bool IsSensingEnabled
         {
             get { return enabled; }
@@ -123,7 +162,6 @@
 
             if (IsSensingEnabled)
             {
-                //Position = radar.SensingEntity.Position;
                 ActivationLevels(out debugActivationLevels);
             }
         }
@@ -149,45 +187,6 @@
                     debugActivationLevels[PieSliceLocation.Right].ToString(),
                     rightVec, Color.Yellow);
                 // END DEBUGGING TEXT DISPLAY
-            }
-        }
-
-        public void ActivationLevels(out Dictionary<PieSliceLocation, int> levels)
-        {
-            levels = new Dictionary<PieSliceLocation, int>(4);
-
-            radar.AdjacentEntities(out adjacentEntities);
-
-            // Store locations for debug printing.
-            float vecScale = 100.0f;
-            aheadVec = radar.SensingEntity.Heading;
-            behindVec = -radar.SensingEntity.Heading;
-            leftVec = new Vector2(aheadVec.Y, -aheadVec.X);
-            rightVec = new Vector2(-aheadVec.Y, aheadVec.X);
-
-            // Scale/position locations for debug printing.
-            aheadVec = radar.SensingEntity.Position + aheadVec * vecScale;
-            behindVec = radar.SensingEntity.Position + behindVec * vecScale;
-            leftVec = radar.SensingEntity.Position + leftVec * vecScale;
-            rightVec = radar.SensingEntity.Position + rightVec * vecScale;
-
-            levels.Add(PieSliceLocation.Ahead, 0);
-            levels.Add(PieSliceLocation.Behind, 0);
-            levels.Add(PieSliceLocation.Left, 0);
-            levels.Add(PieSliceLocation.Right, 0);
-
-            foreach (RadarInfo curRadarInfo in adjacentEntities)
-            {
-                float curAngle = MathHelper.ToDegrees(curRadarInfo.RelativeAngle);
-
-                if (curAngle > aheadQuadrantStart && curAngle <= rightQuadrantStart)
-                    levels[PieSliceLocation.Ahead]++;
-                else if (curAngle > rightQuadrantStart && curAngle <= behindQuadrantStart)
-                    levels[PieSliceLocation.Right]++;
-                else if (curAngle > behindQuadrantStart || curAngle <= leftQuadrantStart)
-                    levels[PieSliceLocation.Behind]++;
-                else if (curAngle > leftQuadrantStart && curAngle <= aheadQuadrantStart)
-                    levels[PieSliceLocation.Left]++;
             }
         }
     }

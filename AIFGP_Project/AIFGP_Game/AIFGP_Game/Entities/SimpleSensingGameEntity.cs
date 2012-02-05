@@ -1,6 +1,5 @@
 ﻿namespace AIFGP_Game
 {
-    using System;
     using System.Collections.Generic;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
@@ -15,8 +14,10 @@
         public SimpleSensingGameEntity(Texture2D texture, Vector2 position)
             : base(texture, position)
         {
+            // If these Add's are modified, make sure to update the PieSlice
+            // one to get the correct index for the Radar instance.
             sensors.Add(new Radar(this));
-            sensors.Add(new PieSlice((Radar)sensors[0]));
+            sensors.Add(new PieSlice(sensors[0] as Radar));
         }
 
         public override void RotateInRadians(float radians)
@@ -25,14 +26,7 @@
             Heading = Vector2.Transform(Heading, Matrix.CreateRotationZ(radians));
 
             foreach (ISensor sensor in sensors)
-            {
-                // Sprite used for radar is not perfect circle so it
-                // looks funky when rotated.
-                if (sensor is Radar)
-                    continue;
-
                 sensor.RotateInRadians(radians);
-            }
         }
 
         public override void RotateInDegrees(float degrees)
@@ -54,9 +48,7 @@
         public override void Draw(SpriteBatch spriteBatch)
         {
             foreach (ISensor sensor in sensors)
-            {
                 sensor.Draw(spriteBatch);
-            }
 
             EntitySprite.Draw(spriteBatch);
         }

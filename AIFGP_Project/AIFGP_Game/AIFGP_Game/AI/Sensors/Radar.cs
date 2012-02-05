@@ -55,40 +55,13 @@
 
         public Vector2 Position
         {
-            get { return position; }
-            set { position = value; }
+            get { return SensingEntity.Position; }
+            set { SensingEntity.Position = value; }
         }
 
-        public void Translate(Vector2 offset)
-        {
-            Position += offset;
-        }
-
-        public void Translate(int x, int y)
-        {
-            Vector2 offset = new Vector2(x, y);
-            Position += offset;
-        }
-
-        public void RotateInRadians(float radians)
-        {
-            radarDebugger.RadarSprite.RotateInRadians(radians);
-        }
-
-        public void RotateInDegrees(float degrees)
-        {
-            radarDebugger.RadarSprite.RotateInRadians(MathHelper.ToRadians(degrees));
-        }
-
-        public void Scale(Vector2 scale)
-        {
-            radarDebugger.RadarSprite.Scale(scale);
-        }
-
-        public void Scale(float scale)
-        {
-            radarDebugger.RadarSprite.Scale(scale);
-        }
+        // A radar does not need to be rotated since it is a circle.
+        public void RotateInRadians(float radians) { }
+        public void RotateInDegrees(float degrees) { }
 
         public void Update(GameTime gameTime)
         {

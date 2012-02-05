@@ -53,28 +53,25 @@
             RadarSprite.CenterPosition = radarDebugging.Position;
             
             strBuilder.Clear();
-            if (IsDebuggingEnabled)
+            resetEntityColors();
+
+            strBuilder.Append("RADAR\n================\n");
+
+            radarDebugging.AdjacentEntities(out adjacentEntities);
+            foreach (RadarInfo radarInfo in adjacentEntities)
             {
-                resetEntityColors();
+                BaseGameEntity entity = EntityManager.Instance.GetEntity(
+                    radarInfo.EntityId) as BaseGameEntity;
 
-                strBuilder.Append("RADAR\n================\n");
+                entity.EntitySprite.Color = Color.Magenta;
 
-                radarDebugging.AdjacentEntities(out adjacentEntities);
-                foreach (RadarInfo radarInfo in adjacentEntities)
-                {
-                    BaseGameEntity entity = EntityManager.Instance.GetEntity(
-                        radarInfo.EntityId) as BaseGameEntity;
-
-                    entity.EntitySprite.Color = Color.Magenta;
-
-                    strBuilder.AppendFormat("Entity: {0}...\nPos: {1}\nDir: {2}\nDist: {3}\nAngle: {4}\n----------------\n",
-                        entity.ID.ToString().Substring(0, 8),
-                        entity.Position,
-                        entity.Heading,
-                        radarInfo.Distance,
-                        MathHelper.ToDegrees(radarInfo.RelativeAngle)
-                    );
-                }
+                strBuilder.AppendFormat("Entity: {0}...\nPos: {1}\nDir: {2}\nDist: {3}\nAngle: {4}\n----------------\n",
+                    entity.ID.ToString().Substring(0, 8),
+                    entity.Position,
+                    entity.Heading,
+                    radarInfo.Distance,
+                    MathHelper.ToDegrees(radarInfo.RelativeAngle)
+                );
             }
         }
 

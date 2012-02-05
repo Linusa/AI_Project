@@ -13,9 +13,6 @@
     /// <typeparam name="T">Animation identifier type.</typeparam>
     public class Sprite<T> : ISpatialEntity, IUpdateable, IDrawable
     {
-        /// <summary>
-        /// The <c>Texture2D</c> the <c>Sprite</c> is drawn from.
-        /// </summary>
         public Texture2D Texture;
 
         private Vector2 topLeftPixel = Vector2.Zero;
@@ -23,7 +20,6 @@
         private float rotation = 0.0f;
         private int spriteWidth = 0;
         private int spriteHeight = 0;
-        //private float spriteScale = 1.0f;
         private Vector2 spriteScale = Vector2.One;
 
         private Dictionary<T, List<Rectangle>> animationFrames = new Dictionary<T, List<Rectangle>>();

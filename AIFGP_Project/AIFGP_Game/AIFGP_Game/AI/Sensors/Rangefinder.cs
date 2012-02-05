@@ -1,14 +1,11 @@
 ﻿namespace AIFGP_Game
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
     public class Rangefinder// : ISensor
     {
-        public Rangefinder(/*Texture2D texture*/)
+        public Rangefinder(/* STUB */)
         {
             // do nothing...at the moment
         }

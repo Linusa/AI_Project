@@ -1,6 +1,5 @@
 namespace AIFGP_Game
 {
-    using System;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
@@ -45,7 +44,6 @@ namespace AIFGP_Game
         {
             graphics.PreferredBackBufferWidth = ScreenDimensions.Width;
             graphics.PreferredBackBufferHeight = ScreenDimensions.Height;
-            //Graphics.IsFullScreen = true;
             graphics.ApplyChanges();
 
             IsMouseVisible = true;

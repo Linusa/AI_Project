@@ -9,7 +9,8 @@
     using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// This class uses reflection to simplify debugging a graphical
+    /// object's properties.
     /// </summary>
     public class PropertyDebugger<T> : IUpdateable, IDrawable
         where T : IUpdateable, IDrawable

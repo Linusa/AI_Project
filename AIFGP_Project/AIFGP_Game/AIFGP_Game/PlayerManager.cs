@@ -1,8 +1,5 @@
 ﻿namespace AIFGP_Game
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Text;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
@@ -40,16 +37,11 @@
             if (keyboardState.IsKeyDown(Keys.Right))
                 Player.RotateInDegrees(3.0f);
 
-            #region KEY CHECKS FOR DEBUG OUTPUT
+            // Press 'Left Alt' for player debugging.
             if (keyboardState.IsKeyDown(Keys.LeftAlt))
-            {
                 playerDebugger.IsDebuggingEnabled = true;
-            }
             else if (keyboardState.IsKeyUp(Keys.LeftAlt))
-            {
                 playerDebugger.IsDebuggingEnabled = false;
-            }
-            #endregion
         }
 
         public void Update(GameTime gameTime)

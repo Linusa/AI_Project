@@ -10,8 +10,10 @@
     {
         public List<IGameEntity> Enemies = new List<IGameEntity>();
 
-        IGameEntity entityFollowingMouse = null;
-        bool followingMouse = false;
+        private IGameEntity entityFollowingMouse = null;
+        private bool followingMouse = false;
+
+        private Random rng = new Random();
 
         public EnemyManager()
         {
@@ -22,9 +24,10 @@
             Vector2 startLocation = new Vector2(xBasePad + xPad, yPad);
             Vector2 curEnemyPosition = startLocation;
 
-            for (int i = 1; i <= 10; i++)
+            for (int i = 0; i < 10; i++)
             {
                 Enemies.Add(new SimpleGameEntity(SensorsGame.NpcSpriteSheet, curEnemyPosition));
+                Enemies[i].RotateInDegrees(rng.Next(360));
                 curEnemyPosition.X += xPad;
             }
         }

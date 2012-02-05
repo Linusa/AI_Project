@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace AIFGP_Game
 {
-    // EntityManager implemented as singleton.
+    // EntityManager is a singleton. Access it with Instance property.
     public class EntityManager
     {
         public Dictionary<Guid, IGameEntity> Entities = new Dictionary<Guid, IGameEntity>();
@@ -24,9 +23,7 @@ namespace AIFGP_Game
             get
             {
                 if (instance == null)
-                {
                     instance = new EntityManager();
-                }
 
                 return instance;
             }

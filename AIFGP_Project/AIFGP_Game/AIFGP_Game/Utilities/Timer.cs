@@ -57,9 +57,7 @@
             active = true;
 
             if (time >= timeout)
-            {
                 time = 0.0f;
-            }
         }
 
         /// <summary>
@@ -106,18 +104,14 @@
             bool timerExpired;
 
             if (!Active)
-            {
                 timerExpired = false;
-            }
             else
             {
                 time += (float)gameTime.ElapsedGameTime.TotalSeconds;
                 timerExpired = time >= timeout;
 
                 if (timerExpired)
-                {
                     time = 0.0f;
-                }
             }
 
             return timerExpired;

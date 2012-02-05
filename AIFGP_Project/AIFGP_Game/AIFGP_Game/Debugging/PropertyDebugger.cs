@@ -11,7 +11,7 @@
     /// <summary>
     /// TODO: Update summary.
     /// </summary>
-    public class TextDebugger<T> : IUpdateable, IDrawable
+    public class PropertyDebugger<T> : IUpdateable, IDrawable
         where T : IUpdateable, IDrawable
     {
         public T ObjectDebugging;
@@ -28,7 +28,7 @@
 
         private bool enabled = false;
 
-        public TextDebugger(T instance)
+        public PropertyDebugger(T instance)
         {
             ObjectDebugging = instance;
             objectDebuggingName = typeOfT.Name;

@@ -9,11 +9,11 @@
 
     public class BaseGameEntityDebugger : IUpdateable, IDrawable
     {
-        private TextDebugger<BaseGameEntity> debugger;
+        private PropertyDebugger<BaseGameEntity> debugger;
 
         public BaseGameEntityDebugger(BaseGameEntity entity)
         {
-            debugger = new TextDebugger<BaseGameEntity>(entity);
+            debugger = new PropertyDebugger<BaseGameEntity>(entity);
 
             debugger.RegisterProperty("ID");
             debugger.RegisterProperty("Position");

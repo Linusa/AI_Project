@@ -27,12 +27,6 @@
                 Enemies.Add(new SimpleGameEntity(SensorsGame.NpcSpriteSheet, curEnemyPosition));
                 curEnemyPosition.X += xPad;
             }
-
-            /*
-            Enemies.Add(new SimpleGameEntity(SensorsGame.NpcSpriteSheet, paddedTopLeft));
-            Enemies.Add(new SimpleGameEntity(SensorsGame.NpcSpriteSheet, paddedTopRight));
-            Enemies.Add(new SimpleGameEntity(SensorsGame.NpcSpriteSheet, paddedBottomLeft));
-            */
         }
 
         public void Update(GameTime gameTime)

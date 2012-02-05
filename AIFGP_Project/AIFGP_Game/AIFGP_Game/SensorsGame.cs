@@ -1,23 +1,16 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-
 namespace AIFGP_Game
 {
+    using System;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework.Input;
+
     /// <summary>
     /// This is the main type for your game
     /// </summary>
     public class SensorsGame : Microsoft.Xna.Framework.Game
     {
-        public GraphicsDeviceManager Graphics;
+        private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
         public static Rectangle ScreenDimensions = new Rectangle(0, 0, 800, 600);
@@ -31,7 +24,6 @@ namespace AIFGP_Game
         public static Texture2D SingleWhitePixel;
 
         private Map map;
-
         private PlayerManager playerManager;
         private EnemyManager enemyManager;
 
@@ -39,7 +31,7 @@ namespace AIFGP_Game
 
         public SensorsGame()
         {
-            Graphics = new GraphicsDeviceManager(this);
+            graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
@@ -51,10 +43,10 @@ namespace AIFGP_Game
         /// </summary>
         protected override void Initialize()
         {
-            Graphics.PreferredBackBufferWidth = ScreenDimensions.Width;
-            Graphics.PreferredBackBufferHeight = ScreenDimensions.Height;
+            graphics.PreferredBackBufferWidth = ScreenDimensions.Width;
+            graphics.PreferredBackBufferHeight = ScreenDimensions.Height;
             //Graphics.IsFullScreen = true;
-            Graphics.ApplyChanges();
+            graphics.ApplyChanges();
 
             IsMouseVisible = true;
 
@@ -123,14 +115,11 @@ namespace AIFGP_Game
         {
             GraphicsDevice.Clear(Color.Black);
 
-            // TODO: Add your drawing code here
             spriteBatch.Begin();
                 map.Draw(spriteBatch);
                 playerManager.Draw(spriteBatch);
                 enemyManager.Draw(spriteBatch);
             spriteBatch.End();
-
-            //strBuilder.Clear();
 
             base.Draw(gameTime);
         }
@@ -154,27 +143,17 @@ namespace AIFGP_Game
             bounds.Height += spriteHeight;
 
             if (position.X < bounds.X)
-            {
                 position.X = bounds.Width;
-            }
             else if (position.X > bounds.Width)
-            {
                 position.X = bounds.X;
-            }
 
             if (position.Y < bounds.Y)
-            {
                 position.Y = bounds.Height;
-            }
             else if (position.Y > bounds.Height)
-            {
                 position.Y = bounds.Y;
-            }
 
             if (entity.Position != position)
-            {
                 entity.Position = position;
-            }
         }
     }
 }

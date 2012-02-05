@@ -50,6 +50,7 @@ ipch/
 [Bb]in
 [Oo]bj
 [Dd]ebug*/
+![Dd]ebugging/
 [Rr]elease*/
 *.csproj.Debug.cachefile
 *.csproj.Release.cachefile

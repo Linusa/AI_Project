@@ -22,11 +22,7 @@
 
         private bool enabled = false;
 
-        // DEBUG MEMBERS
-        Vector2 debugLoc = new Vector2(15.0f);
-        private StringBuilder debugStringBuilder = new StringBuilder();
-        List<RadarInfo> debugAdjacentEntityList = new List<RadarInfo>();
-        // END DEBUG MEMBERS
+        RadarDebugger radarDebugger;
 
         public Radar(IGameEntity entity)
         {
@@ -37,26 +33,21 @@
             Sprite.ActiveAnimation = 0;
 
             resetScaleUp();
+
+            radarDebugger = new RadarDebugger(this);
+            radarDebugger.IsDebuggingEnabled = true;
         }
 
         public void AdjacentEntities(out List<RadarInfo> adjacentEntities)
         {
             adjacentEntities = new List<RadarInfo>();
 
-            debugStringBuilder.Clear();
             foreach (IGameEntity curEntity in EntityManager.Instance.Entities.Values)
             {
                 // Do not check if we are comparing the same entity.
                 if (curEntity == SensingEntity)
-                {
                     continue;
-                }
 
-                // DEBUGGING COLOR CHANGE
-                BaseGameEntity curBaseGameEntity = curEntity as BaseGameEntity;
-                curBaseGameEntity.EntitySprite.Color = Color.White;
-                // END DEBUGGING COLOR CHANGE
-                
                 Vector2 vecToCurrentEntity = curEntity.Position - SensingEntity.Position;
                 float distToCurrentEntity = vecToCurrentEntity.Length();
                 
@@ -66,20 +57,6 @@
                     float relativeAngle = (float)Angles.AngleFromUToV(SensingEntity.Heading, vecToCurrentEntity);
 
                     adjacentEntities.Add(new RadarInfo(curEntity.ID, distToCurrentEntity, relativeAngle));
-
-                    // DEBUGGING COLOR CHANGE
-                    curBaseGameEntity.EntitySprite.Color = Color.Magenta;
-                    // END DEBUGGING COLOR CHANGE
-
-                    // DEBUGGING TEXT
-                    debugStringBuilder.AppendFormat("RADAR\nEntity: {0}...\nPos: {1}\nDir: {2}\nDist: {3}\nAngle: {4}\n================\n",
-                        curEntity.ID.ToString().Substring(0, 8),
-                        curEntity.Position,
-                        curEntity.Heading,
-                        distToCurrentEntity,
-                        MathHelper.ToDegrees(relativeAngle)
-                    );
-                    // END DEBUGGING TEXT
                 }
             }
         }
@@ -144,7 +121,9 @@
             if (IsSensingEnabled)
             {
                 updateRadarScaleUp(gameTime);
-                AdjacentEntities(out debugAdjacentEntityList);
+
+                if (radarDebugger.IsDebuggingEnabled)
+                    radarDebugger.Update(gameTime);
             }
         }
 
@@ -154,10 +133,8 @@
             {
                 Sprite.Draw(spriteBatch);
 
-                // DEBUGGING TEXT DISPLAY
-                spriteBatch.DrawString(SensorsGame.DebugFont, debugStringBuilder,
-                    debugLoc, Color.Yellow);
-                // END DEBUGGING TEXT DISPLAY
+                if (radarDebugger.IsDebuggingEnabled)
+                    radarDebugger.Draw(spriteBatch);
             }
         }
 

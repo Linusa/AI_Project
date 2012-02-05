@@ -111,6 +111,9 @@
     <Compile Include="AI\Sensors\Radar.cs" />
     <Compile Include="AI\Sensors\RadarInfo.cs" />
     <Compile Include="AI\Sensors\Rangefinder.cs" />
+    <Compile Include="Debugging\BaseGameEntityDebugger.cs" />
+    <Compile Include="Debugging\RadarDebugger.cs" />
+    <Compile Include="Debugging\TextDebugger.cs" />
     <Compile Include="Entities\BaseGameEntity.cs" />
     <Compile Include="EnemyManager.cs" />
     <Compile Include="Entities\Interfaces\ICollidable.cs" />

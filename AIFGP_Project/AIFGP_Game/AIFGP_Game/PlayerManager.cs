@@ -15,15 +15,13 @@
         public IGameEntity Player;
         private float playerSpeed = 4.0f;
 
-        // DEBUG MEMBERS
-        private bool debugOutput = false;
-        Vector2 debugLoc = Vector2.Zero;
-        private StringBuilder debugStringBuilder = new StringBuilder();
-        // END DEBUG MEMBERS
+        BaseGameEntityDebugger playerDebugger;
 
         public PlayerManager()
         {
             Player = new SimpleSensingGameEntity(SensorsGame.PlayerSpriteSheet, SensorsGame.ScreenCenter);
+
+            playerDebugger = new BaseGameEntityDebugger(Player as BaseGameEntity);
         }
 
         private void checkKeyboard()
@@ -31,48 +29,25 @@
             KeyboardState keyboardState = Keyboard.GetState();
 
             if (keyboardState.IsKeyDown(Keys.Up))
-            {
                 Player.Position += (Player.Heading * playerSpeed);
-            }
 
             if (keyboardState.IsKeyDown(Keys.Down))
-            {
                 Player.Position -= (Player.Heading * playerSpeed);
-            }
 
             if (keyboardState.IsKeyDown(Keys.Left))
-            {
                 Player.RotateInDegrees(-3.0f);
-            }
 
             if (keyboardState.IsKeyDown(Keys.Right))
-            {
                 Player.RotateInDegrees(3.0f);
-            }
 
             #region KEY CHECKS FOR DEBUG OUTPUT
             if (keyboardState.IsKeyDown(Keys.LeftAlt))
             {
-                debugOutput = true;
-                debugStringBuilder.Clear();
-                debugStringBuilder.AppendFormat("Player: {0}...\nPos: {1}\nDir: {2}\n\n",
-                    Player.ID.ToString().Substring(0, 8),
-                    Player.Position,
-                    Player.Heading
-                );
-
-                Vector2 offset = new Vector2(Player.BoundingBox.Width + 10, -Player.BoundingBox.Height + 10) / 2.0f;
-                if (Player.Position.X > SensorsGame.ScreenCenter.X)
-                {
-                    Vector2 stringSize = SensorsGame.DebugFont.MeasureString(debugStringBuilder);
-                    offset.X -= stringSize.X + Player.BoundingBox.Width + 10;
-                }
-
-                debugLoc = Player.Position + offset;
+                playerDebugger.IsDebuggingEnabled = true;
             }
             else if (keyboardState.IsKeyUp(Keys.LeftAlt))
             {
-                debugOutput = false;
+                playerDebugger.IsDebuggingEnabled = false;
             }
             #endregion
         }
@@ -81,19 +56,18 @@
         {
             checkKeyboard();
             Player.Update(gameTime);
+            SensorsGame.WrapPosition(ref Player);
+
+            if (playerDebugger.IsDebuggingEnabled)
+                playerDebugger.Update(gameTime);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             Player.Draw(spriteBatch);
 
-            #region DEBUG OUTPUT
-            if (debugOutput)
-            {
-                spriteBatch.DrawString(SensorsGame.DebugFont, debugStringBuilder,
-                    debugLoc, Color.Yellow);
-            }
-            #endregion
+            if (playerDebugger.IsDebuggingEnabled)
+                playerDebugger.Draw(spriteBatch);
         }
     }
 }

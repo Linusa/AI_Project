@@ -29,9 +29,7 @@
                 // Sprite used for radar is not perfect circle so it
                 // looks funky when rotated.
                 if (sensor is Radar)
-                {
                     continue;
-                }
 
                 sensor.RotateInRadians(radians);
             }

@@ -12,13 +12,14 @@ namespace AIFGP_Game
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
-        public static Rectangle ScreenDimensions = new Rectangle(0, 0, 800, 600);
+        public static Rectangle ScreenDimensions = new Rectangle(0, 0, 1280, 950);
         public static Vector2 ScreenCenter = new Vector2(ScreenDimensions.Width,
             ScreenDimensions.Height) / 2;
 
         public static Texture2D PlayerSpriteSheet;
         public static Texture2D NpcSpriteSheet;
         public static Texture2D GrassTile;
+        public static Texture2D WallTile;
         public static Texture2D RadarCircle;
         public static Texture2D SingleWhitePixel;
 
@@ -65,6 +66,7 @@ namespace AIFGP_Game
             PlayerSpriteSheet = Content.Load<Texture2D>(@"Images\player_arrow_with_effects");
             NpcSpriteSheet = Content.Load<Texture2D>(@"Images\npc_arrow_with_effects");
             GrassTile = Content.Load<Texture2D>(@"Images\grass_tile");
+            WallTile = Content.Load<Texture2D>(@"Images\wall_tile");
             RadarCircle = Content.Load<Texture2D>(@"Images\circle");
 
             SingleWhitePixel = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);

@@ -16,8 +16,9 @@
         {
             // If these Add's are modified, make sure to update the PieSlice
             // one to get the correct index for the Radar instance.
+            sensors.Add(new Rangefinder(this));
             sensors.Add(new Radar(this));
-            sensors.Add(new PieSlice(sensors[0] as Radar));
+            sensors.Add(new PieSlice(sensors[1] as Radar));
         }
 
         public override void RotateInRadians(float radians)

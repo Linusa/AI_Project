@@ -10,8 +10,6 @@
         public IGameEntity SensingEntity;
         public float EntityRange = 125.0f;
 
-        private Vector2 position = Vector2.Zero;
-
         private bool enabled = false;
 
         private RadarDebugger radarDebugger;
@@ -81,6 +79,5 @@
             if (IsSensingEnabled)
                 radarDebugger.Draw(spriteBatch);
         }
-
     }
 }

@@ -1,5 +1,6 @@
 ﻿namespace AIFGP_Game
 {
+    using System;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
@@ -28,7 +29,7 @@
         }
 
         // NOTE: Hard-coded based on 50x50 arrow pics.
-        public override float BoundingRadius
+        public override Nullable<float> BoundingRadius
         {
             get { return 24.0f; }
         }

@@ -8,25 +8,24 @@
     /// </summary>
     public class Line : ISpatialEntity, IDrawable
     {
-        private Sprite<byte> lineSprite;
-        private int defaultLineHeight = 3;
+        public Sprite<byte> LineSprite;
+        private int defaultLineHeight = 2;
 
         public Line(Vector2 position, int width, Color color)
         {
             Rectangle dimensions = new Rectangle(0, 0, width, defaultLineHeight);
-
-            lineSprite = new Sprite<byte>(SensorsGame.SingleWhitePixel,
+            LineSprite = new Sprite<byte>(SensorsGame.SingleWhitePixel,
                 position, dimensions);
-
-            lineSprite.Color = color;
-            lineSprite.AddAnimationFrame(0, dimensions);
-            lineSprite.ActiveAnimation = 0;
+            
+            LineSprite.Color = color;
+            LineSprite.AddAnimationFrame(0, dimensions);
+            LineSprite.ActiveAnimation = 0;
         }
 
         public Vector2 Position
         {
-            get { return lineSprite.CenterPosition; }
-            set { lineSprite.CenterPosition = value; }
+            get { return LineSprite.CenterPosition; }
+            set { LineSprite.CenterPosition = value; }
         }
 
         public void Translate(Vector2 offset)
@@ -42,7 +41,7 @@
 
         public void RotateInRadians(float radians)
         {
-            lineSprite.RotateInRadians(radians);
+            LineSprite.RotateInRadians(radians);
         }
 
         public void RotateInDegrees(float degrees)
@@ -52,17 +51,17 @@
 
         public void Scale(float scale)
         {
-            lineSprite.Scale(scale);
+            LineSprite.Scale(scale);
         }
 
         public void Scale(Vector2 scale)
         {
-            lineSprite.Scale(scale);
+            LineSprite.Scale(scale);
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)
         {
-            lineSprite.Draw(spriteBatch);
+            LineSprite.Draw(spriteBatch);
         }
     }
 }

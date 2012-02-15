@@ -97,7 +97,7 @@
             get;
         }
 
-        public abstract float BoundingRadius
+        public abstract Nullable<float> BoundingRadius
         {
             get;
         }

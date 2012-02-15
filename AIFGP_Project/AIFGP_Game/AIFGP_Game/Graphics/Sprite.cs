@@ -34,8 +34,21 @@
             Dimensions = dimensions;
             Texture = texture;
             CenterPosition = position;
+        }
 
-            ComputeLocalOrigin();
+        // Copy constructor.
+        public Sprite(Sprite<T> sprite)
+        {
+            Dimensions = sprite.Dimensions;
+            Texture = sprite.Texture;
+            Position = sprite.Position;
+
+            rotation = sprite.rotation;
+            spriteScale = sprite.spriteScale;
+            animationFrames = sprite.animationFrames;
+            animationTimer = new Timer(sprite.AnimationRate);
+            
+            ActiveAnimation = sprite.ActiveAnimation;
         }
 
         public Vector2 Position
@@ -48,6 +61,12 @@
         {
             get { return topLeftPixel + localOrigin; }
             set { topLeftPixel = value - localOrigin; }
+        }
+
+        public Vector2 LocalOrigin
+        {
+            get { return localOrigin; }
+            set { localOrigin = value; }
         }
 
         public void Translate(Vector2 offset)
@@ -125,6 +144,7 @@
             {
                 spriteWidth = value.Width;
                 spriteHeight = value.Height;
+                computeLocalOrigin();
             }
         }
 
@@ -159,7 +179,7 @@
             animationTimer.Start();
         }
 
-        private void ComputeLocalOrigin()
+        private void computeLocalOrigin()
         {
             localOrigin.X = spriteWidth / 2;
             localOrigin.Y = spriteHeight / 2;

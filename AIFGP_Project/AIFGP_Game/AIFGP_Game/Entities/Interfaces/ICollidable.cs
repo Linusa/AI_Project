@@ -1,5 +1,6 @@
 ﻿namespace AIFGP_Game
 {
+    using System;
     using Microsoft.Xna.Framework;
 
     public interface ICollidable
@@ -9,7 +10,7 @@
             get;
         }
 
-        float BoundingRadius
+        Nullable<float> BoundingRadius
         {
             get;
         }

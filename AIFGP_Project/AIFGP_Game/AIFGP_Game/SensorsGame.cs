@@ -12,7 +12,7 @@ namespace AIFGP_Game
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
-        public static Rectangle ScreenDimensions = new Rectangle(0, 0, 1280, 950);
+        public static Rectangle ScreenDimensions = new Rectangle(0, 0, 800, 600);
         public static Vector2 ScreenCenter = new Vector2(ScreenDimensions.Width,
             ScreenDimensions.Height) / 2;
 

@@ -10,7 +10,7 @@
     public class PlayerManager : IUpdateable, IDrawable
     {
         public IGameEntity Player;
-        private float playerSpeed = 4.0f;
+        private float playerSpeed = 250.0f;
 
         BaseGameEntityDebugger playerDebugger;
 
@@ -21,15 +21,17 @@
             playerDebugger = new BaseGameEntityDebugger(Player as BaseGameEntity);
         }
 
-        private void checkKeyboard()
+        private void checkKeyboard(GameTime gameTime)
         {
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
             KeyboardState keyboardState = Keyboard.GetState();
 
             if (keyboardState.IsKeyDown(Keys.Up))
-                Player.Position += (Player.Heading * playerSpeed);
+                Player.Position += (Player.Heading * playerSpeed * dt);
 
             if (keyboardState.IsKeyDown(Keys.Down))
-                Player.Position -= (Player.Heading * playerSpeed);
+                Player.Position -= (Player.Heading * playerSpeed * dt);
 
             if (keyboardState.IsKeyDown(Keys.Left))
                 Player.RotateInDegrees(-3.0f);
@@ -46,7 +48,7 @@
 
         public void Update(GameTime gameTime)
         {
-            checkKeyboard();
+            checkKeyboard(gameTime);
             Player.Update(gameTime);
             SensorsGame.WrapPosition(ref Player);
 

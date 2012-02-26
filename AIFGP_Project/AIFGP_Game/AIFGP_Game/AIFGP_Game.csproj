@@ -144,6 +144,7 @@
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
+    <Content Include="Map\ascii_maps\map001.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\AIFGP_GameContent\AIFGP_GameContent.contentproj">

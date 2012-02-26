@@ -24,7 +24,8 @@
             Vector2 startLocation = new Vector2(xBasePad + xPad, yPad);
             Vector2 curEnemyPosition = startLocation;
 
-            for (int i = 0; i < 10; i++)
+            int numEnemies = 0;
+            for (int i = 0; i < numEnemies; i++)
             {
                 Enemies.Add(new SimpleGameEntity(SensorsGame.NpcSpriteSheet, curEnemyPosition));
                 Enemies[i].RotateInDegrees(rng.Next(360));

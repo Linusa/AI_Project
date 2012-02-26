@@ -3,6 +3,7 @@
     using System.Collections.Generic;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
+    using System.IO;
 
     /// <summary>
     /// Super basic map implementation, this will be changed
@@ -11,19 +12,60 @@
     /// </summary>
     public class Map : IDrawable
     {
-        private Sprite<byte>[,] backgroundTiles;
-
         public int TilesAcross;
         public int TilesDown;
 
+        private Sprite<byte>[,] backgroundTiles;
+
+        private string mapDirectory;
+
         // Pretty big constructor, could be re-organized at some point.
-        public Map()
+        public Map(string mapFileName)
         {
+            mapDirectory = @"C:\Users\Jason\Documents\AI_Project\AIFGP_Project\AIFGP_Game\AIFGP_Game\Map\ascii_maps\";
+            loadMapFromText(mapFileName);
+        }
+
+        public void Draw(SpriteBatch spriteBatch)
+        {
+            foreach (Sprite<byte> tile in backgroundTiles)
+            {
+                tile.Draw(spriteBatch);
+            }
+        }
+
+        private void loadMapFromText(string mapFileName)
+        {
+            if (!File.Exists(mapFileName))
+            {
+                System.Diagnostics.Debug.WriteLine("Map '" + mapFileName
+                    + "' does not exist!");
+            }
+
+            List<Vector2> wallLocations = new List<Vector2>();
+
+            int numLines = 0;
+            string curLine = "";
+            StreamReader reader = File.OpenText(mapDirectory + mapFileName);
+            while ((curLine = reader.ReadLine()) != null)
+            {
+                if (numLines == 0)
+                {
+                    TilesAcross = curLine.Length;
+                }
+
+                char[] chars = curLine.ToCharArray();
+                for (int i = 0; i < chars.Length; i++)
+                    if (chars[i] == 'W')
+                        wallLocations.Add(new Vector2(i, numLines));
+
+                numLines++;
+            }
+
+            TilesDown = numLines;
+
             // Map tiles are 28x28 in px.
             Rectangle mapTileDimensions = new Rectangle(0, 0, 28, 28);
-
-            int TilesAcross = (int)(SensorsGame.ScreenDimensions.Width / mapTileDimensions.Width) + 1;
-            int TilesDown = (int)(SensorsGame.ScreenDimensions.Height / mapTileDimensions.Height) + 1;
 
             backgroundTiles = new Sprite<byte>[TilesAcross, TilesDown];
 
@@ -35,32 +77,24 @@
             wallTile.AddAnimationFrame(0, mapTileDimensions);
             wallTile.ActiveAnimation = 0;
 
-            // Hard-coded wall locations.
-            List<Vector2> wallLocations = new List<Vector2>();
-            Vector2 curWallPos = new Vector2(TilesAcross / 2, TilesDown / 5);
-            for (int x = 0; x < 10; x++)
-            {
-                wallLocations.Add(curWallPos);
-                curWallPos.X++;
-            }
-            for (int y = 0; y < 10; y++)
-            {
-                wallLocations.Add(curWallPos);
-                curWallPos.Y++;
-            }
-
             Vector2 curTilePos = Vector2.Zero;
+
+            int xOffset = (SensorsGame.ScreenDimensions.Width - TilesAcross * mapTileDimensions.Width) / 2;
+            int yOffset = (SensorsGame.ScreenDimensions.Height - TilesDown * mapTileDimensions.Height) / 2;
             Rectangle curRect = mapTileDimensions;
-            for (int x = 1; x <= TilesAcross; x++)
+            curRect.X = xOffset;
+            curRect.Y = yOffset;
+
+            for (int y = 0; y < TilesDown; y++)
             {
-                for (int y = 1; y <= TilesDown; y++)
+                for (int x = 0; x < TilesAcross; x++)
                 {
                     curTilePos.X = curRect.X;
                     curTilePos.Y = curRect.Y;
 
                     Sprite<byte> curTile;
 
-                    Vector2 curLoc = new Vector2(x-1, y-1);
+                    Vector2 curLoc = new Vector2(x, y);
                     if (wallLocations.Contains(curLoc))
                     {
                         curTile = new Sprite<byte>(wallTile);
@@ -76,21 +110,13 @@
                         curTile = new Sprite<byte>(grassTile);
 
                     curTile.Position = curTilePos;
-                    backgroundTiles[x-1, y-1] = curTile;
+                    backgroundTiles[x, y] = curTile;
 
-                    curRect.Y += curRect.Height;
+                    curRect.X += curRect.Width;
                 }
 
-                curRect.X = x * mapTileDimensions.Height;
-                curRect.Y = 0;
-            }
-        }
-
-        public void Draw(SpriteBatch spriteBatch)
-        {
-            foreach (Sprite<byte> tile in backgroundTiles)
-            {
-                tile.Draw(spriteBatch);
+                curRect.X = xOffset;
+                curRect.Y += mapTileDimensions.Height;
             }
         }
     }

@@ -13,6 +13,7 @@ namespace AIFGP_Game
         private SpriteBatch spriteBatch;
 
         public static Rectangle ScreenDimensions = new Rectangle(0, 0, 800, 600);
+        //public static Rectangle ScreenDimensions = new Rectangle(0, 0, 1920, 1080);
         public static Vector2 ScreenCenter = new Vector2(ScreenDimensions.Width,
             ScreenDimensions.Height) / 2;
 
@@ -72,7 +73,7 @@ namespace AIFGP_Game
             SingleWhitePixel = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             SingleWhitePixel.SetData<Color>(new Color[1] { Color.White }); 
 
-            map = new Map();
+            map = new Map("map001.txt");
             playerManager = new PlayerManager();
             enemyManager = new EnemyManager();
 

@@ -36,7 +36,7 @@
 
         private void loadMapFromText(string mapFileName)
         {
-            if (!File.Exists(mapFileName))
+            if (!File.Exists(mapDirectory + mapFileName))
             {
                 System.Diagnostics.Debug.WriteLine("Map '" + mapFileName
                     + "' does not exist!");

@@ -78,15 +78,13 @@
 
         public NodeType GetNode(int index)
         {
-            try
-            {
+            if (NodeExists(index))
                 return nodes[index];
-            }
-            catch (System.IndexOutOfRangeException e)
-            {
-                throw new System.ArgumentException("Node index invalid.",
-                    "index", e);
-            }
+            
+            SysDbg.WriteLine("Graph.GetNode(" + index
+                + ") received invalid index!");
+
+            return null;
         }
 
         public EdgeType GetEdge(int nodeFrom, int nodeTo)
@@ -125,12 +123,11 @@
 
         public void AddEdge(EdgeType edge)
         {
-            if (!EdgeExists(edge.NodeFrom, edge.NodeTo))
+            if (edgeCanBeAdded(edge.NodeFrom, edge.NodeTo))
+            {
                 edges[edge.NodeFrom].Add(edge);
 
-            if (!EdgeExists(edge.NodeTo, edge.NodeFrom))
-            {
-                EdgeType edgeReversed = (EdgeType)edge.ReverseEdge;
+                EdgeType edgeReversed = (EdgeType)edge.Reversed;
                 edges[edgeReversed.NodeFrom].Add(edgeReversed);
             }
         }
@@ -139,12 +136,12 @@
         {
             if (NodeExists(index))
             {
-                // Mark node as invalid (don't actually delete it)
-                nodes[index].Index = Node.InvalidIndex;
-
                 // Remove all edges that go to removed node.
                 foreach (EdgeType edge in EdgesFromNode(index))
                     edges[edge.NodeTo].RemoveAll(e => e.NodeTo == index);
+                
+                // Mark node as invalid (don't actually delete it)
+                nodes[index].Index = Node.InvalidIndex;
 
                 // Remove the removed node's edges.
                 edges[index].Clear();
@@ -153,7 +150,7 @@
 
         public void RemoveEdge(int nodeFrom, int nodeTo)
         {
-            if (NodeExists(nodeFrom) && NodeExists(nodeTo))
+            if (EdgeExists(nodeFrom, nodeTo))
             {
                 edges[nodeFrom].RemoveAt(edges[nodeFrom].FindIndex(e => e.NodeTo == nodeTo));
                 edges[nodeTo].RemoveAt(edges[nodeTo].FindIndex(e => e.NodeTo == nodeFrom));
@@ -162,7 +159,7 @@
 
         public void ChangeEdgeWeight(int nodeFrom, int nodeTo, double weight)
         {
-            if (NodeExists(nodeFrom) && NodeExists(nodeTo))
+            if (EdgeExists(nodeFrom, nodeTo))
             {
                 for (int i = 0; i < edges[nodeFrom].Count; i++)
                 {
@@ -189,9 +186,9 @@
             get
             {
                 bool empty = true;
-                for (int i = 0; i < nodes.Count; i++)
+                foreach (NodeType node in nodes)
                 {
-                    if (nodes[i].Index != Node.InvalidIndex)
+                    if (node.Index != Node.InvalidIndex)
                     {
                         empty = false;
                         break;
@@ -217,15 +214,35 @@
             get
             {
                 for (int i = 0; i < edges.Count; i++)
+                {
                     for (int j = 0; j < edges[i].Count; j++)
-                        yield return edges[i][j];
+                    {
+                        int from = edges[i][j].NodeFrom;
+                        int to = edges[i][j].NodeTo;
+
+                        // Explicit NodeExists inlining here to make
+                        // iteration as fast as possible.
+                        bool fromExists = from >= 0
+                            && from < nodes.Count
+                            && nodes[from].Index != Node.InvalidIndex;
+
+                        bool toExists = to >= 0
+                            && to < nodes.Count
+                            && nodes[to].Index != Node.InvalidIndex;
+
+                        if (fromExists && toExists)
+                            yield return edges[i][j];
+                    }
+                }
             }
         }
 
         public IEnumerable<EdgeType> EdgesFromNode(int nodeIndex)
         {
+            bool fromNodeExists = NodeExists(nodeIndex);
             for (int i = 0; i < edges[nodeIndex].Count; i++)
-                yield return edges[nodeIndex][i];
+                if (fromNodeExists && NodeExists(edges[nodeIndex][i].NodeTo))
+                    yield return edges[nodeIndex][i];
         }
 
         public void Clear()
@@ -239,6 +256,26 @@
         {
             for (int i = 0; i < edges.Count; i++)
                 edges[i].Clear();
+        }
+
+        private bool edgeCanBeAdded(int nodeFrom, int nodeTo)
+        {
+            bool canBeAdded = NodeExists(nodeFrom) && NodeExists(nodeTo)
+                && nodeFrom != nodeTo;
+
+            if (canBeAdded)
+            {
+                foreach (EdgeType edge in EdgesFromNode(nodeFrom))
+                {
+                    if (edge.NodeTo == nodeTo)
+                    {
+                        canBeAdded = false;
+                        break;
+                    }
+                }
+            }
+
+            return canBeAdded;
         }
     }
 }

@@ -112,6 +112,7 @@
     <Compile Include="AI\Sensors\RadarInfo.cs" />
     <Compile Include="AI\Sensors\Rangefinder.cs" />
     <Compile Include="Debugging\BaseGameEntityDebugger.cs" />
+    <Compile Include="Debugging\GraphDebugger.cs" />
     <Compile Include="Debugging\PieSliceDebugger.cs" />
     <Compile Include="Debugging\RadarDebugger.cs" />
     <Compile Include="Debugging\PropertyDebugger.cs" />

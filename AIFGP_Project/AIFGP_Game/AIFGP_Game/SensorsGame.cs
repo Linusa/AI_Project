@@ -56,39 +56,12 @@ namespace AIFGP_Game
             IsFixedTimeStep = false;
 
             // BEGIN Graph Testing
+            /*
             System.Diagnostics.Debug.WriteLine("------- BEGIN TESTING! -------");
-
-            testGraph.AddNode(new Node(testGraph.AvailableNodeIndex));
-            testGraph.AddNode(new Node(testGraph.AvailableNodeIndex));
-            testGraph.AddEdge(new Edge(0, 1));
-
-            testGraph.AddNode(new Node(testGraph.AvailableNodeIndex));
-            testGraph.AddNode(new Node(testGraph.AvailableNodeIndex));
-            testGraph.AddEdge(new Edge(0, 2));
-            testGraph.AddEdge(new Edge(0, 3));
-            testGraph.AddEdge(new Edge(2, 3));
-            testGraph.ChangeEdgeWeight(3, 0, 32.0);
-
-            System.Diagnostics.Debug.WriteLine("Nodes before first delete.");
-            foreach (Node node in testGraph.Nodes)
-                System.Diagnostics.Debug.WriteLine("\tNode #" + node.Index);
-
-            testGraph.RemoveNode(0);
-            testGraph.RemoveNode(1);
-
-            System.Diagnostics.Debug.WriteLine("Nodes after first delete.");
-            foreach (Node node in testGraph.Nodes)
-                System.Diagnostics.Debug.WriteLine("\tNode #" + node.Index);
-
-            testGraph.AddNode(new Node(0));
-            testGraph.AddEdge(new Edge(0, 1));
-            testGraph.AddEdge(new Edge(2, 0));
-
-            System.Diagnostics.Debug.WriteLine("Current edges.");
-            foreach (Edge edge in testGraph.Edges)
-                System.Diagnostics.Debug.WriteLine("\tEdge " + edge.NodeFrom + " -> " + edge.NodeTo);
-            
+            GraphDebugger graphDebugger = new GraphDebugger();
+            graphDebugger.Run(new Graph<Node, Edge>());
             System.Diagnostics.Debug.WriteLine("------- DONE TESTING! -------");
+            */
             // END Graph Testing
 
             base.Initialize();

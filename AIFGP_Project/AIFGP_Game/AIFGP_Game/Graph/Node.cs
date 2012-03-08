@@ -2,7 +2,7 @@
 {
     public class Node
     {
-        private int idx;
+        private int idx = InvalidIndex;
 
         public Node(int index)
         {

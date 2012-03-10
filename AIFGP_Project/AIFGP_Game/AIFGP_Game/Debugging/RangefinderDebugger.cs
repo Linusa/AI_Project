@@ -98,7 +98,7 @@
             foreach (FeelerLine line in feelerLines)
             {
                 line.VisualLine.Draw(spriteBatch);
-                spriteBatch.DrawString(SensorsGame.DebugFont, strBuilder,
+                spriteBatch.DrawString(AStarGame.DebugFont, strBuilder,
                     debugLoc, Color.Yellow);
             }
         }

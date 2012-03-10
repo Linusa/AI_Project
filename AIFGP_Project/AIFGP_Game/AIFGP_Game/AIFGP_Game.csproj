@@ -112,6 +112,8 @@
     <Compile Include="AI\Sensors\RadarInfo.cs" />
     <Compile Include="AI\Sensors\Rangefinder.cs" />
     <Compile Include="Debugging\BaseGameEntityDebugger.cs" />
+    <Compile Include="Debugging\BFSDebugger.cs" />
+    <Compile Include="Debugging\DFSDebugger.cs" />
     <Compile Include="Debugging\GraphDebugger.cs" />
     <Compile Include="Debugging\PieSliceDebugger.cs" />
     <Compile Include="Debugging\RadarDebugger.cs" />
@@ -134,13 +136,16 @@
     <Compile Include="Graph\GraphInfo.cs" />
     <Compile Include="Graph\Edge.cs" />
     <Compile Include="Graph\Node.cs" />
+    <Compile Include="Graph\Search\BreadthFirstSearch.cs" />
+    <Compile Include="Graph\Search\DepthFirstSearch.cs" />
     <Compile Include="Map\Map.cs" />
+    <Compile Include="Map\TileInfo.cs" />
     <Compile Include="Map\Wall.cs" />
     <Compile Include="PlayerManager.cs" />
     <Compile Include="Entities\SimpleGameEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
-    <Compile Include="SensorsGame.cs" />
+    <Compile Include="AStarGame.cs" />
     <Compile Include="Graphics\Sprite.cs" />
     <Compile Include="Utilities\Angles.cs" />
     <Compile Include="Utilities\Timer.cs" />

@@ -95,6 +95,24 @@
             graph.GetEdge(6, 1).Weight = 33.2112;
             graph.GetEdge(1, 6).Weight = 2112.33;
 
+            // Check for edge modification by iteration.
+            foreach (Edge e in graph.Edges)
+                e.Weight = 1.0;
+            double weightMod = 10.0;
+            foreach (Edge e in graph.Edges)
+            {
+                e.Weight += weightMod;
+                weightMod += 10.0;
+            }
+
+            // Revert all weights back to 1.0.
+            foreach (Edge e in graph.Edges)
+                e.Weight = 1.0;
+
+            // Check for edge modification by iteration over a node's edges.
+            foreach (Edge e in graph.EdgesFromNode(1))
+                e.Weight = 3.0;
+
             graph.Clear();
 
             int numNodes = 15;

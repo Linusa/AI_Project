@@ -16,7 +16,7 @@
 
         public PlayerManager()
         {
-            Player = new SimpleSensingGameEntity(SensorsGame.PlayerSpriteSheet, SensorsGame.ScreenCenter);
+            Player = new SimpleSensingGameEntity(AStarGame.PlayerSpriteSheet, AStarGame.ScreenCenter);
 
             playerDebugger = new BaseGameEntityDebugger(Player as BaseGameEntity);
         }
@@ -50,7 +50,7 @@
         {
             checkKeyboard(gameTime);
             Player.Update(gameTime);
-            SensorsGame.WrapPosition(ref Player);
+            AStarGame.WrapPosition(ref Player);
 
             if (playerDebugger.IsDebuggingEnabled)
                 playerDebugger.Update(gameTime);

@@ -8,115 +8,105 @@
     /// <summary>
     /// Super basic map implementation, this will be changed
     /// in a big way later. Currently just makes a bunch of
-    /// grass tiles to fill the background.
+    /// tiles based on an input file.
     /// </summary>
     public class Map : IDrawable
     {
+        public enum TileType
+        {
+            Ground,
+            Wall
+        }
+
         public int TilesAcross;
         public int TilesDown;
 
-        private Sprite<byte>[,] backgroundTiles;
+        // Map tiles are 28x28 in px.
+        public static readonly Vector2 TileSize
+            = new Vector2(28.0f, 28.0f);
+        
+        private List<TileInfo> mapTiles = new List<TileInfo>();
+
+        private Sprite<byte> grassTile;
+        private Sprite<byte> wallTile;
 
         private string mapDirectory;
 
-        // Pretty big constructor, could be re-organized at some point.
         public Map(string mapFileName)
         {
             mapDirectory = @"C:\Users\Jason\Documents\AI_Project\AIFGP_Project\AIFGP_Game\AIFGP_Game\Map\ascii_maps\";
             loadMapFromText(mapFileName);
+
+            Rectangle tileFrame = new Rectangle(0, 0, (int)TileSize.X, (int)TileSize.Y);
+            
+            grassTile = new Sprite<byte>(AStarGame.GrassTile, Vector2.Zero, tileFrame);
+            grassTile.AddAnimationFrame(0, tileFrame);
+            grassTile.ActiveAnimation = 0;
+
+            wallTile = new Sprite<byte>(AStarGame.WallTile, Vector2.Zero, tileFrame);
+            wallTile.AddAnimationFrame(0, tileFrame);
+            wallTile.ActiveAnimation = 0;
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            foreach (Sprite<byte> tile in backgroundTiles)
+            foreach (TileInfo tileInfo in mapTiles)
             {
+                Sprite<byte> tile;
+
+                if (tileInfo.Type == TileType.Wall)
+                    tile = wallTile;
+                else
+                    tile = grassTile;
+
+                tile.Position = tileInfo.Position;
                 tile.Draw(spriteBatch);
             }
         }
 
         private void loadMapFromText(string mapFileName)
         {
+            string path = mapDirectory + mapFileName;
+
             if (!File.Exists(mapDirectory + mapFileName))
             {
                 System.Diagnostics.Debug.WriteLine("Map '" + mapFileName
                     + "' does not exist!");
+                return;
             }
 
-            List<Vector2> wallLocations = new List<Vector2>();
+            string[] textMap = File.ReadAllLines(path);
 
-            int numLines = 0;
-            string curLine = "";
-            StreamReader reader = File.OpenText(mapDirectory + mapFileName);
-            while ((curLine = reader.ReadLine()) != null)
+            TilesAcross = textMap[0].Length;
+            TilesDown = textMap.Length;
+
+            int xOffset = (AStarGame.ScreenDimensions.Width - TilesAcross * (int)TileSize.X) / 2;
+            int yOffset = (AStarGame.ScreenDimensions.Height - TilesDown * (int)TileSize.Y) / 2;
+            Vector2 offset = new Vector2(xOffset, yOffset);
+
+            for (int i = 0; i < textMap.Length; i++)
             {
-                if (numLines == 0)
+                char[] chars = textMap[i].ToCharArray();
+                for (int j = 0; j < chars.Length; j++)
                 {
-                    TilesAcross = curLine.Length;
-                }
+                    TileInfo curTile = new TileInfo();
+                    curTile.Position = offset + new Vector2(j * TileSize.X, i * TileSize.Y);
 
-                char[] chars = curLine.ToCharArray();
-                for (int i = 0; i < chars.Length; i++)
-                    if (chars[i] == 'W')
-                        wallLocations.Add(new Vector2(i, numLines));
-
-                numLines++;
-            }
-
-            TilesDown = numLines;
-
-            // Map tiles are 28x28 in px.
-            Rectangle mapTileDimensions = new Rectangle(0, 0, 28, 28);
-
-            backgroundTiles = new Sprite<byte>[TilesAcross, TilesDown];
-
-            Sprite<byte> grassTile = new Sprite<byte>(SensorsGame.GrassTile, Vector2.Zero, mapTileDimensions);
-            grassTile.AddAnimationFrame(0, mapTileDimensions);
-            grassTile.ActiveAnimation = 0;
-
-            Sprite<byte> wallTile = new Sprite<byte>(SensorsGame.WallTile, Vector2.Zero, mapTileDimensions);
-            wallTile.AddAnimationFrame(0, mapTileDimensions);
-            wallTile.ActiveAnimation = 0;
-
-            Vector2 curTilePos = Vector2.Zero;
-
-            int xOffset = (SensorsGame.ScreenDimensions.Width - TilesAcross * mapTileDimensions.Width) / 2;
-            int yOffset = (SensorsGame.ScreenDimensions.Height - TilesDown * mapTileDimensions.Height) / 2;
-            Rectangle curRect = mapTileDimensions;
-            curRect.X = xOffset;
-            curRect.Y = yOffset;
-
-            for (int y = 0; y < TilesDown; y++)
-            {
-                for (int x = 0; x < TilesAcross; x++)
-                {
-                    curTilePos.X = curRect.X;
-                    curTilePos.Y = curRect.Y;
-
-                    Sprite<byte> curTile;
-
-                    Vector2 curLoc = new Vector2(x, y);
-                    if (wallLocations.Contains(curLoc))
+                    if (chars[j] == 'W')
                     {
-                        curTile = new Sprite<byte>(wallTile);
-
                         // Create a Wall and register it with the WallManager.
                         Wall curWall = new Wall();
-                        curWall.TopLeftPixel = curTilePos;
-                        curWall.BottomRightPixel = curTilePos + new Vector2(
-                            mapTileDimensions.Width, mapTileDimensions.Height);
+                        curWall.TopLeftPixel = curTile.Position;
+                        curWall.BottomRightPixel = curTile.Position + TileSize;
                         WallManager.Instance.AddWall(curWall);
+
+                        curTile.Type = TileType.Wall;
                     }
                     else
-                        curTile = new Sprite<byte>(grassTile);
+                        curTile.Type = TileType.Ground;
 
-                    curTile.Position = curTilePos;
-                    backgroundTiles[x, y] = curTile;
-
-                    curRect.X += curRect.Width;
+                    mapTiles.Add(curTile);
                 }
-
-                curRect.X = xOffset;
-                curRect.Y += mapTileDimensions.Height;
             }
         }
     }

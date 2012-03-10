@@ -83,16 +83,16 @@
             pieSliceDivider1.Draw(spriteBatch);
             pieSliceDivider2.Draw(spriteBatch);
 
-            spriteBatch.DrawString(SensorsGame.DebugFont,
+            spriteBatch.DrawString(AStarGame.DebugFont,
                 debugActivationLevels[PieSlice.PieSliceLocation.Ahead].ToString(),
                 aheadVec, Color.Yellow);
-            spriteBatch.DrawString(SensorsGame.DebugFont,
+            spriteBatch.DrawString(AStarGame.DebugFont,
                 debugActivationLevels[PieSlice.PieSliceLocation.Behind].ToString(),
                 behindVec, Color.Yellow);
-            spriteBatch.DrawString(SensorsGame.DebugFont,
+            spriteBatch.DrawString(AStarGame.DebugFont,
                 debugActivationLevels[PieSlice.PieSliceLocation.Left].ToString(),
                 leftVec, Color.Yellow);
-            spriteBatch.DrawString(SensorsGame.DebugFont,
+            spriteBatch.DrawString(AStarGame.DebugFont,
                 debugActivationLevels[PieSlice.PieSliceLocation.Right].ToString(),
                 rightVec, Color.Yellow);
         }

@@ -7,7 +7,7 @@ namespace AIFGP_Game
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class SensorsGame : Microsoft.Xna.Framework.Game
+    public class AStarGame : Microsoft.Xna.Framework.Game
     {
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
@@ -32,7 +32,7 @@ namespace AIFGP_Game
 
         public Graph<Node, Edge> testGraph = new Graph<Node,Edge>();
 
-        public SensorsGame()
+        public AStarGame()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -56,12 +56,10 @@ namespace AIFGP_Game
             IsFixedTimeStep = false;
 
             // BEGIN Graph Testing
-            /*
             System.Diagnostics.Debug.WriteLine("------- BEGIN TESTING! -------");
-            GraphDebugger graphDebugger = new GraphDebugger();
-            graphDebugger.Run(new Graph<Node, Edge>());
+            BFSDebugger dfsDebugger = new BFSDebugger();
+            dfsDebugger.Run();
             System.Diagnostics.Debug.WriteLine("------- DONE TESTING! -------");
-            */
             // END Graph Testing
 
             base.Initialize();

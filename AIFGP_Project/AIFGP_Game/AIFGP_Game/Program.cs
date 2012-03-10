@@ -10,7 +10,7 @@ namespace AIFGP_Game
         /// </summary>
         static void Main(string[] args)
         {
-            using (SensorsGame game = new SensorsGame())
+            using (AStarGame game = new AStarGame())
             {
                 game.Run();
             }

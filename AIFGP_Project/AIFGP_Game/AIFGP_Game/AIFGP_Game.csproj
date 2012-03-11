@@ -138,6 +138,7 @@
     <Compile Include="Graph\Node.cs" />
     <Compile Include="Graph\Search\BreadthFirstSearch.cs" />
     <Compile Include="Graph\Search\DepthFirstSearch.cs" />
+    <Compile Include="Graph\Search\DijkstraSearch.cs" />
     <Compile Include="Map\Map.cs" />
     <Compile Include="Map\TileInfo.cs" />
     <Compile Include="Map\Wall.cs" />
@@ -148,12 +149,14 @@
     <Compile Include="AStarGame.cs" />
     <Compile Include="Graphics\Sprite.cs" />
     <Compile Include="Utilities\Angles.cs" />
+    <Compile Include="Utilities\Heap.cs" />
     <Compile Include="Utilities\Timer.cs" />
     <Compile Include="WallManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
+    <Content Include="Map\ascii_maps\map002.txt" />
     <Content Include="Map\ascii_maps\map001.txt" />
   </ItemGroup>
   <ItemGroup>

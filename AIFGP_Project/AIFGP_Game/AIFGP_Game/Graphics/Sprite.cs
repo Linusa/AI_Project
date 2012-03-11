@@ -42,10 +42,11 @@
             Dimensions = sprite.Dimensions;
             Texture = sprite.Texture;
             Position = sprite.Position;
+            Color = sprite.Color;
 
             rotation = sprite.rotation;
             spriteScale = sprite.spriteScale;
-            animationFrames = sprite.animationFrames;
+            animationFrames = new Dictionary<T,List<Rectangle>>(sprite.animationFrames);
             animationTimer = new Timer(sprite.AnimationRate);
             
             ActiveAnimation = sprite.ActiveAnimation;

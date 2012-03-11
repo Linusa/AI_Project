@@ -1,5 +1,6 @@
 namespace AIFGP_Game
 {
+    using System;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
@@ -57,8 +58,14 @@ namespace AIFGP_Game
 
             // BEGIN Graph Testing
             System.Diagnostics.Debug.WriteLine("------- BEGIN TESTING! -------");
-            BFSDebugger dfsDebugger = new BFSDebugger();
-            dfsDebugger.Run();
+            Random rng = new Random();
+            int numInts = 10;
+            Heap<int> intHeap = new Heap<int>(Heap<int>.Ordering.Min, numInts);
+            for (int i = 0; i < numInts; i++)
+                intHeap.Insert(rng.Next(50));
+            while (!intHeap.IsEmpty)
+                System.Diagnostics.Debug.Write(intHeap.Remove() + " ");
+            System.Diagnostics.Debug.Write("\n");
             System.Diagnostics.Debug.WriteLine("------- DONE TESTING! -------");
             // END Graph Testing
 

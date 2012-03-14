@@ -2,15 +2,15 @@
 {
     using System;
     using System.Collections.Generic;
+    
+    public enum HeapSorting
+    {
+        Min,
+        Max
+    }
 
     public class Heap<T> where T : IComparable<T>
     {
-        public enum Ordering
-        {
-            Min,
-            Max
-        }
-
         private List<T> elements;
         private int size = 0;
         private int cap = 0;
@@ -18,7 +18,7 @@
         // True if first T comes before second T.
         private Func<T, T, bool> firstBeforeSecond;
 
-        public Heap(Ordering order, int capacity)
+        public Heap(HeapSorting order, int capacity)
         {
             cap = capacity;
             elements = new List<T>(cap + 1);
@@ -28,10 +28,10 @@
 
             switch (order)
             {
-                case Ordering.Min:
+                case HeapSorting.Min:
                     firstBeforeSecond = (ele1, ele2) => ele1.CompareTo(ele2) < 0;
                     break;
-                case Ordering.Max:
+                case HeapSorting.Max:
                     firstBeforeSecond = (ele1, ele2) => ele1.CompareTo(ele2) > 0;
                     break;
             }
@@ -106,12 +106,11 @@
 
         private void percolateDown(int idx)
         {
-            int sizeNoFirst = size - 1;
-            while (2 * idx <= sizeNoFirst)
+            while (2 * idx <= size)
             {
                 int child = 2 * idx;
 
-                bool parentOf2 = child < sizeNoFirst;
+                bool parentOf2 = child < size;
                 bool rightChildNext = parentOf2
                     && firstBeforeSecond(elements[child + 1], elements[child]);
 

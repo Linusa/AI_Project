@@ -1,6 +1,7 @@
 namespace AIFGP_Game
 {
     using System;
+    using System.Collections.Generic;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
@@ -56,18 +57,55 @@ namespace AIFGP_Game
             // Hot-fix for the every-second or so stuttering.
             IsFixedTimeStep = false;
 
-            // BEGIN Graph Testing
+            // BEGIN Testing
             System.Diagnostics.Debug.WriteLine("------- BEGIN TESTING! -------");
+
+            // Heap testing.
+            /*
             Random rng = new Random();
-            int numInts = 10;
-            Heap<int> intHeap = new Heap<int>(Heap<int>.Ordering.Min, numInts);
-            for (int i = 0; i < numInts; i++)
-                intHeap.Insert(rng.Next(50));
-            while (!intHeap.IsEmpty)
-                System.Diagnostics.Debug.Write(intHeap.Remove() + " ");
-            System.Diagnostics.Debug.Write("\n");
+
+            for (int numTrials = 1; numTrials <= 100; numTrials++)
+            {
+                int numInts = rng.Next(2, 100000);
+                List<int> intList = new List<int>(numInts);
+
+                for (int i = 0; i < numInts; i++)
+                    intList.Add(rng.Next(rng.Next(100000)));
+
+                Heap<int> intHeap = new Heap<int>(HeapSorting.Min, numInts);
+                for (int i = 0; i < numInts; i++)
+                    intHeap.Insert(intList[i]);
+
+                intList.Clear();
+
+                while (!intHeap.IsEmpty)
+                {
+                    int curInt = intHeap.Remove();
+                    intList.Add(curInt);
+                }
+
+                bool success = true;
+                for (int i = 0; i < numInts - 1; i++)
+                {
+                    if (intList[i] > intList[i + 1])
+                    {
+                        success = false;
+                        break;
+                    }
+                }
+
+                System.Diagnostics.Debug.Write(numTrials + ": ");
+                if (!success)
+                {
+                    System.Diagnostics.Debug.WriteLine("FAILED!!!");
+                }
+                else
+                    System.Diagnostics.Debug.WriteLine("passed");
+            }
+            */
+
             System.Diagnostics.Debug.WriteLine("------- DONE TESTING! -------");
-            // END Graph Testing
+            // END Testing
 
             base.Initialize();
         }

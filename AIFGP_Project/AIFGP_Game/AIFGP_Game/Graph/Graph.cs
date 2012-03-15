@@ -39,6 +39,19 @@
             }
         }
 
+        public List<int> NodeIndices
+        {
+            get
+            {
+                List<int> indices = new List<int>();
+                for (int i = 0; i < nodes.Count; i++)
+                    if (nodes[i].Index != Node.InvalidIndex)
+                        indices.Add(i);
+
+                return indices;
+            }
+        }
+
         public int AvailableNodeIndex
         {
             get { return availableNodeIndex; }

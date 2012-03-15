@@ -10,6 +10,8 @@
     {
         public List<IGameEntity> Enemies = new List<IGameEntity>();
 
+        private IGameEntity player;
+
         private IGameEntity entityFollowingMouse = null;
         private bool followingMouse = false;
 
@@ -17,6 +19,8 @@
 
         public EnemyManager()
         {
+            player = EntityManager.Instance.GetPlayer();
+
             int xBasePad = 180;
             int xPad = SimpleGameEntity.Dimensions.Width;
             int yPad = SimpleGameEntity.Dimensions.Height;
@@ -29,6 +33,7 @@
             {
                 Enemies.Add(new SimpleGameEntity(AStarGame.NpcSpriteSheet, curEnemyPosition));
                 Enemies[i].RotateInDegrees(rng.Next(360));
+                Enemies[i].MaxSpeed = player.MaxSpeed - rng.Next(10, 100);
                 curEnemyPosition.X += xPad;
             }
         }
@@ -64,6 +69,7 @@
                     }
                 }
 
+                entity.Velocity += entity.Seek(player.Position);
                 entity.Update(gameTime);
             }
         }

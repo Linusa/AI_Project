@@ -18,7 +18,7 @@
             graph.AddNode(new Node(graph.AvailableNodeIndex));
             graph.AddNode(new Node(graph.AvailableNodeIndex));
 
-            // Connect 0-2, 0-3, 2-3, and change 2-3's weight.
+            // Connect 0-2, 0-3, 2-3, and change 2-3's actualWeight.
             graph.AddEdge(new Edge(0, 2));
             graph.AddEdge(new Edge(0, 3));
             graph.AddEdge(new Edge(2, 3));
@@ -39,7 +39,7 @@
                 SysDbg.WriteLine("\tNode #" + node.Index);
 
             // Re-add node 0, connect 0-2. (Connect 0-1 and 1-0 not allowed)
-            // Also, change 0-2 weight.
+            // Also, change 0-2 actualWeight.
             graph.AddNode(new Node(0));
             graph.AddEdge(new Edge(0, 1));
             graph.AddEdge(new Edge(2, 0));
@@ -90,7 +90,7 @@
             graph.RemoveEdge(0, 5);
             graph.RemoveEdge(3, 2);
 
-            // These all change the weight.
+            // These all change the actualWeight.
             graph.ChangeEdgeWeight(1, 2, 9001);
             graph.GetEdge(6, 1).Weight = 33.2112;
             graph.GetEdge(1, 6).Weight = 2112.33;

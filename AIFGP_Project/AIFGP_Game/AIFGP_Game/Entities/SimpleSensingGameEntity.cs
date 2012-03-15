@@ -37,6 +37,9 @@
 
         public override void Update(GameTime gameTime)
         {
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Position += Velocity * dt;
+
             foreach (ISensor sensor in sensors)
             {
                 sensor.Position = Position;

@@ -60,48 +60,42 @@ namespace AIFGP_Game
             // BEGIN Testing
             System.Diagnostics.Debug.WriteLine("------- BEGIN TESTING! -------");
 
-            // Heap testing.
             /*
             Random rng = new Random();
+            Graph<PositionalNode, Edge> graph = new Graph<PositionalNode, Edge>();
 
-            for (int numTrials = 1; numTrials <= 100; numTrials++)
+            int numNodes = 7;
+            for (int i = 0; i < numNodes; i++)
             {
-                int numInts = rng.Next(2, 100000);
-                List<int> intList = new List<int>(numInts);
-
-                for (int i = 0; i < numInts; i++)
-                    intList.Add(rng.Next(rng.Next(100000)));
-
-                Heap<int> intHeap = new Heap<int>(HeapSorting.Min, numInts);
-                for (int i = 0; i < numInts; i++)
-                    intHeap.Insert(intList[i]);
-
-                intList.Clear();
-
-                while (!intHeap.IsEmpty)
-                {
-                    int curInt = intHeap.Remove();
-                    intList.Add(curInt);
-                }
-
-                bool success = true;
-                for (int i = 0; i < numInts - 1; i++)
-                {
-                    if (intList[i] > intList[i + 1])
-                    {
-                        success = false;
-                        break;
-                    }
-                }
-
-                System.Diagnostics.Debug.Write(numTrials + ": ");
-                if (!success)
-                {
-                    System.Diagnostics.Debug.WriteLine("FAILED!!!");
-                }
-                else
-                    System.Diagnostics.Debug.WriteLine("passed");
+                float x = (float)(rng.NextDouble() * (ScreenDimensions.Width - 100));
+                float y = (float)(rng.NextDouble() * (ScreenDimensions.Height - 100));
+                graph.AddNode(new PositionalNode(graph.AvailableNodeIndex, new Vector2(x, y)));
             }
+
+            graph.AddEdge(new Edge(0, 1, 10.0));
+            graph.AddEdge(new Edge(0, 2));
+            graph.AddEdge(new Edge(0, 3, 10.0));
+            graph.AddEdge(new Edge(1, 4));
+            graph.AddEdge(new Edge(1, 5, 5.0));
+            graph.AddEdge(new Edge(2, 6));
+            graph.AddEdge(new Edge(3, 5, 5.0));
+
+            AStarSearch aStar = new AStarSearch(graph, 0, 5, AStarHeuristics.Distance);
+
+            List<int> path = new List<int>();
+            aStar.PathToTarget(out path);
+            System.Diagnostics.Debug.Write("Path: ");
+            for (int i = 0; i < path.Count; i++)
+            {
+                System.Diagnostics.Debug.Write(path[i]);
+
+                if (i < path.Count - 1)
+                    System.Diagnostics.Debug.Write("|");
+            }
+            if (path.Count > 0)
+                System.Diagnostics.Debug.WriteLine(", Cost = " + aStar.CostToTarget);
+            else
+                System.Diagnostics.Debug.WriteLine("");
             */
 
             System.Diagnostics.Debug.WriteLine("------- DONE TESTING! -------");
@@ -127,7 +121,7 @@ namespace AIFGP_Game
             SingleWhitePixel = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             SingleWhitePixel.SetData<Color>(new Color[1] { Color.White }); 
 
-            map = new Map("map001.txt");
+            map = new Map("map002.txt");
             playerManager = new PlayerManager();
             enemyManager = new EnemyManager();
 

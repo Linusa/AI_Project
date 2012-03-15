@@ -18,5 +18,19 @@
             get;
             set;
         }
+
+        Vector2 Velocity
+        {
+            get;
+            set;
+        }
+
+        float MaxSpeed
+        {
+            get;
+            set;
+        }
+
+        Vector2 Seek(Vector2 target);
     }
 }

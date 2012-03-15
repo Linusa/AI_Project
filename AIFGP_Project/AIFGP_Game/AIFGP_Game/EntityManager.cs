@@ -8,6 +8,8 @@ namespace AIFGP_Game
     {
         public Dictionary<Guid, IGameEntity> Entities = new Dictionary<Guid, IGameEntity>();
 
+        public Guid PlayerID;
+
         public void RegisterEntity(IGameEntity entity)
         {
             Entities.Add(entity.ID, entity);
@@ -16,6 +18,11 @@ namespace AIFGP_Game
         public IGameEntity GetEntity(Guid id)
         {
             return Entities[id];
+        }
+
+        public IGameEntity GetPlayer()
+        {
+            return Entities[PlayerID];
         }
 
         public static EntityManager Instance

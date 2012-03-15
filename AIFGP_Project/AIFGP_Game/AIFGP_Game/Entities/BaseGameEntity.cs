@@ -16,6 +16,9 @@
         private Guid id;
 
         private Vector2 heading = Vector2.Zero;
+        private Vector2 velocity = Vector2.Zero;
+
+        private float maxSpeed = 250.0f;
 
         public BaseGameEntity(Texture2D texture, Vector2 position, Rectangle dimensions)
         {
@@ -50,6 +53,18 @@
             set { heading = Vector2.Normalize(value); }
         }
 
+        public Vector2 Velocity
+        {
+            get { return velocity; }
+            set { velocity = value; }
+        }
+
+        public float MaxSpeed
+        {
+            get { return maxSpeed; }
+            set { maxSpeed = MathHelper.Max(0.0f, value); }
+        }
+
         public virtual void Translate(Vector2 offset)
         {
             Position += offset;
@@ -82,8 +97,17 @@
             EntitySprite.Scale(scale);
         }
 
+        public Vector2 Seek(Vector2 target)
+        {
+            Vector2 toTarget = Vector2.Normalize(target - Position) * MaxSpeed;
+            return toTarget - Velocity;
+        }
+
         public virtual void Update(GameTime gameTime)
         {
+            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+            Position += Velocity * dt;
+
             EntitySprite.Update(gameTime);
         }
 

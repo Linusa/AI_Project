@@ -3,40 +3,49 @@
     using System;
     using System.Collections.Generic;
 
-    public class DijkstraSearch
+    using Heuristic = System.Func<Graph<PositionalNode, Edge>, int, int, double>;
+
+    public class AStarSearch
     {
         public readonly bool TargetFound = false;
 
-        private readonly Graph<Node, Edge> g;
+        private readonly Graph<PositionalNode, Edge> g;
         private readonly int numNodes;
 
         private int src;
         private int tgt;
 
+        private Heuristic heuristic;
+
         private List<Edge> edgeFrontier;
         private List<Edge> shortestPathTree;
-        private List<double> accumulativeWeights;
+        private List<double> weights;
+        private List<double> weightsPlusHeuristic;
 
-        public DijkstraSearch(Graph<Node, Edge> graph, int source, int target = -1)
+        public AStarSearch(Graph<PositionalNode, Edge> graph, int source, int target, Heuristic h)
         {
             g = graph;
             src = source;
             tgt = target;
 
+            heuristic = h;
+
             numNodes = graph.NodeCount;
             edgeFrontier = new List<Edge>(numNodes);
             shortestPathTree = new List<Edge>(numNodes);
-            accumulativeWeights = new List<double>(numNodes);
+            weights = new List<double>(numNodes);
+            weightsPlusHeuristic = new List<double>(numNodes);
 
             for (int i = 0; i < numNodes; i++)
             {
                 edgeFrontier.Add(null);
                 shortestPathTree.Add(null);
-                accumulativeWeights.Add(0.0);
+                weights.Add(0.0);
+                weightsPlusHeuristic.Add(0.0);
             }
 
-            bool sourceExists = g.NodeExists(src);
-            TargetFound = sourceExists ? search() : false;
+            bool nodesExist = g.NodeExists(src) && g.NodeExists(tgt);
+            TargetFound = nodesExist ? search() : false;
         }
 
         public void PathToTarget(out List<int> path)
@@ -58,19 +67,9 @@
             }
         }
 
-        public void ShortestPathTree(out List<Edge> tree)
-        {
-            tree = shortestPathTree;
-        }
-
         public double CostToTarget
         {
-            get { return accumulativeWeights[tgt]; }
-        }
-
-        public double CostToNode(int nodeIndex)
-        {
-            return accumulativeWeights[nodeIndex];
+            get { return weights[tgt]; }
         }
 
         private bool search()
@@ -78,7 +77,7 @@
             KeyHeap<double> cheapestNodesHeap =
                 new KeyHeap<double>(
                     HeapSorting.Min,
-                    accumulativeWeights,
+                    weightsPlusHeuristic,
                     numNodes
                 );
             
@@ -93,26 +92,26 @@
 
                 foreach (Edge e in g.EdgesFromNode(cheapestNode))
                 {
-                    double weight = accumulativeWeights[cheapestNode] + e.Weight;
+                    double actualWeight = weights[cheapestNode] + e.Weight;
+                    double heuristicWeight = actualWeight + heuristic(g, e.NodeTo, tgt);
 
                     if (edgeFrontier[e.NodeTo] == null)
                     {
-                        accumulativeWeights[e.NodeTo] = weight;
+                        weights[e.NodeTo] = actualWeight;
+                        weightsPlusHeuristic[e.NodeTo] = heuristicWeight;
                         cheapestNodesHeap.Insert(e.NodeTo);
                         edgeFrontier[e.NodeTo] = e;
                     }
-                    else if (weight < accumulativeWeights[e.NodeTo] && shortestPathTree[e.NodeTo] == null)
+                    else if (actualWeight < weights[e.NodeTo] && shortestPathTree[e.NodeTo] == null)
                     {
-                        accumulativeWeights[e.NodeTo] = weight;
+                        weights[e.NodeTo] = actualWeight;
+                        weightsPlusHeuristic[e.NodeTo] = heuristicWeight;
                         cheapestNodesHeap.Reorder(e.NodeTo);
                         edgeFrontier[e.NodeTo] = e;
                     }
                 }
             }
 
-            // If no target was specified (or target did not exist) search
-            // returns false. The instance still holds valuable info though
-            // in the shortest path tree and the accumulative weights.
             return false;
         }
     }

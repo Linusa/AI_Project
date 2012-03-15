@@ -34,16 +34,6 @@
             get { return 24.0f; }
         }
 
-        public override void Update(GameTime gameTime)
-        {
-            EntitySprite.Update(gameTime);
-        }
-
-        public override void Draw(SpriteBatch spriteBatch)
-        {
-            EntitySprite.Draw(spriteBatch);
-        }
-
         protected override void configureSprite()
         {
             Rectangle curFrame = Dimensions;

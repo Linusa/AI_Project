@@ -143,6 +143,8 @@
     <Compile Include="Graph\Search\DepthFirstSearch.cs" />
     <Compile Include="Graph\Search\DijkstraSearch.cs" />
     <Compile Include="Graph\Specializations\Navigation\PositionalNode.cs" />
+    <Compile Include="Graph\Specializations\Visual\VisualEdge.cs" />
+    <Compile Include="Graph\Specializations\Visual\VisualNode.cs" />
     <Compile Include="Map\Map.cs" />
     <Compile Include="Map\TileInfo.cs" />
     <Compile Include="Map\Wall.cs" />

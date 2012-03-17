@@ -32,7 +32,7 @@ namespace AIFGP_Game
 
         public static SpriteFont DebugFont;
 
-        public Graph<Node, Edge> testGraph = new Graph<Node,Edge>();
+        private VisualGraphDebugger debugGraph;
 
         public AStarGame()
         {
@@ -60,26 +60,8 @@ namespace AIFGP_Game
             // BEGIN Testing
             System.Diagnostics.Debug.WriteLine("------- BEGIN TESTING! -------");
 
+
             /*
-            Random rng = new Random();
-            Graph<PositionalNode, Edge> graph = new Graph<PositionalNode, Edge>();
-
-            int numNodes = 7;
-            for (int i = 0; i < numNodes; i++)
-            {
-                float x = (float)(rng.NextDouble() * (ScreenDimensions.Width - 100));
-                float y = (float)(rng.NextDouble() * (ScreenDimensions.Height - 100));
-                graph.AddNode(new PositionalNode(graph.AvailableNodeIndex, new Vector2(x, y)));
-            }
-
-            graph.AddEdge(new Edge(0, 1, 10.0));
-            graph.AddEdge(new Edge(0, 2));
-            graph.AddEdge(new Edge(0, 3, 10.0));
-            graph.AddEdge(new Edge(1, 4));
-            graph.AddEdge(new Edge(1, 5, 5.0));
-            graph.AddEdge(new Edge(2, 6));
-            graph.AddEdge(new Edge(3, 5, 5.0));
-
             AStarSearch aStar = new AStarSearch(graph, 0, 5, AStarHeuristics.Distance);
 
             List<int> path = new List<int>();
@@ -124,6 +106,41 @@ namespace AIFGP_Game
             map = new Map("map002.txt");
             playerManager = new PlayerManager();
             enemyManager = new EnemyManager();
+            
+            Random rng = new Random();
+            Graph<VisualNode, VisualEdge> graph = new Graph<VisualNode, VisualEdge>();
+
+            /*
+            int numNodes = 7;
+            for (int i = 0; i < numNodes; i++)
+            {
+                float x = (float)(rng.NextDouble() * (ScreenDimensions.Width - 100));
+                float y = (float)(rng.NextDouble() * (ScreenDimensions.Height - 100));
+                graph.AddNode(new VisualNode(graph.AvailableNodeIndex, new Vector2(x, y)));
+            }
+            */
+
+            float w = ScreenDimensions.Width;
+            float h = ScreenDimensions.Height;
+            Point center = ScreenDimensions.Center;
+
+            graph.AddNode(new VisualNode(graph.AvailableNodeIndex, new Vector2(3*w/6, 1*h/5)));
+            graph.AddNode(new VisualNode(graph.AvailableNodeIndex, new Vector2(2*w/6, 2*h/5)));
+            graph.AddNode(new VisualNode(graph.AvailableNodeIndex, new Vector2(3*w/6, 2*h/5)));
+            graph.AddNode(new VisualNode(graph.AvailableNodeIndex, new Vector2(4*w/6, 2*h/5)));
+            graph.AddNode(new VisualNode(graph.AvailableNodeIndex, new Vector2(1*w/6, 3*h/5)));
+            graph.AddNode(new VisualNode(graph.AvailableNodeIndex, new Vector2(2*w/6, 3*h/5)));
+            graph.AddNode(new VisualNode(graph.AvailableNodeIndex, new Vector2(3*w/6, 3*h/5)));
+
+            graph.AddEdge(new VisualEdge(0, 1, graph));
+            graph.AddEdge(new VisualEdge(0, 2, graph));
+            graph.AddEdge(new VisualEdge(0, 3, graph));
+            graph.AddEdge(new VisualEdge(1, 4, graph));
+            graph.AddEdge(new VisualEdge(1, 5, graph));
+            graph.AddEdge(new VisualEdge(2, 6, graph));
+            graph.AddEdge(new VisualEdge(3, 5, graph));
+
+            debugGraph = new VisualGraphDebugger(graph);
 
             DebugFont = Content.Load<SpriteFont>(@"Fonts\Debug");
         }
@@ -168,6 +185,7 @@ namespace AIFGP_Game
                 map.Draw(spriteBatch);
                 playerManager.Draw(spriteBatch);
                 enemyManager.Draw(spriteBatch);
+                debugGraph.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);

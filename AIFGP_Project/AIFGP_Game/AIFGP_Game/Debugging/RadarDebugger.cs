@@ -10,7 +10,7 @@
         private Radar radarDebugging;
         
         public Sprite<byte> RadarSprite;
-        private static Rectangle spriteDimensions = new Rectangle(0, 0, 250, 250);
+        public static Rectangle SpriteDimensions = new Rectangle(0, 0, 250, 250);
         private Vector2 scaleUp = new Vector2(0.025f);
         private Vector2 scaleMax = new Vector2(1.0f);
         private Timer scaleUpTimer = new Timer(0.01f);
@@ -25,8 +25,8 @@
         {
             radarDebugging = radar;
 
-            RadarSprite = new Sprite<byte>(AStarGame.RadarCircle, Vector2.Zero, spriteDimensions);
-            RadarSprite.AddAnimationFrame(0, spriteDimensions);
+            RadarSprite = new Sprite<byte>(AStarGame.RadarCircle, Vector2.Zero, SpriteDimensions);
+            RadarSprite.AddAnimationFrame(0, SpriteDimensions);
             RadarSprite.ActiveAnimation = 0;
             
             resetScaleUp();

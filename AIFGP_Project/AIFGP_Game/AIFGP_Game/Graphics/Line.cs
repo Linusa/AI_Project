@@ -22,6 +22,12 @@
             LineSprite.ActiveAnimation = 0;
         }
 
+        public Color LineColor
+        {
+            get { return LineSprite.Color; }
+            set { LineSprite.Color = value; }
+        }
+
         public Vector2 Position
         {
             get { return LineSprite.CenterPosition; }

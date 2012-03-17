@@ -32,7 +32,7 @@ namespace AIFGP_Game
 
         public static SpriteFont DebugFont;
 
-        private VisualGraphDebugger debugGraph;
+        private GraphViewer debugGraphViewer;
 
         public AStarGame()
         {
@@ -59,27 +59,6 @@ namespace AIFGP_Game
 
             // BEGIN Testing
             System.Diagnostics.Debug.WriteLine("------- BEGIN TESTING! -------");
-
-
-            /*
-            AStarSearch aStar = new AStarSearch(graph, 0, 5, AStarHeuristics.Distance);
-
-            List<int> path = new List<int>();
-            aStar.PathToTarget(out path);
-            System.Diagnostics.Debug.Write("Path: ");
-            for (int i = 0; i < path.Count; i++)
-            {
-                System.Diagnostics.Debug.Write(path[i]);
-
-                if (i < path.Count - 1)
-                    System.Diagnostics.Debug.Write("|");
-            }
-            if (path.Count > 0)
-                System.Diagnostics.Debug.WriteLine(", Cost = " + aStar.CostToTarget);
-            else
-                System.Diagnostics.Debug.WriteLine("");
-            */
-
             System.Diagnostics.Debug.WriteLine("------- DONE TESTING! -------");
             // END Testing
 
@@ -108,39 +87,37 @@ namespace AIFGP_Game
             enemyManager = new EnemyManager();
             
             Random rng = new Random();
-            Graph<VisualNode, VisualEdge> graph = new Graph<VisualNode, VisualEdge>();
-
-            /*
-            int numNodes = 7;
-            for (int i = 0; i < numNodes; i++)
-            {
-                float x = (float)(rng.NextDouble() * (ScreenDimensions.Width - 100));
-                float y = (float)(rng.NextDouble() * (ScreenDimensions.Height - 100));
-                graph.AddNode(new VisualNode(graph.AvailableNodeIndex, new Vector2(x, y)));
-            }
-            */
+            Graph<PositionalNode, Edge> graph = new Graph<PositionalNode, Edge>();
 
             float w = ScreenDimensions.Width;
             float h = ScreenDimensions.Height;
             Point center = ScreenDimensions.Center;
 
-            graph.AddNode(new VisualNode(graph.AvailableNodeIndex, new Vector2(3*w/6, 1*h/5)));
-            graph.AddNode(new VisualNode(graph.AvailableNodeIndex, new Vector2(2*w/6, 2*h/5)));
-            graph.AddNode(new VisualNode(graph.AvailableNodeIndex, new Vector2(3*w/6, 2*h/5)));
-            graph.AddNode(new VisualNode(graph.AvailableNodeIndex, new Vector2(4*w/6, 2*h/5)));
-            graph.AddNode(new VisualNode(graph.AvailableNodeIndex, new Vector2(1*w/6, 3*h/5)));
-            graph.AddNode(new VisualNode(graph.AvailableNodeIndex, new Vector2(2*w/6, 3*h/5)));
-            graph.AddNode(new VisualNode(graph.AvailableNodeIndex, new Vector2(3*w/6, 3*h/5)));
+            Vector2 p0 = new Vector2(3*w/6, 1*h/5);
+            Vector2 p1 = new Vector2(2*w/6, 2*h/5);
+            Vector2 p2 = new Vector2(3*w/6, 2*h/5);
+            Vector2 p3 = new Vector2(4*w/6, 2*h/5);
+            Vector2 p4 = new Vector2(1*w/6, 3*h/5);
+            Vector2 p5 = new Vector2(2*w/6, 3*h/5);
+            Vector2 p6 = new Vector2(3*w/6, 3*h/5);
 
-            graph.AddEdge(new VisualEdge(0, 1, graph));
-            graph.AddEdge(new VisualEdge(0, 2, graph));
-            graph.AddEdge(new VisualEdge(0, 3, graph));
-            graph.AddEdge(new VisualEdge(1, 4, graph));
-            graph.AddEdge(new VisualEdge(1, 5, graph));
-            graph.AddEdge(new VisualEdge(2, 6, graph));
-            graph.AddEdge(new VisualEdge(3, 5, graph));
+            graph.AddNode(new PositionalNode(graph.AvailableNodeIndex, p0));
+            graph.AddNode(new PositionalNode(graph.AvailableNodeIndex, p1));
+            graph.AddNode(new PositionalNode(graph.AvailableNodeIndex, p2));
+            graph.AddNode(new PositionalNode(graph.AvailableNodeIndex, p3));
+            graph.AddNode(new PositionalNode(graph.AvailableNodeIndex, p4));
+            graph.AddNode(new PositionalNode(graph.AvailableNodeIndex, p5));
+            graph.AddNode(new PositionalNode(graph.AvailableNodeIndex, p6));
 
-            debugGraph = new VisualGraphDebugger(graph);
+            graph.AddEdge(new Edge(0, 1, (p0-p1).Length()));
+            graph.AddEdge(new Edge(0, 2, (p0-p1).Length()));
+            graph.AddEdge(new Edge(0, 3, (p0-p3).Length()));
+            graph.AddEdge(new Edge(1, 4, (p1-p4).Length()));
+            graph.AddEdge(new Edge(1, 5, (p1-p5).Length()));
+            graph.AddEdge(new Edge(2, 6, (p2-p6).Length()));
+            graph.AddEdge(new Edge(3, 5, (p3-p5).Length()));
+
+            debugGraphViewer = new GraphViewer(graph);
 
             DebugFont = Content.Load<SpriteFont>(@"Fonts\Debug");
         }
@@ -185,7 +162,7 @@ namespace AIFGP_Game
                 map.Draw(spriteBatch);
                 playerManager.Draw(spriteBatch);
                 enemyManager.Draw(spriteBatch);
-                debugGraph.Draw(spriteBatch);
+                debugGraphViewer.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);

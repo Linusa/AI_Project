@@ -119,7 +119,7 @@
     <Compile Include="Debugging\RadarDebugger.cs" />
     <Compile Include="Debugging\PropertyDebugger.cs" />
     <Compile Include="Debugging\RangefinderDebugger.cs" />
-    <Compile Include="Debugging\VisualGraphDebugger.cs" />
+    <Compile Include="Graphics\GraphViewer.cs" />
     <Compile Include="Entities\BaseGameEntity.cs" />
     <Compile Include="EnemyManager.cs" />
     <Compile Include="Entities\Interfaces\ICollidable.cs" />
@@ -143,8 +143,6 @@
     <Compile Include="Graph\Search\DepthFirstSearch.cs" />
     <Compile Include="Graph\Search\DijkstraSearch.cs" />
     <Compile Include="Graph\Specializations\Navigation\PositionalNode.cs" />
-    <Compile Include="Graph\Specializations\Visual\VisualEdge.cs" />
-    <Compile Include="Graph\Specializations\Visual\VisualNode.cs" />
     <Compile Include="Map\Map.cs" />
     <Compile Include="Map\TileInfo.cs" />
     <Compile Include="Map\Wall.cs" />

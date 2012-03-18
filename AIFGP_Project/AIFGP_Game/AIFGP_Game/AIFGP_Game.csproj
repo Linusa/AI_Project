@@ -119,6 +119,7 @@
     <Compile Include="Debugging\RadarDebugger.cs" />
     <Compile Include="Debugging\PropertyDebugger.cs" />
     <Compile Include="Debugging\RangefinderDebugger.cs" />
+    <Compile Include="Graphics\GraphSearchViewer.cs" />
     <Compile Include="Graphics\GraphViewer.cs" />
     <Compile Include="Entities\BaseGameEntity.cs" />
     <Compile Include="EnemyManager.cs" />
@@ -161,6 +162,7 @@
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
+    <Content Include="Map\ascii_maps\map003.txt" />
     <Content Include="Map\ascii_maps\map002.txt" />
     <Content Include="Map\ascii_maps\map001.txt" />
   </ItemGroup>

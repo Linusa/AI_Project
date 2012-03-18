@@ -28,7 +28,7 @@
             Vector2 startLocation = new Vector2(xBasePad + xPad, yPad);
             Vector2 curEnemyPosition = startLocation;
 
-            int numEnemies = 0;
+            int numEnemies = 1;
             for (int i = 0; i < numEnemies; i++)
             {
                 Enemies.Add(new SimpleGameEntity(AStarGame.NpcSpriteSheet, curEnemyPosition));
@@ -69,7 +69,7 @@
                     }
                 }
 
-                entity.Velocity += entity.Seek(player.Position);
+                //entity.Velocity += entity.Seek(player.Position);
                 entity.Update(gameTime);
             }
         }

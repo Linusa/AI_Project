@@ -31,6 +31,7 @@ namespace AIFGP_Game
         private EnemyManager enemyManager;
 
         public static SpriteFont DebugFont;
+        public static SpriteFont SmallDebugFont;
 
         private GraphViewer debugGraphViewer;
 
@@ -82,10 +83,11 @@ namespace AIFGP_Game
             SingleWhitePixel = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             SingleWhitePixel.SetData<Color>(new Color[1] { Color.White }); 
 
-            map = new Map("map002.txt");
+            map = new Map("map003.txt");
             playerManager = new PlayerManager();
             enemyManager = new EnemyManager();
             
+            /*
             Random rng = new Random();
             Graph<PositionalNode, Edge> graph = new Graph<PositionalNode, Edge>();
 
@@ -118,8 +120,12 @@ namespace AIFGP_Game
             graph.AddEdge(new Edge(3, 5, (p3-p5).Length()));
 
             debugGraphViewer = new GraphViewer(graph);
+            debugGraphViewer.ChangeEdgeColor(graph.GetEdge(0, 1), Color.DarkGoldenrod);
+            debugGraphViewer.ChangeEdgeColor(graph.GetEdge(6, 2), Color.Magenta);
+            */
 
             DebugFont = Content.Load<SpriteFont>(@"Fonts\Debug");
+            SmallDebugFont = Content.Load<SpriteFont>(@"Fonts\Debug_Small");
         }
 
         /// <summary>
@@ -138,12 +144,11 @@ namespace AIFGP_Game
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
                 || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
-            // TODO: Add your update logic here
+            map.Update(gameTime);
             playerManager.Update(gameTime);
             enemyManager.Update(gameTime);
 
@@ -162,7 +167,7 @@ namespace AIFGP_Game
                 map.Draw(spriteBatch);
                 playerManager.Draw(spriteBatch);
                 enemyManager.Draw(spriteBatch);
-                debugGraphViewer.Draw(spriteBatch);
+                //debugGraphViewer.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);

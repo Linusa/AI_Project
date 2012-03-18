@@ -15,6 +15,7 @@
         // TODO: THIS NEEDS TO BE FULLY TESTED!
         public void AddWall(Wall wallToAdd)
         {
+            /*
             bool mergedWall = false;
 
             for (int i = 0; i < Walls.Count; i++)
@@ -54,6 +55,9 @@
 
             if (!mergedWall)
                 Walls.Add(wallToAdd);
+            */
+
+            Walls.Add(wallToAdd);
         }
 
         public BoundingBox WallExtentsIn3D(Wall wall)

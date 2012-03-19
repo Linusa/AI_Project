@@ -99,6 +99,8 @@
                 int cheapestNode = cheapestNodesHeap.Remove();
                 shortestPathTree[cheapestNode] = edgeFrontier[cheapestNode];
 
+                System.Diagnostics.Debug.Write(cheapestNode + " | ");
+
                 if (cheapestNode == tgt)
                     return true;
 
@@ -123,6 +125,8 @@
                     }
                 }
             }
+
+            System.Diagnostics.Debug.WriteLine("");
 
             return false;
         }

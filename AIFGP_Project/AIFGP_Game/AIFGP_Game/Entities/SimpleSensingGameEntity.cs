@@ -37,16 +37,13 @@
 
         public override void Update(GameTime gameTime)
         {
-            float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-            Position += Velocity * dt;
+            base.Update(gameTime);
 
             foreach (ISensor sensor in sensors)
             {
                 sensor.Position = Position;
                 sensor.Update(gameTime);
             }
-
-            EntitySprite.Update(gameTime);
         }
 
         public override void Draw(SpriteBatch spriteBatch)

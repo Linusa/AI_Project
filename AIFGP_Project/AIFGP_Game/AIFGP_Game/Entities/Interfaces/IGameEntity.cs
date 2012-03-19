@@ -1,6 +1,7 @@
 ﻿namespace AIFGP_Game
 {
     using System;
+    using System.Collections.Generic;
     using Microsoft.Xna.Framework;
 
     /// <summary>
@@ -30,6 +31,14 @@
             get;
             set;
         }
+
+        bool FollowingPath
+        {
+            get;
+            set;
+        }
+
+        void FollowPath(List<Vector2> path);
 
         Vector2 Seek(Vector2 target);
     }

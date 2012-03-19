@@ -2,9 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.IO;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
-    using System.IO;
+    using Microsoft.Xna.Framework.Input;
 
     using NavigationGraph = Graph<PositionalNode, Edge>;
 
@@ -28,14 +29,16 @@
         private Sprite<byte> grassTile;
         private Sprite<byte> wallTile;
 
-        private NavigationGraph navGraph = new NavigationGraph();
+        public NavigationGraph NavigationGraph = new NavigationGraph();
         private Dictionary<Vector2, int> nodeIndices = new Dictionary<Vector2, int>();
         private Dictionary<Vector2, bool> positionsFilled = new Dictionary<Vector2, bool>();
         private Vector2 seedStart;
 
-        private GraphViewer navGraphViewer;
+        private GraphSearchViewer navGraphViewer;
 
         private string mapDirectory;
+
+        private Timer inputTimer = new Timer(0.2f);
 
         public Map(string mapFileName)
         {
@@ -43,26 +46,21 @@
             loadMapFromText(mapFileName);
 
             CreateNavigationGraph();
-            navGraphViewer = new GraphViewer(navGraph);
-
-            /*
-            AStarSearch search = new AStarSearch(navGraph, 451, 112, AStarHeuristics.Distance);
-            if (search.TargetFound)
-            {
-                List<int> path;
-                search.PathToTarget(out path);
-
-                for (int i = 0; i < path.Count - 1; i++)
-                    navGraphViewer.ChangeEdgeColor(navGraph.GetEdge(path[i], path[i+1]), Color.Red);
-            }
-            */
+            navGraphViewer = new GraphSearchViewer(NavigationGraph);
 
             initSprites();
+
+            inputTimer.Start();
         }
 
         // Map must be loaded before this is called!
         public void CreateNavigationGraph()
         {
+            // GC may wreak havoc here, test this out.
+            nodeIndices.Clear();
+            positionsFilled.Clear();
+            NavigationGraph.Clear();
+
             Vector2 toTileCenter = TileSize / 2;
 
             positionsFilled.Clear();
@@ -71,10 +69,6 @@
 
             computeNavGraphNodes(seedStart);
             computeNavGraphEdges();
-
-            // GC may wreak havoc here, test this out.
-            nodeIndices.Clear();
-            positionsFilled.Clear();
         }
 
         private void computeNavGraphNodes(Vector2 seedPosition)
@@ -88,8 +82,8 @@
 
                 if (!tileIsWall)
                 {
-                    int nodeIdx = navGraph.AvailableNodeIndex;
-                    navGraph.AddNode(new PositionalNode(nodeIdx, seedPosition));
+                    int nodeIdx = NavigationGraph.AvailableNodeIndex;
+                    NavigationGraph.AddNode(new PositionalNode(nodeIdx, seedPosition));
                     nodeIndices.Add(seedPosition, nodeIdx);
                 }
 
@@ -116,7 +110,7 @@
             Vector2 dy = new Vector2(0.0f, TileSize.Y);
             double diagDist = Math.Sqrt(dx.X * dx.X + dy.Y * dy.Y);
 
-            foreach (PositionalNode n in navGraph.Nodes)
+            foreach (PositionalNode n in NavigationGraph.Nodes)
             {
                 Vector2 leftNodePos = n.Position - dx;
                 Vector2 topLeftNodePos = n.Position - dx - dy;
@@ -128,28 +122,28 @@
                 Vector2 bottomLeftNodePos = n.Position - dx + dy;
 
                 if (nodeIndices.ContainsKey(leftNodePos))
-                    navGraph.AddEdge(new Edge(n.Index, nodeIndices[leftNodePos], dx.X));
+                    NavigationGraph.AddEdge(new Edge(n.Index, nodeIndices[leftNodePos], dx.X));
 
                 if (nodeIndices.ContainsKey(rightNodePos))
-                    navGraph.AddEdge(new Edge(n.Index, nodeIndices[rightNodePos], dx.X));
+                    NavigationGraph.AddEdge(new Edge(n.Index, nodeIndices[rightNodePos], dx.X));
 
                 if (nodeIndices.ContainsKey(topNodePos))
-                    navGraph.AddEdge(new Edge(n.Index, nodeIndices[topNodePos], dy.Y));
+                    NavigationGraph.AddEdge(new Edge(n.Index, nodeIndices[topNodePos], dy.Y));
 
                 if (nodeIndices.ContainsKey(bottomNodePos))
-                    navGraph.AddEdge(new Edge(n.Index, nodeIndices[bottomNodePos], dy.Y));
+                    NavigationGraph.AddEdge(new Edge(n.Index, nodeIndices[bottomNodePos], dy.Y));
 
                 if (nodeIndices.ContainsKey(topLeftNodePos))
-                    navGraph.AddEdge(new Edge(n.Index, nodeIndices[topLeftNodePos], diagDist));
+                    NavigationGraph.AddEdge(new Edge(n.Index, nodeIndices[topLeftNodePos], diagDist));
                 
                 if (nodeIndices.ContainsKey(topRightNodePos))
-                    navGraph.AddEdge(new Edge(n.Index, nodeIndices[topRightNodePos], diagDist));
+                    NavigationGraph.AddEdge(new Edge(n.Index, nodeIndices[topRightNodePos], diagDist));
                 
                 if (nodeIndices.ContainsKey(bottomRightNodePos))
-                    navGraph.AddEdge(new Edge(n.Index, nodeIndices[bottomRightNodePos], diagDist));
+                    NavigationGraph.AddEdge(new Edge(n.Index, nodeIndices[bottomRightNodePos], diagDist));
                 
                 if (nodeIndices.ContainsKey(bottomLeftNodePos))
-                    navGraph.AddEdge(new Edge(n.Index, nodeIndices[bottomLeftNodePos], diagDist));
+                    NavigationGraph.AddEdge(new Edge(n.Index, nodeIndices[bottomLeftNodePos], diagDist));
             }
         }
 
@@ -219,6 +213,74 @@
 
         public void Update(GameTime gameTime)
         {
+            if (inputTimer.Expired(gameTime))
+            {
+                KeyboardState keyboardState = Keyboard.GetState();
+                if (keyboardState.IsKeyDown(Keys.LeftShift))
+                {
+                    MouseState mouseState = Mouse.GetState();
+                    bool leftMouseButton = mouseState.LeftButton == ButtonState.Pressed;
+                    bool rightMouseButton = mouseState.RightButton == ButtonState.Pressed;
+                    if (leftMouseButton || rightMouseButton)
+                    {
+                        int leftRightPad = (AStarGame.ScreenDimensions.Width - (TilesAcross * (int)TileSize.X)) / 2;
+                        int topBottomPad = (AStarGame.ScreenDimensions.Height - (TilesDown * (int)TileSize.Y)) / 2;
+
+                        int mapSquareX = (mouseState.X - leftRightPad) / (int)TileSize.X;
+                        int mapSquareY = (mouseState.Y - topBottomPad) / (int)TileSize.Y;
+
+                        mapSquareX = (int)MathHelper.Clamp(mapSquareX, 0, TilesAcross - 1);
+                        mapSquareY = (int)MathHelper.Clamp(mapSquareY, 0, TilesDown - 1);
+
+                        int mapSquareIndex = (mapSquareY * TilesAcross) + mapSquareX;
+
+                        TileInfo selectedTile = mapTiles[mapSquareIndex];
+
+                        Wall wall = new Wall();
+                        wall.TopLeftPixel = selectedTile.Position;
+                        wall.BottomRightPixel = selectedTile.Position + TileSize;
+
+                        if (leftMouseButton)
+                        {
+                            Vector2 nodePos = selectedTile.Position + TileSize / 2;
+                            if (nodeIndices.ContainsKey(nodePos))
+                            {
+                                int selectedNodeIdx = nodeIndices[nodePos];
+                                PositionalNode selectedNode = NavigationGraph.GetNode(selectedNodeIdx);
+
+                                selectedTile.Type = TileType.Wall;
+                                WallManager.Instance.AddWall(wall);
+
+                                bool graphWasDisplayed = navGraphViewer.DisplayGraph;
+                                bool indicesWereDisplayed = navGraphViewer.DisplayNodeIndices;
+
+                                CreateNavigationGraph();
+                                navGraphViewer = new GraphSearchViewer(NavigationGraph);
+
+                                navGraphViewer.DisplayGraph = graphWasDisplayed;
+                                navGraphViewer.DisplayNodeIndices = indicesWereDisplayed;
+                            }
+                        }
+                        else if (rightMouseButton)
+                        {
+                            selectedTile.Type = TileType.Ground;
+                            WallManager.Instance.RemoveWall(wall);
+                            
+                            bool graphWasDisplayed = navGraphViewer.DisplayGraph;
+                            bool indicesWereDisplayed = navGraphViewer.DisplayNodeIndices;
+
+                            CreateNavigationGraph();
+                            navGraphViewer = new GraphSearchViewer(NavigationGraph);
+
+                            navGraphViewer.DisplayGraph = graphWasDisplayed;
+                            navGraphViewer.DisplayNodeIndices = indicesWereDisplayed;
+                        }
+
+                        mapTiles[mapSquareIndex] = selectedTile;
+                    }
+                }
+            }
+
             navGraphViewer.Update(gameTime);
         }
 

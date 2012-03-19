@@ -42,14 +42,6 @@
 
             if (noVelocityChange)
                 Player.Velocity = Vector2.Zero;
-
-            /*
-            // Press 'Left Alt' for player debugging.
-            if (keyboardState.IsKeyDown(Keys.LeftAlt))
-                playerDebugger.IsDebuggingEnabled = true;
-            else if (keyboardState.IsKeyUp(Keys.LeftAlt))
-                playerDebugger.IsDebuggingEnabled = false;
-            */
         }
 
         public void Update(GameTime gameTime)

@@ -9,7 +9,7 @@
         // TODO: Integrate nUnit or something similar.
         public void Run(Graph<Node, Edge> graph)
         {
-            // Add nodes 0 and 1, and an edge between them.
+            // Add nodes 0 and 1, and an curEdge between them.
             graph.AddNode(new Node(graph.AvailableNodeIndex));
             graph.AddNode(new Node(graph.AvailableNodeIndex));
             graph.AddEdge(new Edge(0, 1));
@@ -95,7 +95,7 @@
             graph.GetEdge(6, 1).Weight = 33.2112;
             graph.GetEdge(1, 6).Weight = 2112.33;
 
-            // Check for edge modification by iteration.
+            // Check for curEdge modification by iteration.
             foreach (Edge e in graph.Edges)
                 e.Weight = 1.0;
             double weightMod = 10.0;
@@ -109,7 +109,7 @@
             foreach (Edge e in graph.Edges)
                 e.Weight = 1.0;
 
-            // Check for edge modification by iteration over a node's edges.
+            // Check for curEdge modification by iteration over a node's edges.
             foreach (Edge e in graph.EdgesFromNode(1))
                 e.Weight = 3.0;
 

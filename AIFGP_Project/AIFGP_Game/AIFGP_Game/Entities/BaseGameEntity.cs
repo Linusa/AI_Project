@@ -1,6 +1,7 @@
 ﻿namespace AIFGP_Game
 {
     using System;
+    using System.Collections.Generic;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
@@ -17,8 +18,10 @@
 
         private Vector2 heading = Vector2.Zero;
         private Vector2 velocity = Vector2.Zero;
-
         private float maxSpeed = 250.0f;
+
+        private List<Vector2> path = new List<Vector2>();
+        private bool followingPath = false;
 
         public BaseGameEntity(Texture2D texture, Vector2 position, Rectangle dimensions)
         {
@@ -65,6 +68,18 @@
             set { maxSpeed = MathHelper.Max(0.0f, value); }
         }
 
+        public bool FollowingPath
+        {
+            get { return followingPath; }
+            set
+            {
+                followingPath = value;
+
+                if (!followingPath)
+                    Velocity = Vector2.Zero;
+            }
+        }
+
         public virtual void Translate(Vector2 offset)
         {
             Position += offset;
@@ -97,6 +112,12 @@
             EntitySprite.Scale(scale);
         }
 
+        public void FollowPath(List<Vector2> p)
+        {
+            path = p;
+            FollowingPath = true;
+        }
+
         public Vector2 Seek(Vector2 target)
         {
             Vector2 toTarget = Vector2.Normalize(target - Position) * MaxSpeed;
@@ -106,6 +127,25 @@
         public virtual void Update(GameTime gameTime)
         {
             float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
+
+            if (FollowingPath)
+            {
+                // For demo purposes, using acceleration of 0.
+                Velocity = Seek(path[0]);
+
+                // Update direction.
+                RotateInRadians((float)Angles.AngleFromUToV(Heading,
+                    Vector2.Normalize(path[0] - Position)));
+
+                if (nextNodeReached())
+                {
+                    path.RemoveAt(0);
+
+                    if (path.Count == 0)
+                        FollowingPath = false;
+                }
+            }
+
             Position += Velocity * dt;
 
             EntitySprite.Update(gameTime);
@@ -127,5 +167,15 @@
         }
 
         protected abstract void configureSprite();
+
+        private bool nextNodeReached()
+        {
+            float epsilon = 10.0f;
+
+            bool xEqual = Math.Abs(path[0].X - Position.X) < epsilon;
+            bool yEqual = Math.Abs(path[0].Y - Position.Y) < epsilon;
+
+            return xEqual && yEqual;
+        }
     }
 }

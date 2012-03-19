@@ -31,5 +31,26 @@
         {
             get { return null; }
         }
+
+        public override bool Equals(object obj)
+        {
+            if (!(obj is Wall))
+                return false;
+
+            return Equals((Wall)obj);
+        }
+
+        public bool Equals(Wall wall)
+        {
+            if (TopLeftPixel != wall.TopLeftPixel)
+                return false;
+
+            return BottomRightPixel == wall.BottomRightPixel;
+        }
+
+        public override int GetHashCode()
+        {
+            return TopLeftPixel.GetHashCode() ^ BottomRightPixel.GetHashCode();
+        }
     }
 }

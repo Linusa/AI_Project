@@ -6,9 +6,6 @@ namespace AIFGP_Game
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
 
-    /// <summary>
-    /// This is the main type for your game
-    /// </summary>
     public class AStarGame : Microsoft.Xna.Framework.Game
     {
         private GraphicsDeviceManager graphics;
@@ -33,20 +30,12 @@ namespace AIFGP_Game
         public static SpriteFont DebugFont;
         public static SpriteFont SmallDebugFont;
 
-        private GraphViewer debugGraphViewer;
-
         public AStarGame()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
-        /// <summary>
-        /// Allows the game to perform any initialization it needs to before starting to run.
-        /// This is where it can query for any required services and load any non-graphic
-        /// related content.  Calling base.Initialize will enumerate through any components
-        /// and initialize them as well.
-        /// </summary>
         protected override void Initialize()
         {
             graphics.PreferredBackBufferWidth = ScreenDimensions.Width;
@@ -66,10 +55,6 @@ namespace AIFGP_Game
             base.Initialize();
         }
 
-        /// <summary>
-        /// LoadContent will be called once per game and is the place to load
-        /// all of your content.
-        /// </summary>
         protected override void LoadContent()
         {
             spriteBatch = new SpriteBatch(GraphicsDevice);
@@ -87,61 +72,18 @@ namespace AIFGP_Game
             playerManager = new PlayerManager();
             enemyManager = new EnemyManager();
             
-            /*
-            Random rng = new Random();
-            Graph<PositionalNode, Edge> graph = new Graph<PositionalNode, Edge>();
-
-            float w = ScreenDimensions.Width;
-            float h = ScreenDimensions.Height;
-            Point center = ScreenDimensions.Center;
-
-            Vector2 p0 = new Vector2(3*w/6, 1*h/5);
-            Vector2 p1 = new Vector2(2*w/6, 2*h/5);
-            Vector2 p2 = new Vector2(3*w/6, 2*h/5);
-            Vector2 p3 = new Vector2(4*w/6, 2*h/5);
-            Vector2 p4 = new Vector2(1*w/6, 3*h/5);
-            Vector2 p5 = new Vector2(2*w/6, 3*h/5);
-            Vector2 p6 = new Vector2(3*w/6, 3*h/5);
-
-            graph.AddNode(new PositionalNode(graph.AvailableNodeIndex, p0));
-            graph.AddNode(new PositionalNode(graph.AvailableNodeIndex, p1));
-            graph.AddNode(new PositionalNode(graph.AvailableNodeIndex, p2));
-            graph.AddNode(new PositionalNode(graph.AvailableNodeIndex, p3));
-            graph.AddNode(new PositionalNode(graph.AvailableNodeIndex, p4));
-            graph.AddNode(new PositionalNode(graph.AvailableNodeIndex, p5));
-            graph.AddNode(new PositionalNode(graph.AvailableNodeIndex, p6));
-
-            graph.AddEdge(new Edge(0, 1, (p0-p1).Length()));
-            graph.AddEdge(new Edge(0, 2, (p0-p1).Length()));
-            graph.AddEdge(new Edge(0, 3, (p0-p3).Length()));
-            graph.AddEdge(new Edge(1, 4, (p1-p4).Length()));
-            graph.AddEdge(new Edge(1, 5, (p1-p5).Length()));
-            graph.AddEdge(new Edge(2, 6, (p2-p6).Length()));
-            graph.AddEdge(new Edge(3, 5, (p3-p5).Length()));
-
-            debugGraphViewer = new GraphViewer(graph);
-            debugGraphViewer.ChangeEdgeColor(graph.GetEdge(0, 1), Color.DarkGoldenrod);
-            debugGraphViewer.ChangeEdgeColor(graph.GetEdge(6, 2), Color.Magenta);
-            */
-
             DebugFont = Content.Load<SpriteFont>(@"Fonts\Debug");
             SmallDebugFont = Content.Load<SpriteFont>(@"Fonts\Debug_Small");
+
+            Window.Title = "4: Graph | 5: Indices | Lalt+Lmouse: Source | "
+                + "Ralt+Lmouse: Target | Lsh+Lmouse: Add Wall | Lsh+Rmouse: Del Wall";
         }
 
-        /// <summary>
-        /// UnloadContent will be called once per game and is the place to unload
-        /// all content.
-        /// </summary>
         protected override void UnloadContent()
         {
             // TODO: Unload any non ContentManager content here
         }
 
-        /// <summary>
-        /// Allows the game to run logic such as updating the world,
-        /// checking for collisions, gathering input, and playing audio.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
             if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed
@@ -155,10 +97,6 @@ namespace AIFGP_Game
             base.Update(gameTime);
         }
 
-        /// <summary>
-        /// This is called when the game should draw itself.
-        /// </summary>
-        /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
@@ -167,7 +105,6 @@ namespace AIFGP_Game
                 map.Draw(spriteBatch);
                 playerManager.Draw(spriteBatch);
                 enemyManager.Draw(spriteBatch);
-                //debugGraphViewer.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);

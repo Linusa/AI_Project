@@ -9,11 +9,5 @@
             get;
             set;
         }
-
-        bool IsSensingEnabled
-        {
-            get;
-            set;
-        }
     }
 }

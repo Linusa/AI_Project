@@ -1,15 +1,16 @@
 ﻿namespace AIFGP_Game
 {
-    using System;
     using System.Collections.Generic;
 
     using BFS = BreadthFirstSearch;
     using SysDbg = System.Diagnostics.Debug;
 
+    /// <summary>
+    /// Simple breadth-first search tester.
+    /// </summary>
     public class BFSDebugger
     {
         // This would be much more effective as a unit test.
-        // TODO: Integrate nUnit or something similar.
         public void Run()
         {
             int testNum = 1;

@@ -5,6 +5,11 @@
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
 
+    /// <summary>
+    /// The Rangefinder sensor ensures an entity is not blind.
+    /// It has a few feelers (rays) projected out of the entity
+    /// that are checked for intersections with walls on the map.
+    /// </summary>
     public class Rangefinder : ISensor
     {
         public IGameEntity SensingEntity;

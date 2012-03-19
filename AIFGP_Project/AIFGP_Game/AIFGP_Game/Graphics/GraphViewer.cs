@@ -1,6 +1,5 @@
 ﻿namespace AIFGP_Game
 {
-    using System;
     using System.Collections.Generic;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
@@ -8,6 +7,10 @@
 
     using GraphType = Graph<PositionalNode, Edge>;
 
+    /// <summary>
+    /// GraphViewer visually displays a graph of PositionalNode's
+    /// and Edges.
+    /// </summary>
     public class GraphViewer : IDrawable, IUpdateable
     {
         public bool DisplayGraph = false;

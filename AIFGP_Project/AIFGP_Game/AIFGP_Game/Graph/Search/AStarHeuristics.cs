@@ -1,7 +1,12 @@
 ﻿namespace AIFGP_Game
 {
+    // Shortcut for an A* heuristic's delegate signature.
     using Heuristic = System.Func<Graph<PositionalNode, Edge>, int, int, double>;
-    
+
+    /// <summary>
+    /// AStarHeuristics provides delegates for the various heuristics
+    /// AStarSearch could use.
+    /// </summary>
     public static class AStarHeuristics
     {
         public static Heuristic Distance =

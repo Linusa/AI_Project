@@ -1,10 +1,17 @@
 ﻿namespace AIFGP_Game
 {
-    using System;
     using System.Collections.Generic;
 
+    // Shortcut for an A* heuristic's delegate signature.
     using Heuristic = System.Func<Graph<PositionalNode, Edge>, int, int, double>;
 
+    /// <summary>
+    /// AStarSearch searches a graph using a modified Dijkstra's
+    /// algorithm. It creates a shortest path tree from the source
+    /// to all nodes encountered until the target is reached. The
+    /// difference from Dijkstra's is that it directs the search
+    /// based on some heuristic (commonly, the Euclidean distance).
+    /// </summary>
     public class AStarSearch
     {
         public readonly bool TargetFound = false;
@@ -48,6 +55,7 @@
             TargetFound = nodesExist ? search() : false;
         }
 
+        // Reconstruct the path to the target.
         public void PathToTarget(out List<int> path)
         {
             path = new List<int>();
@@ -72,8 +80,12 @@
             get { return weights[tgt]; }
         }
 
+        // The A* search.
         private bool search()
         {
+            // KeyHeap is used as a heap that sorts indices
+            // based on the elements at their locations in
+            // weightsPlusHeuristic.
             KeyHeap<double> cheapestNodesHeap =
                 new KeyHeap<double>(
                     HeapSorting.Min,
@@ -98,14 +110,14 @@
                     if (edgeFrontier[e.NodeTo] == null)
                     {
                         weights[e.NodeTo] = actualWeight;
-                        weightsPlusHeuristic[e.NodeTo] = heuristicWeight;
+                        weightsPlusHeuristic[e.NodeTo] = heuristicWeight; // Heuristic weight, not actual!
                         cheapestNodesHeap.Insert(e.NodeTo);
                         edgeFrontier[e.NodeTo] = e;
                     }
                     else if (actualWeight < weights[e.NodeTo] && shortestPathTree[e.NodeTo] == null)
                     {
                         weights[e.NodeTo] = actualWeight;
-                        weightsPlusHeuristic[e.NodeTo] = heuristicWeight;
+                        weightsPlusHeuristic[e.NodeTo] = heuristicWeight; // Heuristic weight, not actual!
                         cheapestNodesHeap.Reorder(e.NodeTo);
                         edgeFrontier[e.NodeTo] = e;
                     }

@@ -5,7 +5,8 @@
     using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// SimpleGameEntity creates an entity using the 50x50 arrow
+    /// pictures.
     /// </summary>
     public class SimpleGameEntity : BaseGameEntity
     {

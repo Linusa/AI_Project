@@ -2,9 +2,6 @@
 {
     using Microsoft.Xna.Framework;
 
-    /// <summary>
-    /// TODO: Update summary.
-    /// </summary>
     public interface IScalable
     {
         void Scale(Vector2 scale);

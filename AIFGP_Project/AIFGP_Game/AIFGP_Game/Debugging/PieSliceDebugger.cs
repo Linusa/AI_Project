@@ -5,6 +5,9 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
+    /// <summary>
+    /// Debugs PieSlice by showing graphical information about it.
+    /// </summary>
     public class PieSliceDebugger : IUpdateable, IDrawable, IRotatable
     {
         private PieSlice pieSliceDebugging;

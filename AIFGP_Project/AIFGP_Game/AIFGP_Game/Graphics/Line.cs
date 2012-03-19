@@ -4,7 +4,7 @@
     using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Used to draw a line on the screen.
     /// </summary>
     public class Line : ISpatialEntity, IDrawable
     {

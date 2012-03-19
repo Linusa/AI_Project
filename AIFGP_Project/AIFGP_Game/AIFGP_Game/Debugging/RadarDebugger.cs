@@ -5,6 +5,9 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
+    /// <summary>
+    /// Debugs Radar by showing graphical information about it.
+    /// </summary>
     public class RadarDebugger : IUpdateable, IDrawable
     {
         private Radar radarDebugging;

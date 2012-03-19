@@ -1,13 +1,9 @@
 ﻿namespace AIFGP_Game
 {
-    using System;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
 
-    /// <summary>
-    /// TODO: Update summary.
-    /// </summary>
     public class PlayerManager : IUpdateable, IDrawable
     {
         public IGameEntity Player;

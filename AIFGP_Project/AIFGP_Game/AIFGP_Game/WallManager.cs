@@ -6,13 +6,13 @@
     // WallManager is a singleton. Access it with Instance property.
     public class WallManager
     {
-        // Note that this is public for reference access, but walls
+        // Note that this is public for easy access, but walls
         // should be added with the AddWall method.
         public List<Wall> Walls = new List<Wall>();
 
-        // Adds a Wall. If possible, the Wall will be merged with an existing
-        // wall.
-        // TODO: THIS NEEDS TO BE FULLY TESTED!
+        // TODO: Merging code not working 100% correctly, so each small
+        // Wall is just added for now. This is not efficient at all,
+        // and must be changed later.
         public void AddWall(Wall wall)
         {
             /*

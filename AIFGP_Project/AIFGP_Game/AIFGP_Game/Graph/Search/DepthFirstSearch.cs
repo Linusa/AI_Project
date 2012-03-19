@@ -1,8 +1,12 @@
 ﻿namespace AIFGP_Game
 {
-    using System;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// DepthFirstSearch searches a graph by traveling as deep as possible,
+    /// and once it gets stuck, backtracks until it can take another path
+    /// as deep as possible, and so on.
+    /// </summary>
     public class DepthFirstSearch
     {
         public readonly bool TargetFound = false;
@@ -34,6 +38,7 @@
             TargetFound = nodesExist ? search() : false;
         }
         
+        // Reconstruct the path to the target.
         public void PathToTarget(out List<int> path)
         {
             path = new List<int>();
@@ -53,6 +58,7 @@
             }
         }
 
+        // The depth-first search.
         private bool search()
         {
             bool found = false;

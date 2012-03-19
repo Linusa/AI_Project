@@ -1,10 +1,20 @@
 ﻿namespace AIFGP_Game
 {
-    using System;
     using System.Collections.Generic;
 
     using SysDbg = System.Diagnostics.Debug;
 
+    /// <summary>
+    /// Graph represents a weighted, undirected graph of nodes and the
+    /// edges between them. An adjacency list representation is used
+    /// for storage internally. Individual nodes and edges can be
+    /// accessed with the corresponding getter methods, but the
+    /// node and edge containers are not accessible. Instead, the
+    /// class provides  iterators to iterate over all nodes, all edges,
+    /// or all edges from a specified node.
+    /// </summary>
+    /// <typeparam name="NodeType">The node type (inherits Node)</typeparam>
+    /// <typeparam name="EdgeType">The edge type (inherits Edge)</typeparam>
     public class Graph<NodeType, EdgeType>
         where NodeType : Node
         where EdgeType : Edge
@@ -115,6 +125,9 @@
             return null;
         }
 
+        // Either adds a new node, or if the node existed previously
+        // but was marked inactive, the node is reactivated and assigned
+        // the node passed in.
         public void AddNode(NodeType node)
         {
             if (node.Index == AvailableNodeIndex)

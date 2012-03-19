@@ -5,6 +5,11 @@
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
 
+    /// <summary>
+    /// The Radar sensor detects adjacent entities within a
+    /// modifiable radius. It provides a List of RadarInfo's
+    /// to uniquely identify each adjacent entity.
+    /// </summary>
     public class Radar : ISensor
     {
         public IGameEntity SensingEntity;

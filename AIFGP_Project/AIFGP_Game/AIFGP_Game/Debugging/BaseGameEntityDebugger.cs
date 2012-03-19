@@ -3,6 +3,10 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
+    /// <summary>
+    /// Debugging class that can show some basic info about a
+    /// game entity.
+    /// </summary>
     public class BaseGameEntityDebugger : IUpdateable, IDrawable
     {
         private PropertyDebugger<BaseGameEntity> debugger;

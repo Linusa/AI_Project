@@ -1,15 +1,16 @@
 ﻿namespace AIFGP_Game
 {
-    using System;
     using System.Collections.Generic;
 
     using DFS = DepthFirstSearch;
     using SysDbg = System.Diagnostics.Debug;
 
+    /// <summary>
+    /// Simple depth-first search tester.
+    /// </summary>
     public class DFSDebugger
     {
         // This would be much more effective as a unit test.
-        // TODO: Integrate nUnit or something similar.
         public void Run()
         {
             int testNum = 1;

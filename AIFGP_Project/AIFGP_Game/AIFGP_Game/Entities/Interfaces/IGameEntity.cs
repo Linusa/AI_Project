@@ -4,9 +4,6 @@
     using System.Collections.Generic;
     using Microsoft.Xna.Framework;
 
-    /// <summary>
-    /// TODO: Update summary.
-    /// </summary>
     public interface IGameEntity : ISpatialEntity, ICollidable, IUpdateable, IDrawable
     {
         Guid ID

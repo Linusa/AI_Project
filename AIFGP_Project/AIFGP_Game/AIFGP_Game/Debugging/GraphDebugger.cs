@@ -1,12 +1,13 @@
 ﻿namespace AIFGP_Game
 {
-    using System;
     using SysDbg = System.Diagnostics.Debug;
 
+    /// <summary>
+    /// Simple graph tester.
+    /// </summary>
     public class GraphDebugger
     {
         // This would be much more effective as a unit test.
-        // TODO: Integrate nUnit or something similar.
         public void Run(Graph<Node, Edge> graph)
         {
             // Add nodes 0 and 1, and an curEdge between them.

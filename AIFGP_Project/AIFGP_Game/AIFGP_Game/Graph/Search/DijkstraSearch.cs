@@ -3,6 +3,14 @@
     using System;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// DijkstraSearch searches a graph using Dijkstra's algorithm. It
+    /// creates a shortest path tree from the source to all nodes
+    /// encountered until the target is reached.  If a target is not
+    /// specified, the shortest path tree will have the shortest path
+    /// from the source to all nodes in the graph, provided the graph
+    /// is connected.
+    /// </summary>
     public class DijkstraSearch
     {
         public readonly bool TargetFound = false;
@@ -39,6 +47,7 @@
             TargetFound = sourceExists ? search() : false;
         }
 
+        // Reconstruct the path to the target.
         public void PathToTarget(out List<int> path)
         {
             path = new List<int>();
@@ -73,8 +82,12 @@
             return accumulativeWeights[nodeIndex];
         }
 
+        // Dijkstra's algorithm.
         private bool search()
         {
+            // KeyHeap is used as a heap that sorts indices
+            // based on the elements at their locations in
+            // accumulativeWeights.
             KeyHeap<double> cheapestNodesHeap =
                 new KeyHeap<double>(
                     HeapSorting.Min,

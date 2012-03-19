@@ -1,13 +1,19 @@
 ﻿namespace AIFGP_Game
 {
-    using System;
     using System.Collections.Generic;
     using Microsoft.Xna.Framework;
-    using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
 
     using GraphType = Graph<PositionalNode, Edge>;
 
+    /// <summary>
+    /// GraphSearchViewer displays a graph of PositionalNode's
+    /// Edge's just like GraphViewer, only it also allows the
+    /// user to select source and target nodes for A* searches.
+    /// If no source is selected, selecting a target will
+    /// instruct the player's entity to follow the A* path
+    /// to the target.
+    /// </summary>
     public class GraphSearchViewer : GraphViewer
     {
         public PositionalNode SourceNode;
@@ -117,6 +123,10 @@
             }
         }
 
+        // Depending on whether or not source and target nodes have
+        // been selected, this method will display the A* path between
+        // source and target, or instruct the player's entity to move
+        // along the A* path to the target.
         private void updatePathDisplay()
         {
             IGameEntity player = EntityManager.Instance.GetPlayer();

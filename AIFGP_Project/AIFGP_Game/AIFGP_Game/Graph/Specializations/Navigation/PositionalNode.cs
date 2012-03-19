@@ -2,6 +2,9 @@
 {
     using Microsoft.Xna.Framework;
 
+    /// <summary>
+    /// PositionalNode is a Node with a location.
+    /// </summary>
     public class PositionalNode : Node
     {
         public Vector2 Position;

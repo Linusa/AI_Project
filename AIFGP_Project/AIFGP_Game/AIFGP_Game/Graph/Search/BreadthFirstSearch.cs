@@ -3,6 +3,11 @@
     using System;
     using System.Collections.Generic;
 
+    /// <summary>
+    /// BreadthFirstSearch searches a graph by levels of depth. From the
+    /// source, it searches all adjacent nodes, then from each adjacent node,
+    /// it examines nodes adjacent to it and so on.
+    /// </summary>
     public class BreadthFirstSearch
     {
         public readonly bool TargetFound = false;
@@ -34,6 +39,7 @@
             TargetFound = nodesExist ? search() : false;
         }
         
+        // Reconstruct the path to the target.
         public void PathToTarget(out List<int> path)
         {
             path = new List<int>();
@@ -53,6 +59,7 @@
             }
         }
 
+        // The breadth-first search.
         private bool search()
         {
             bool found = false;

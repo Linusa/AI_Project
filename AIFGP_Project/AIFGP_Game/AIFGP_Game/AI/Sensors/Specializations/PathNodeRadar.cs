@@ -7,6 +7,11 @@
     
     using GraphType = Graph<PositionalNode, Edge>;
 
+    /// <summary>
+    /// Slight modification of the Radar class, though this
+    /// class does not inherit from Radar. It finds the nodes
+    /// in a navigation graph near its position.
+    /// </summary>
     public class PathNodeRadar : ISensor
     {
         public float Range = 50.0f;

@@ -9,6 +9,12 @@
 
     using NavigationGraph = Graph<PositionalNode, Edge>;
 
+    /// <summary>
+    /// Map represents the game map. It is initialized with a text file
+    /// representation of the map, and then the navigation graph is
+    /// automatically generated via floodfill. A Map can be modified on
+    /// the fly and its navigation graph will update accordingly.
+    /// </summary>
     public class Map : IDrawable, IUpdateable
     {
         public enum TileType
@@ -42,6 +48,7 @@
 
         public Map(string mapFileName)
         {
+            // This will not be here for the third assignment! :D
             mapDirectory = @"C:\Users\Jason\Documents\AI_Project\AIFGP_Project\AIFGP_Game\AIFGP_Game\Map\ascii_maps\";
             loadMapFromText(mapFileName);
 
@@ -71,6 +78,7 @@
             computeNavGraphEdges();
         }
 
+        // Uses floodfill to auto-generate the navigation graph's nodes.
         private void computeNavGraphNodes(Vector2 seedPosition)
         {
             if (positionsFilled.ContainsKey(seedPosition) && !positionsFilled[seedPosition])
@@ -104,6 +112,8 @@
             }
         }
 
+        // After the nodes have been generated, this method iterates
+        // over all of them and adds the appropriate edges.
         private void computeNavGraphEdges()
         {
             Vector2 dx = new Vector2(TileSize.X, 0.0f);
@@ -147,6 +157,7 @@
             }
         }
 
+        // Parses a text file representation of a map.
         private void loadMapFromText(string mapFileName)
         {
             string path = mapDirectory + mapFileName;
@@ -213,6 +224,9 @@
 
         public void Update(GameTime gameTime)
         {
+            // If left-shift is held down, the user can left-click to put
+            // walls down and right-click to remove them. This looks messy,
+            // but it's really just handling input.
             if (inputTimer.Expired(gameTime))
             {
                 KeyboardState keyboardState = Keyboard.GetState();
@@ -240,6 +254,8 @@
                         wall.TopLeftPixel = selectedTile.Position;
                         wall.BottomRightPixel = selectedTile.Position + TileSize;
 
+                        // Update the map, walls, and navigation graph if a wall was
+                        // placed/removed.
                         if (leftMouseButton)
                         {
                             Vector2 nodePos = selectedTile.Position + TileSize / 2;

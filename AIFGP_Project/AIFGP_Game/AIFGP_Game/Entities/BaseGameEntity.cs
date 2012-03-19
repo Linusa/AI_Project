@@ -6,14 +6,14 @@
     using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// BaseGameEntity is an abstract class that provides most of the
+    /// implementation to get an entity up and running.
     /// </summary>
     public abstract class BaseGameEntity : IGameEntity
     {
         // Should never be adding more than 256 animations to a Sprite.
         public Sprite<byte> EntitySprite;
 
-        // GUID for the entity.
         private Guid id;
 
         private Vector2 heading = Vector2.Zero;
@@ -118,6 +118,7 @@
             FollowingPath = true;
         }
 
+        // Force needed to move to a target.
         public Vector2 Seek(Vector2 target)
         {
             Vector2 toTarget = Vector2.Normalize(target - Position) * MaxSpeed;
@@ -168,6 +169,7 @@
 
         protected abstract void configureSprite();
 
+        // Checks if the entity is within 10px of current path position.
         private bool nextNodeReached()
         {
             float epsilon = 10.0f;

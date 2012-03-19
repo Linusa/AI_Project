@@ -1,5 +1,11 @@
 ﻿namespace AIFGP_Game
 {
+    /// <summary>
+    /// Edge represents a directed, weighted edge in a graph. An Edge
+    /// stores the index of the node it comes from, the index of the
+    /// node it goes to, and also the weight of the edge. This is to
+    /// be used as the superclass for any specialized edges.
+    /// </summary>
     public class Edge
     {
         private int from = Node.InvalidIndex;

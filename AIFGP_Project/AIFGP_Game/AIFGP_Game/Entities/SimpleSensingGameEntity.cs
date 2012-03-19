@@ -5,7 +5,7 @@
     using Microsoft.Xna.Framework.Graphics;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// SimpleSensingGameEntity is a SimpleGameEntity with sensors. :D
     /// </summary>
     public class SimpleSensingGameEntity : SimpleGameEntity
     {

@@ -5,6 +5,11 @@
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
 
+    /// <summary>
+    /// The PieSlice sensor uses information gathered by a Radar
+    /// instance and partitions the adjacent entities into
+    /// pie slices based on location.
+    /// </summary>
     public class PieSlice : ISensor
     {
         public enum PieSliceLocation

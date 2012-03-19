@@ -3,7 +3,9 @@
     using System;
 
     /// <summary>
-    /// TODO: Update summary.
+    /// Simple struct that contains valuable spatial information
+    /// for an entity relative to the entity whose Radar returned
+    /// this info.
     /// </summary>
     public struct RadarInfo
     {

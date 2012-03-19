@@ -136,7 +136,6 @@
     <Compile Include="Graphics\Interfaces\IScalable.cs" />
     <Compile Include="Graphics\Line.cs" />
     <Compile Include="Graph\Graph.cs" />
-    <Compile Include="Graph\GraphInfo.cs" />
     <Compile Include="Graph\Edge.cs" />
     <Compile Include="Graph\Node.cs" />
     <Compile Include="Graph\Search\AStarHeuristics.cs" />

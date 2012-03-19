@@ -102,7 +102,10 @@
                 System.Diagnostics.Debug.Write(cheapestNode + " | ");
 
                 if (cheapestNode == tgt)
+                {
+                    System.Diagnostics.Debug.WriteLine("");
                     return true;
+                }
 
                 foreach (Edge e in g.EdgesFromNode(cheapestNode))
                 {
@@ -125,8 +128,6 @@
                     }
                 }
             }
-
-            System.Diagnostics.Debug.WriteLine("");
 
             return false;
         }

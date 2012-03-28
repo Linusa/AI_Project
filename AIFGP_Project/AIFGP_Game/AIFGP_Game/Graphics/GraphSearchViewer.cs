@@ -45,7 +45,7 @@
 
                     if (leftMouseButton)
                     {
-                        Vector2 mouseVec = new Vector2(mouse.X, mouse.Y);
+                        Vector2 mouseVec = AStarGame.MousePositionInWorld();
                         checkForClickedNode(mouseVec, leftAlt, rightAlt);
 
                         updatePathDisplay();

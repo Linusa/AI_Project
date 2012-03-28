@@ -6,57 +6,83 @@
 
     public class PlayerManager : IUpdateable, IDrawable
     {
-        public IGameEntity Player;
+        public BaseGameEntity Player;
 
-        private BaseGameEntityDebugger playerDebugger;
+        private Vector2 oldVertical = Vector2.Zero;
+        private Vector2 oldHorizontal = Vector2.Zero;
 
         public PlayerManager()
         {
-            Player = new SimpleSensingGameEntity(AStarGame.PlayerSpriteSheet, AStarGame.ScreenCenter);
+            Player = new Rabbit(AStarGame.RabbitSpriteSheet, AStarGame.ScreenCenter);
             EntityManager.Instance.PlayerID = Player.ID;
 
-            playerDebugger = new BaseGameEntityDebugger(Player as BaseGameEntity);
+            Player.MaxSpeed = 225.0f;
         }
 
         private void checkKeyboard(GameTime gameTime)
         {
+            Vector2 vertical = Vector2.Zero;
+            Vector2 horizontal = Vector2.Zero;
+
             KeyboardState keyboardState = Keyboard.GetState();
 
-            bool noVelocityChange = false;
-
             if (keyboardState.IsKeyDown(Keys.Up))
-                Player.Velocity = Player.Heading * Player.MaxSpeed;
-            else if (keyboardState.IsKeyDown(Keys.Down))
-                Player.Velocity = -Player.Heading * Player.MaxSpeed;
-            else
-                noVelocityChange = true;
+            {
+                vertical.Y = -Player.MaxSpeed;
+                Player.EntitySprite.ActiveAnimation = (byte)Rabbit.AnimationIds.HopBack;
+            }
             
-            if (keyboardState.IsKeyDown(Keys.Left))
-                Player.RotateInDegrees(-3.0f);
-            else if (keyboardState.IsKeyDown(Keys.Right))
-                Player.RotateInDegrees(3.0f);
+            if (keyboardState.IsKeyDown(Keys.Down))
+            {
+                vertical.Y = Player.MaxSpeed;
+                Player.EntitySprite.ActiveAnimation = (byte)Rabbit.AnimationIds.HopForward;
+            }
 
-            if (noVelocityChange)
-                Player.Velocity = Vector2.Zero;
+            if (keyboardState.IsKeyDown(Keys.Left))
+            {
+                horizontal.X = -Player.MaxSpeed;
+                Player.EntitySprite.ActiveAnimation = (byte)Rabbit.AnimationIds.HopLeft;
+            }
+            
+            if (keyboardState.IsKeyDown(Keys.Right))
+            {
+                horizontal.X = Player.MaxSpeed;
+                Player.EntitySprite.ActiveAnimation = (byte)Rabbit.AnimationIds.HopRight;
+            }
+
+            Player.Velocity = vertical + horizontal;
+
+            if (Player.Velocity.Equals(Vector2.Zero))
+            {
+                bool wasMovingUp = oldVertical.Y < 0.0f;
+                bool wasMovingDown = oldVertical.Y > 0.0f;
+                bool wasMovingLeft = oldHorizontal.X < 0.0f;
+                bool wasMovingRight = oldHorizontal.X > 0.0f;
+
+                if (wasMovingUp)
+                    Player.EntitySprite.ActiveAnimation = (byte)Rabbit.AnimationIds.LookBack;
+                else if (wasMovingDown)
+                    Player.EntitySprite.ActiveAnimation = (byte)Rabbit.AnimationIds.LookForward;
+                
+                if (wasMovingLeft)
+                    Player.EntitySprite.ActiveAnimation = (byte)Rabbit.AnimationIds.LookLeft;
+                else if (wasMovingRight)
+                    Player.EntitySprite.ActiveAnimation = (byte)Rabbit.AnimationIds.LookRight;
+            }
+            
+            oldVertical = vertical;
+            oldHorizontal = horizontal;
         }
 
         public void Update(GameTime gameTime)
         {
             checkKeyboard(gameTime);
-
             Player.Update(gameTime);
-            AStarGame.WrapPosition(ref Player);
-
-            if (playerDebugger.IsDebuggingEnabled)
-                playerDebugger.Update(gameTime);
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             Player.Draw(spriteBatch);
-
-            if (playerDebugger.IsDebuggingEnabled)
-                playerDebugger.Draw(spriteBatch);
         }
     }
 }

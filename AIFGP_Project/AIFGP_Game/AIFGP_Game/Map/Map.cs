@@ -224,7 +224,7 @@
 
         public void Update(GameTime gameTime)
         {
-            // If left-shift is held down, the user can left-click to put
+            // If horizontal-shift is held down, the user can horizontal-click to put
             // walls down and right-click to remove them. This looks messy,
             // but it's really just handling input.
             if (inputTimer.Expired(gameTime))
@@ -240,8 +240,10 @@
                         int leftRightPad = (AStarGame.ScreenDimensions.Width - (TilesAcross * (int)TileSize.X)) / 2;
                         int topBottomPad = (AStarGame.ScreenDimensions.Height - (TilesDown * (int)TileSize.Y)) / 2;
 
-                        int mapSquareX = (mouseState.X - leftRightPad) / (int)TileSize.X;
-                        int mapSquareY = (mouseState.Y - topBottomPad) / (int)TileSize.Y;
+                        Vector2 mouseVec = AStarGame.MousePositionInWorld();
+
+                        int mapSquareX = ((int)mouseVec.X - leftRightPad) / (int)TileSize.X;
+                        int mapSquareY = ((int)mouseVec.Y - topBottomPad) / (int)TileSize.Y;
 
                         mapSquareX = (int)MathHelper.Clamp(mapSquareX, 0, TilesAcross - 1);
                         mapSquareY = (int)MathHelper.Clamp(mapSquareY, 0, TilesDown - 1);

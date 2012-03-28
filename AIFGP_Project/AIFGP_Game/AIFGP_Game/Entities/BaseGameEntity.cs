@@ -7,7 +7,7 @@
 
     /// <summary>
     /// BaseGameEntity is an abstract class that provides most of the
-    /// implementation to get an entity up and running.
+    /// implementation to get an entity vertical and running.
     /// </summary>
     public abstract class BaseGameEntity : IGameEntity
     {
@@ -132,11 +132,11 @@
             if (FollowingPath)
             {
                 // For demo purposes, using acceleration of 0.
-                Velocity = Seek(path[0]);
+                Velocity += Seek(path[0]);
 
                 // Update direction.
-                RotateInRadians((float)Angles.AngleFromUToV(Heading,
-                    Vector2.Normalize(path[0] - Position)));
+                //RotateInRadians((float)Angles.AngleFromUToV(Heading,
+                //    Vector2.Normalize(path[0] - position)));
 
                 if (nextNodeReached())
                 {

@@ -14,7 +14,7 @@
     /// </summary>
     public class PathNodeRadar : ISensor
     {
-        public float Range = 50.0f;
+        public float Range = 100.0f;
 
         private GraphType g;
 

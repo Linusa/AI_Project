@@ -11,8 +11,7 @@ namespace AIFGP_Game
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
-        public static Rectangle ScreenDimensions = new Rectangle(0, 0, 800, 600);
-        //public static Rectangle ScreenDimensions = new Rectangle(0, 0, 1920, 1080);
+        public static Rectangle ScreenDimensions = new Rectangle(0, 0, 1920, 1080);
         public static Vector2 ScreenCenter = new Vector2(ScreenDimensions.Width,
             ScreenDimensions.Height) / 2;
 
@@ -22,6 +21,9 @@ namespace AIFGP_Game
         public static Texture2D WallTile;
         public static Texture2D RadarCircle;
         public static Texture2D SingleWhitePixel;
+        public static Texture2D RabbitSpriteSheet;
+
+        public static Camera GameCamera;
 
         private Map map;
         private PlayerManager playerManager;
@@ -29,6 +31,8 @@ namespace AIFGP_Game
 
         public static SpriteFont DebugFont;
         public static SpriteFont SmallDebugFont;
+        
+        private MouseState prevMouseState;
 
         public AStarGame()
         {
@@ -38,10 +42,17 @@ namespace AIFGP_Game
 
         protected override void Initialize()
         {
-            graphics.PreferredBackBufferWidth = ScreenDimensions.Width;
-            graphics.PreferredBackBufferHeight = ScreenDimensions.Height;
-            graphics.ApplyChanges();
+            //ScreenDimensions.Width = graphics.GraphicsDevice.DisplayMode.Width;
+            //ScreenDimensions.Height = graphics.GraphicsDevice.DisplayMode.Height;
+            //ScreenCenter = new Vector2(ScreenDimensions.Width, ScreenDimensions.Height) / 2;
 
+            //graphics.PreferredBackBufferWidth = ScreenDimensions.Width;
+            graphics.PreferredBackBufferWidth = 800;
+            //graphics.PreferredBackBufferHeight = ScreenDimensions.Height;
+            graphics.PreferredBackBufferHeight = 600;
+            //graphics.IsFullScreen = true;
+            graphics.ApplyChanges();
+            
             IsMouseVisible = true;
 
             // Hot-fix for the every-second or so stuttering.
@@ -64,19 +75,19 @@ namespace AIFGP_Game
             GrassTile = Content.Load<Texture2D>(@"Images\grass_tile");
             WallTile = Content.Load<Texture2D>(@"Images\wall_tile");
             RadarCircle = Content.Load<Texture2D>(@"Images\circle");
+            RabbitSpriteSheet = Content.Load<Texture2D>(@"Images\rabbit_136x360_ea34x36");
 
             SingleWhitePixel = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             SingleWhitePixel.SetData<Color>(new Color[1] { Color.White }); 
 
-            map = new Map("map003.txt");
+            map = new Map("map004.txt");
             playerManager = new PlayerManager();
             enemyManager = new EnemyManager();
+
+            GameCamera = new Camera(graphics.GraphicsDevice, playerManager.Player.Position);
             
             DebugFont = Content.Load<SpriteFont>(@"Fonts\Debug");
             SmallDebugFont = Content.Load<SpriteFont>(@"Fonts\Debug_Small");
-
-            Window.Title = "4: Graph | 5: Indices | Lalt+Lmouse: Source | "
-                + "Ralt+Lmouse: Target | Lsh+Lmouse: Add Wall | Lsh+Rmouse: Del Wall";
         }
 
         protected override void UnloadContent()
@@ -94,6 +105,22 @@ namespace AIFGP_Game
             playerManager.Update(gameTime);
             enemyManager.Update(gameTime);
 
+            MouseState mouseState = Mouse.GetState();
+            if (mouseState.MiddleButton == ButtonState.Pressed)
+                GameCamera.Position += new Vector2(prevMouseState.X - mouseState.X, prevMouseState.Y - mouseState.Y);
+            
+            if (mouseState.ScrollWheelValue != prevMouseState.ScrollWheelValue)
+            {
+                // magFactor assigned either 1.1 or 0.9 depending on direction of scroll.
+                float magFactor = (mouseState.ScrollWheelValue - prevMouseState.ScrollWheelValue) / 1200.0f + 1;
+                GameCamera.Magnification *= magFactor;
+            }
+ 
+            prevMouseState = mouseState;
+
+            if (!playerManager.Player.Velocity.Equals(Vector2.Zero))
+                GameCamera.Position = playerManager.Player.Position;
+
             base.Update(gameTime);
         }
 
@@ -101,13 +128,38 @@ namespace AIFGP_Game
         {
             GraphicsDevice.Clear(Color.Black);
 
-            spriteBatch.Begin();
-                map.Draw(spriteBatch);
-                playerManager.Draw(spriteBatch);
-                enemyManager.Draw(spriteBatch);
+            spriteBatch.Begin(SpriteSortMode.Deferred, null,
+                null, null, null, null, GameCamera.Transformation);
+                    map.Draw(spriteBatch);
+                    playerManager.Draw(spriteBatch);
+                    enemyManager.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
+        }
+
+        public static Vector2 MousePositionInWorld()
+        {
+            MouseState mouse = Mouse.GetState();
+            return PositionInWorld(new Vector2(mouse.X, mouse.Y));
+        }
+
+        /// <summary>
+        /// This should be stored in some utilities class, but for now,
+        /// this is fine.
+        /// </summary>
+        public static Vector2 PositionInWorld(Vector2 position)
+        {
+            return Vector2.Transform(position, Matrix.Invert(GameCamera.Transformation));
+        }
+
+        /// <summary>
+        /// This should be stored in some utilities class, but for now,
+        /// this is fine.
+        /// </summary>
+        public static Vector2 PositionInView(Vector2 position)
+        {
+            return Vector2.Transform(position, GameCamera.Transformation);
         }
 
         /// <summary>

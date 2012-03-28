@@ -38,7 +38,7 @@
             foreach (IGameEntity entity in Enemies)
             {
                 float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                //entity.Velocity += entity.Seek(player.position) * dt;
+                //entity.Velocity += entity.Seek(player.Position) * dt;
 
                 entity.Update(gameTime);
             }

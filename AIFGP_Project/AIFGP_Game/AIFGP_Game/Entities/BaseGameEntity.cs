@@ -132,7 +132,7 @@
             if (FollowingPath)
             {
                 // For demo purposes, using acceleration of 0.
-                Velocity += Seek(path[0]);
+                Velocity = Seek(path[0]);
 
                 // Update direction.
                 //RotateInRadians((float)Angles.AngleFromUToV(Heading,

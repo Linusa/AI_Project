@@ -224,7 +224,7 @@
 
         public void Update(GameTime gameTime)
         {
-            // If horizontal-shift is held down, the user can horizontal-click to put
+            // If left-shift is held down, the user can left-click to put
             // walls down and right-click to remove them. This looks messy,
             // but it's really just handling input.
             if (inputTimer.Expired(gameTime))

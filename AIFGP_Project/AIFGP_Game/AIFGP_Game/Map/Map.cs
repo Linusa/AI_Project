@@ -49,7 +49,7 @@
         public Map(string mapFileName)
         {
             // This will not be here for the third assignment! :D
-            mapDirectory = @"C:\Users\Jason\Documents\AI_Project\AIFGP_Project\AIFGP_Game\AIFGP_Game\Map\ascii_maps\";
+            mapDirectory = @"ascii_maps\";
             loadMapFromText(mapFileName);
 
             CreateNavigationGraph();

@@ -23,11 +23,13 @@
 
             Vector2 startLocation = new Vector2(xBasePad + xPad, yPad);
             Vector2 curEnemyPosition = startLocation;
-
-            int numEnemies = 0;
+            List<Vector2> route = new List<Vector2>();
+            route.Add(new Vector2(100, 100));
+            route.Add(new Vector2(500, 500));
+            int numEnemies = 1;
             for (int i = 0; i < numEnemies; i++)
             {
-                Enemies.Add(new SimpleGameEntity(AStarGame.NpcSpriteSheet, curEnemyPosition));
+                Enemies.Add(new SimpleSensingGameEntity(AStarGame.NpcSpriteSheet, curEnemyPosition, route));
                 Enemies[i].RotateInDegrees(rng.Next(360));
                 curEnemyPosition.X += xPad;
             }

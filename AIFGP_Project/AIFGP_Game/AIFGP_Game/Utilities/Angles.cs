@@ -24,6 +24,11 @@
             double dotResult2 = Vector2.Dot(U, V);
 
             return -Math.Atan2(dotResult1, dotResult2);
+
+            /*double angle1 = Math.Atan2(U.Y, U.X);
+            double angle2 = Math.Atan2(V.Y, V.X);
+
+            return angle2 - angle1;*/
         }
     }
 }

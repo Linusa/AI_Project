@@ -45,6 +45,9 @@
         private string mapDirectory;
 
         private Timer inputTimer = new Timer(0.2f);
+        public static readonly List<Vector2> bushes = new List<Vector2>(){new Vector2(200, 200),
+                                                    new Vector2(500, 500),
+                                                    new Vector2(300, 0)};
 
         public Map(string mapFileName)
         {

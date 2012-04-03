@@ -112,6 +112,8 @@
     <Compile Include="AI\Sensors\Radar.cs" />
     <Compile Include="AI\Sensors\RadarInfo.cs" />
     <Compile Include="AI\Sensors\Rangefinder.cs" />
+    <Compile Include="AI\Sensors\Specializations\BushRadar.cs" />
+    <Compile Include="AI\Sensors\Specializations\LoS.cs" />
     <Compile Include="AI\Sensors\Specializations\PathNodeRadar.cs" />
     <Compile Include="Debugging\BaseGameEntityDebugger.cs" />
     <Compile Include="Debugging\BFSDebugger.cs" />
@@ -156,6 +158,10 @@
     <Compile Include="Program.cs" />
     <Compile Include="AStarGame.cs" />
     <Compile Include="Graphics\Sprite.cs" />
+    <Compile Include="States\ChaseState.cs" />
+    <Compile Include="States\PatrolState.cs" />
+    <Compile Include="States\SearchState.cs" />
+    <Compile Include="States\State.cs" />
     <Compile Include="Utilities\Angles.cs" />
     <Compile Include="Utilities\Heap.cs" />
     <Compile Include="Utilities\KeyHeap.cs" />
@@ -203,6 +209,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <PropertyGroup>

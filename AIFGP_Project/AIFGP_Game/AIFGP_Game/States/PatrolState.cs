@@ -1,0 +1,30 @@
+﻿namespace AIFGP_Game
+{
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using Microsoft.Xna.Framework;
+    
+    class PatrolState : State
+    {
+        public void Enter(SimpleSensingGameEntity i)
+        {
+            return;
+        }
+
+        public void Execute(SimpleSensingGameEntity i)
+        {
+            if (Vector2.Subtract(i.Position, i.patrolRoute[i.nextPatrol]).LengthSquared() < 5)
+                i.nextPatrol = (i.nextPatrol + 1) % i.patrolRoute.Count;
+            Vector2 force = i.Seek(i.patrolRoute[i.nextPatrol]);
+            i.Velocity += force;
+            return;
+        }
+
+        public void Exit(SimpleSensingGameEntity i)
+        {
+            return;
+        }
+    }
+}

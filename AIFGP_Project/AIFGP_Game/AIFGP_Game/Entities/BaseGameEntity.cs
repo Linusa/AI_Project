@@ -18,7 +18,7 @@
 
         private Vector2 heading = Vector2.Zero;
         private Vector2 velocity = Vector2.Zero;
-        private float maxSpeed = 250.0f;
+        private float maxSpeed = 100.0f;
 
         private List<Vector2> path = new List<Vector2>();
         private bool followingPath = false;

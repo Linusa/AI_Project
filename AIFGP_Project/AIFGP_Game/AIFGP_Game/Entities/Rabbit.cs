@@ -7,6 +7,7 @@
 
     public class Rabbit : BaseGameEntity
     {
+        
         public enum AnimationIds
         {
             LookForward,

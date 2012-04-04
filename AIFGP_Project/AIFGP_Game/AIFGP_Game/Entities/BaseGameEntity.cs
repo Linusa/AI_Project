@@ -134,6 +134,12 @@
                 // For demo purposes, using acceleration of 0.
                 Velocity = Seek(path[0]);
 
+                // Little bit hackish, but rather keep these NaN checks
+                // for only when following path. That way just setting Velocity
+                // is as fast as possible.
+                if (Single.IsNaN(Velocity.X) || Single.IsNaN(Velocity.Y))
+                    Velocity = Vector2.Zero;
+
                 // Update direction.
                 //RotateInRadians((float)Angles.AngleFromUToV(Heading,
                 //    Vector2.Normalize(path[0] - position)));

@@ -169,11 +169,8 @@
     <Content Include="GameThumbnail.png" />
     <Content Include="Settings\global_settings.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
-    <Content Include="Map\ascii_maps\map003.txt" />
-    <Content Include="Map\ascii_maps\map002.txt" />
-    <Content Include="Map\ascii_maps\map001.txt" />
-    <Content Include="Map\ascii_maps\map004.txt" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\AIFGP_Game_Data\AIFGP_Game_Data.csproj">
@@ -215,9 +212,8 @@
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\Microsoft.Xna.GameStudio.targets" />
   <PropertyGroup>
-    <PostBuildEvent>IF EXIST "$(TargetDir)ascii_maps" DEL /S /Q "$(TargetDir)ascii_maps"
-MKDIR "$(TargetDir)ascii_maps"
-XCOPY "$(ProjectDir)Map\ascii_maps" "$(TargetDir)ascii_maps"</PostBuildEvent>
+    <PostBuildEvent>
+    </PostBuildEvent>
   </PropertyGroup>
   <!--
       To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -117,7 +117,7 @@ namespace AIFGP_Game
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.DarkGreen);
+            GraphicsDevice.Clear(Color.Black);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null,
                 null, null, null, null, gameCamera.Transformation);

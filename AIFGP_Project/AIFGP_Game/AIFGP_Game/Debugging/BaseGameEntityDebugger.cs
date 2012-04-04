@@ -50,9 +50,9 @@
             Vector2 offset = new Vector2(debugger.ObjectDebugging.BoundingBox.Width + 10,
                 -debugger.ObjectDebugging.BoundingBox.Height + 10) / 2.0f;
 
-            if (debugger.ObjectDebugging.Position.X > AStarGame.ScreenCenter.X)
+            if (debugger.ObjectDebugging.Position.X > AStarGame.WorldCenter.X)
             {
-                Vector2 stringSize = AStarGame.DebugFont.MeasureString(debugger.DebugText);
+                Vector2 stringSize = FontManager.DebugFont.MeasureString(debugger.DebugText);
                 offset.X -= stringSize.X + debugger.ObjectDebugging.BoundingBox.Width + 10;
             }
 

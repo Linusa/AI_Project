@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIFGP_Game", "AIFGP_Game\AIFGP_Game\AIFGP_Game.csproj", "{A42450DD-7320-47E7-AA73-A3D0ABDD0C6B}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "AIFGP_GameContent", "AIFGP_Game\AIFGP_GameContent\AIFGP_GameContent.contentproj", "{A95D8F4C-A86E-4BF4-92D1-D27B35964031}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIFGP_GameContent", "AIFGP_Game\AIFGP_GameContent\AIFGP_GameContent.contentproj", "{A95D8F4C-A86E-4BF4-92D1-D27B35964031}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AIFGP_Game_Data", "AIFGP_Game_Data\AIFGP_Game_Data.csproj", "{C1BF6346-B741-468A-B5D5-BD273D10CC47}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,6 +19,10 @@ Global
 		{A42450DD-7320-47E7-AA73-A3D0ABDD0C6B}.Release|x86.Build.0 = Release|x86
 		{A95D8F4C-A86E-4BF4-92D1-D27B35964031}.Debug|x86.ActiveCfg = Debug|x86
 		{A95D8F4C-A86E-4BF4-92D1-D27B35964031}.Release|x86.ActiveCfg = Release|x86
+		{C1BF6346-B741-468A-B5D5-BD273D10CC47}.Debug|x86.ActiveCfg = Debug|x86
+		{C1BF6346-B741-468A-B5D5-BD273D10CC47}.Debug|x86.Build.0 = Debug|x86
+		{C1BF6346-B741-468A-B5D5-BD273D10CC47}.Release|x86.ActiveCfg = Release|x86
+		{C1BF6346-B741-468A-B5D5-BD273D10CC47}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

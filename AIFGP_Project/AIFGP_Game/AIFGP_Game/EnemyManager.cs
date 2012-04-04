@@ -27,7 +27,7 @@
             int numEnemies = 0;
             for (int i = 0; i < numEnemies; i++)
             {
-                Enemies.Add(new SimpleGameEntity(AStarGame.NpcSpriteSheet, curEnemyPosition));
+                Enemies.Add(new SimpleGameEntity(TextureManager.NpcSpriteSheet, curEnemyPosition));
                 Enemies[i].RotateInDegrees(rng.Next(360));
                 curEnemyPosition.X += xPad;
             }

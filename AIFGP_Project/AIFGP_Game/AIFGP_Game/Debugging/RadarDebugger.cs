@@ -28,7 +28,7 @@
         {
             radarDebugging = radar;
 
-            RadarSprite = new Sprite<byte>(AStarGame.RadarCircle, Vector2.Zero, SpriteDimensions);
+            RadarSprite = new Sprite<byte>(TextureManager.RadarCircle, Vector2.Zero, SpriteDimensions);
             RadarSprite.AddAnimationFrame(0, SpriteDimensions);
             RadarSprite.ActiveAnimation = 0;
             
@@ -81,7 +81,7 @@
         public void Draw(SpriteBatch spriteBatch)
         {
             RadarSprite.Draw(spriteBatch);
-            spriteBatch.DrawString(AStarGame.DebugFont, strBuilder,
+            spriteBatch.DrawString(FontManager.DebugFont, strBuilder,
                 debugLoc, Color.Yellow);
         }
 

@@ -83,7 +83,7 @@
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(AStarGame.DebugFont, DebugText,
+            spriteBatch.DrawString(FontManager.DebugFont, DebugText,
                     DebugLocation, Color.Yellow);
         }
     }

@@ -1,0 +1,14 @@
+﻿<?xml version="1.0"?>
+<GlobalSettings>
+  <Game>
+    <Name>Farmed Robbery</Name>
+    <Scenario>Scenarios\Scenario001</Scenario>
+    <IsMouseVisible>true</IsMouseVisible>
+    <IsFixedTimeStep>false</IsFixedTimeStep>
+  </Game>
+  <Screen>
+    <IsFullScreen>false</IsFullScreen>
+    <ResolutionWidth>1280</ResolutionWidth>
+    <ResolutionHeight>720</ResolutionHeight>
+  </Screen>
+</GlobalSettings>

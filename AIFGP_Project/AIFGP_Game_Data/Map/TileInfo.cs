@@ -1,13 +1,13 @@
-﻿namespace AIFGP_Game
+﻿namespace AIFGP_Game_Data
 {
     using Microsoft.Xna.Framework;
 
     public struct TileInfo
     {
-        public Map.TileType Type;
+        public TileType Type;
         public Vector2 Position;
 
-        public TileInfo(Map.TileType type, Vector2 position)
+        public TileInfo(TileType type, Vector2 position)
         {
             Type = type;
             Position = position;

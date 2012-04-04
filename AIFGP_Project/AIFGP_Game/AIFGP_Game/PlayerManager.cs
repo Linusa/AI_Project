@@ -4,6 +4,8 @@
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
 
+    using AIFGP_Game_Data;
+
     public class PlayerManager : IUpdateable, IDrawable
     {
         public BaseGameEntity Player;
@@ -11,12 +13,15 @@
         private Vector2 oldVertical = Vector2.Zero;
         private Vector2 oldHorizontal = Vector2.Zero;
 
-        public PlayerManager()
+        public PlayerManager(PlayerDescription playerDescription)
         {
-            Player = new Rabbit(AStarGame.RabbitSpriteSheet, AStarGame.ScreenCenter);
+            Player = new Rabbit(TextureManager.RabbitSpriteSheet, Vector2.Zero);
             EntityManager.Instance.PlayerID = Player.ID;
+            
+            Vector2 playerPos = AStarGame.GameMap.TilePosToWorldPos(playerDescription.StartingTilePosition);
+            Player.Position = playerPos;
 
-            Player.MaxSpeed = 225.0f;
+            Player.MaxSpeed = playerDescription.MaxSpeed;
         }
 
         private void checkKeyboard(GameTime gameTime)

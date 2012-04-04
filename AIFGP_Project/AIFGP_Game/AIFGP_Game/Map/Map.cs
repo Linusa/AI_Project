@@ -7,28 +7,21 @@
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
 
+    using AIFGP_Game_Data;
+
     using NavigationGraph = Graph<PositionalNode, Edge>;
 
     /// <summary>
-    /// Map represents the game map. It is initialized with a text file
+    /// Map represents the game map. It is initialized with a description
     /// representation of the map, and then the navigation graph is
     /// automatically generated via floodfill. A Map can be modified on
     /// the fly and its navigation graph will update accordingly.
     /// </summary>
     public class Map : IDrawable, IUpdateable
     {
-        public enum TileType
-        {
-            Ground,
-            Wall
-        }
-
         public int TilesAcross;
         public int TilesDown;
-
-        // Map tiles are 28x28 in px.
-        public static readonly Vector2 TileSize
-            = new Vector2(28.0f, 28.0f);
+        public Vector2 TileSize;
         
         private List<TileInfo> mapTiles = new List<TileInfo>();
 
@@ -42,26 +35,39 @@
 
         private GraphSearchViewer navGraphViewer;
 
-        private string mapDirectory;
-
         private Timer inputTimer = new Timer(0.2f);
 
-        public Map(string mapFileName)
+        public Map(MapDescription mapDescription)
         {
-            // This will not be here for the third assignment! :D
-            mapDirectory = @"ascii_maps\";
-            loadMapFromText(mapFileName);
+            TilesAcross = mapDescription.TilesAcross;
+            TilesDown = mapDescription.TilesDown;
+            TileSize = mapDescription.TileSize;
 
-            CreateNavigationGraph();
+            if (mapDescription.MapTiles.Length != TilesAcross * TilesDown)
+                throw new System.InvalidOperationException("Map area is not "
+                    + "equal to tiles across x tiles down! ("
+                    + mapDescription.MapTiles.Length + " != "
+                    + TilesAcross + " * " + TilesDown + ")");
+
+            createTiles(mapDescription.MapTiles);
+            
+            createNavigationGraph();
             navGraphViewer = new GraphSearchViewer(NavigationGraph);
-
+            
             initSprites();
 
             inputTimer.Start();
         }
 
+        public Vector2 TilePosToWorldPos(Vector2 tilePosition)
+        {
+            tilePosition.X *= TileSize.X;
+            tilePosition.Y *= TileSize.Y;
+            return tilePosition + TileSize / 2;
+        }
+
         // Map must be loaded before this is called!
-        public void CreateNavigationGraph()
+        private void createNavigationGraph()
         {
             // GC may wreak havoc here, test this out.
             nodeIndices.Clear();
@@ -73,6 +79,8 @@
             positionsFilled.Clear();
             foreach (TileInfo tileInfo in mapTiles)
                 positionsFilled.Add(tileInfo.Position + toTileCenter, false);
+            
+            seedStart = mapTiles[mapTiles.Count / 2].Position + toTileCenter;
 
             computeNavGraphNodes(seedStart);
             computeNavGraphEdges();
@@ -157,36 +165,23 @@
             }
         }
 
-        // Parses a text file representation of a map.
-        private void loadMapFromText(string mapFileName)
+        private void createTiles(int[] tileTypeIndices)
         {
-            string path = mapDirectory + mapFileName;
-
-            if (!File.Exists(mapDirectory + mapFileName))
-            {
-                System.Diagnostics.Debug.WriteLine("Map '" + mapFileName
-                    + "' does not exist!");
-                return;
-            }
-
-            string[] textMap = File.ReadAllLines(path);
-
-            TilesAcross = textMap[0].Length;
-            TilesDown = textMap.Length;
-
-            int xOffset = (AStarGame.ScreenDimensions.Width - TilesAcross * (int)TileSize.X) / 2;
-            int yOffset = (AStarGame.ScreenDimensions.Height - TilesDown * (int)TileSize.Y) / 2;
+            int xOffset = (AStarGame.WorldDimensions.Width - TilesAcross * (int)TileSize.X) / 2;
+            int yOffset = (AStarGame.WorldDimensions.Height - TilesDown * (int)TileSize.Y) / 2;
             Vector2 offset = new Vector2(xOffset, yOffset);
 
-            for (int i = 0; i < textMap.Length; i++)
+            for (int i = 0; i < TilesDown; i++)
             {
-                char[] chars = textMap[i].ToCharArray();
-                for (int j = 0; j < chars.Length; j++)
+                for (int j = 0; j < TilesAcross; j++)
                 {
                     TileInfo curTile = new TileInfo();
                     curTile.Position = offset + new Vector2(j * TileSize.X, i * TileSize.Y);
 
-                    if (chars[j] == 'W')
+                    int curIdx = (i * TilesAcross) + j;
+                    TileType curTileType = (TileType)tileTypeIndices[curIdx];
+
+                    if (curTileType == TileType.Wall)
                     {
                         // Create a Wall and register it with the WallManager.
                         Wall curWall = new Wall();
@@ -195,11 +190,6 @@
                         WallManager.Instance.AddWall(curWall);
 
                         curTile.Type = TileType.Wall;
-                    }
-                    else if (chars[j] == '+')
-                    {
-                        seedStart = curTile.Position + (TileSize / 2);
-                        curTile.Type = TileType.Ground;
                     }
                     else
                         curTile.Type = TileType.Ground;
@@ -213,11 +203,11 @@
         {
             Rectangle tileFrame = new Rectangle(0, 0, (int)TileSize.X, (int)TileSize.Y);
             
-            grassTile = new Sprite<byte>(AStarGame.GrassTile, Vector2.Zero, tileFrame);
+            grassTile = new Sprite<byte>(TextureManager.GrassTile, Vector2.Zero, tileFrame);
             grassTile.AddAnimationFrame(0, tileFrame);
             grassTile.ActiveAnimation = 0;
 
-            wallTile = new Sprite<byte>(AStarGame.WallTile, Vector2.Zero, tileFrame);
+            wallTile = new Sprite<byte>(TextureManager.WallTile, Vector2.Zero, tileFrame);
             wallTile.AddAnimationFrame(0, tileFrame);
             wallTile.ActiveAnimation = 0;
         }
@@ -237,8 +227,8 @@
                     bool rightMouseButton = mouseState.RightButton == ButtonState.Pressed;
                     if (leftMouseButton || rightMouseButton)
                     {
-                        int leftRightPad = (AStarGame.ScreenDimensions.Width - (TilesAcross * (int)TileSize.X)) / 2;
-                        int topBottomPad = (AStarGame.ScreenDimensions.Height - (TilesDown * (int)TileSize.Y)) / 2;
+                        int leftRightPad = (AStarGame.WorldDimensions.Width - (TilesAcross * (int)TileSize.X)) / 2;
+                        int topBottomPad = (AStarGame.WorldDimensions.Height - (TilesDown * (int)TileSize.Y)) / 2;
 
                         Vector2 mouseVec = AStarGame.MousePositionInWorld();
 
@@ -256,7 +246,7 @@
                         wall.TopLeftPixel = selectedTile.Position;
                         wall.BottomRightPixel = selectedTile.Position + TileSize;
 
-                        // Update the map, walls, and navigation graph if a wall was
+                        // Update the GameMap, walls, and navigation graph if a wall was
                         // placed/removed.
                         if (leftMouseButton)
                         {
@@ -272,7 +262,7 @@
                                 bool graphWasDisplayed = navGraphViewer.DisplayGraph;
                                 bool indicesWereDisplayed = navGraphViewer.DisplayNodeIndices;
 
-                                CreateNavigationGraph();
+                                createNavigationGraph();
                                 navGraphViewer = new GraphSearchViewer(NavigationGraph);
 
                                 navGraphViewer.DisplayGraph = graphWasDisplayed;
@@ -287,7 +277,7 @@
                             bool graphWasDisplayed = navGraphViewer.DisplayGraph;
                             bool indicesWereDisplayed = navGraphViewer.DisplayNodeIndices;
 
-                            CreateNavigationGraph();
+                            createNavigationGraph();
                             navGraphViewer = new GraphSearchViewer(NavigationGraph);
 
                             navGraphViewer.DisplayGraph = graphWasDisplayed;

@@ -35,7 +35,7 @@
         {
             Graph = graph;
             
-            nodeSprite = new Sprite<byte>(AStarGame.RadarCircle, Vector2.Zero,
+            nodeSprite = new Sprite<byte>(TextureManager.RadarCircle, Vector2.Zero,
                 RadarDebugger.SpriteDimensions);
             nodeSprite.AddAnimationFrame(0, RadarDebugger.SpriteDimensions);
             nodeSprite.ActiveAnimation = 0;
@@ -138,7 +138,7 @@
 
                     if (DisplayNodeIndices)
                     {
-                        spriteBatch.DrawString(AStarGame.SmallDebugFont,
+                        spriteBatch.DrawString(FontManager.SmallDebugFont,
                             n.Index.ToString(), n.Position - idxOffset,
                             Color.Yellow);
                     }

@@ -6,31 +6,28 @@ namespace AIFGP_Game
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
 
+    using AIFGP_Game_Data;
+
     public class AStarGame : Microsoft.Xna.Framework.Game
     {
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
-        public static Rectangle ScreenDimensions = new Rectangle(0, 0, 1920, 1080);
-        public static Vector2 ScreenCenter = new Vector2(ScreenDimensions.Width,
-            ScreenDimensions.Height) / 2;
+        public static GlobalSettings GlobalGameSettings;
 
-        public static Texture2D PlayerSpriteSheet;
-        public static Texture2D NpcSpriteSheet;
-        public static Texture2D GrassTile;
-        public static Texture2D WallTile;
-        public static Texture2D RadarCircle;
-        public static Texture2D SingleWhitePixel;
-        public static Texture2D RabbitSpriteSheet;
+        private Scenario currentScenario;
 
-        public static Camera GameCamera;
+        public static Rectangle WorldDimensions;// = new Rectangle(0, 0, 1932, 1120);
+        public static Vector2 WorldCenter;// = new Vector2(WorldDimensions.Width,
+            //WorldDimensions.Height) / 2;
 
-        private Map map;
+        private static Camera gameCamera;
+
+        public static Map GameMap;
+
         private PlayerManager playerManager;
         private EnemyManager enemyManager;
 
-        public static SpriteFont DebugFont;
-        public static SpriteFont SmallDebugFont;
         
         private MouseState prevMouseState;
 
@@ -42,21 +39,16 @@ namespace AIFGP_Game
 
         protected override void Initialize()
         {
-            //ScreenDimensions.Width = graphics.GraphicsDevice.DisplayMode.Width;
-            //ScreenDimensions.Height = graphics.GraphicsDevice.DisplayMode.Height;
-            //ScreenCenter = new Vector2(ScreenDimensions.Width, ScreenDimensions.Height) / 2;
+            GlobalSettings.Load(@"Settings\global_settings.xml", out GlobalGameSettings);
 
-            //graphics.PreferredBackBufferWidth = ScreenDimensions.Width;
-            graphics.PreferredBackBufferWidth = 800;
-            //graphics.PreferredBackBufferHeight = ScreenDimensions.Height;
-            graphics.PreferredBackBufferHeight = 600;
-            //graphics.IsFullScreen = true;
+            Window.Title = GlobalGameSettings.Game.Name;
+            IsMouseVisible = GlobalGameSettings.Game.IsMouseVisible;
+            IsFixedTimeStep = GlobalGameSettings.Game.IsFixedTimeStep;
+
+            graphics.PreferredBackBufferWidth = GlobalGameSettings.Screen.ResolutionWidth;
+            graphics.PreferredBackBufferHeight = GlobalGameSettings.Screen.ResolutionHeight;
+            graphics.IsFullScreen = GlobalGameSettings.Screen.IsFullScreen;
             graphics.ApplyChanges();
-            
-            IsMouseVisible = true;
-
-            // Hot-fix for the every-second or so stuttering.
-            IsFixedTimeStep = false;
 
             // BEGIN Testing
             System.Diagnostics.Debug.WriteLine("------- BEGIN TESTING! -------");
@@ -68,26 +60,25 @@ namespace AIFGP_Game
 
         protected override void LoadContent()
         {
+            FontManager.LoadFonts(this);
+            TextureManager.LoadTextures(this);
+            
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            PlayerSpriteSheet = Content.Load<Texture2D>(@"Images\player_arrow_with_effects");
-            NpcSpriteSheet = Content.Load<Texture2D>(@"Images\npc_arrow_with_effects");
-            GrassTile = Content.Load<Texture2D>(@"Images\grass_tile");
-            WallTile = Content.Load<Texture2D>(@"Images\wall_tile");
-            RadarCircle = Content.Load<Texture2D>(@"Images\circle");
-            RabbitSpriteSheet = Content.Load<Texture2D>(@"Images\rabbit_136x360_ea34x36");
+            currentScenario = Content.Load<Scenario>(GlobalGameSettings.Game.Scenario);
 
-            SingleWhitePixel = new Texture2D(GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
-            SingleWhitePixel.SetData<Color>(new Color[1] { Color.White }); 
+            // This could go in a little method.
+            WorldDimensions = new Rectangle(0, 0,
+                currentScenario.MapDescription.TilesAcross * (int)currentScenario.MapDescription.TileSize.X,
+                currentScenario.MapDescription.TilesDown * (int)currentScenario.MapDescription.TileSize.Y);
+            WorldCenter = new Vector2(WorldDimensions.Width, WorldDimensions.Height) / 2;
 
-            map = new Map("map004.txt");
-            playerManager = new PlayerManager();
+            GameMap = new Map(currentScenario.MapDescription);
+            playerManager = new PlayerManager(currentScenario.PlayerDescription);
             enemyManager = new EnemyManager();
 
-            GameCamera = new Camera(graphics.GraphicsDevice, playerManager.Player.Position);
+            gameCamera = new Camera(graphics.GraphicsDevice, playerManager.Player.Position);
             
-            DebugFont = Content.Load<SpriteFont>(@"Fonts\Debug");
-            SmallDebugFont = Content.Load<SpriteFont>(@"Fonts\Debug_Small");
         }
 
         protected override void UnloadContent()
@@ -101,36 +92,36 @@ namespace AIFGP_Game
                 || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
-            map.Update(gameTime);
+            GameMap.Update(gameTime);
             playerManager.Update(gameTime);
             enemyManager.Update(gameTime);
 
             MouseState mouseState = Mouse.GetState();
             if (mouseState.MiddleButton == ButtonState.Pressed)
-                GameCamera.Position += new Vector2(prevMouseState.X - mouseState.X, prevMouseState.Y - mouseState.Y);
+                gameCamera.Position += new Vector2(prevMouseState.X - mouseState.X, prevMouseState.Y - mouseState.Y);
             
             if (mouseState.ScrollWheelValue != prevMouseState.ScrollWheelValue)
             {
                 // magFactor assigned either 1.1 or 0.9 depending on direction of scroll.
                 float magFactor = (mouseState.ScrollWheelValue - prevMouseState.ScrollWheelValue) / 1200.0f + 1;
-                GameCamera.Magnification *= magFactor;
+                gameCamera.Magnification *= magFactor;
             }
  
             prevMouseState = mouseState;
 
             if (!playerManager.Player.Velocity.Equals(Vector2.Zero))
-                GameCamera.Position = playerManager.Player.Position;
+                gameCamera.Position = playerManager.Player.Position;
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
+            GraphicsDevice.Clear(Color.DarkGreen);
 
             spriteBatch.Begin(SpriteSortMode.Deferred, null,
-                null, null, null, null, GameCamera.Transformation);
-                    map.Draw(spriteBatch);
+                null, null, null, null, gameCamera.Transformation);
+                    GameMap.Draw(spriteBatch);
                     playerManager.Draw(spriteBatch);
                     enemyManager.Draw(spriteBatch);
             spriteBatch.End();
@@ -150,7 +141,7 @@ namespace AIFGP_Game
         /// </summary>
         public static Vector2 PositionInWorld(Vector2 position)
         {
-            return Vector2.Transform(position, Matrix.Invert(GameCamera.Transformation));
+            return Vector2.Transform(position, Matrix.Invert(gameCamera.Transformation));
         }
 
         /// <summary>
@@ -159,9 +150,10 @@ namespace AIFGP_Game
         /// </summary>
         public static Vector2 PositionInView(Vector2 position)
         {
-            return Vector2.Transform(position, GameCamera.Transformation);
+            return Vector2.Transform(position, gameCamera.Transformation);
         }
 
+#if false
         /// <summary>
         /// This should be stored in some utilities class, but for now,
         /// this is fine.
@@ -193,5 +185,6 @@ namespace AIFGP_Game
             if (entity.Position != position)
                 entity.Position = position;
         }
+#endif
     }
 }

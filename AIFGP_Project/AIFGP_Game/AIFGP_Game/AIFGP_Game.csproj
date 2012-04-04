@@ -122,6 +122,8 @@
     <Compile Include="Debugging\PropertyDebugger.cs" />
     <Compile Include="Debugging\RangefinderDebugger.cs" />
     <Compile Include="Entities\Rabbit.cs" />
+    <Compile Include="FontManager.cs" />
+    <Compile Include="Settings\GlobalSettings.cs" />
     <Compile Include="Graphics\Camera.cs" />
     <Compile Include="Graphics\GraphSearchViewer.cs" />
     <Compile Include="Graphics\GraphViewer.cs" />
@@ -148,7 +150,6 @@
     <Compile Include="Graph\Search\DijkstraSearch.cs" />
     <Compile Include="Graph\Specializations\Navigation\PositionalNode.cs" />
     <Compile Include="Map\Map.cs" />
-    <Compile Include="Map\TileInfo.cs" />
     <Compile Include="Map\Wall.cs" />
     <Compile Include="PlayerManager.cs" />
     <Compile Include="Entities\SimpleGameEntity.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="AStarGame.cs" />
     <Compile Include="Graphics\Sprite.cs" />
+    <Compile Include="TextureManager.cs" />
     <Compile Include="Utilities\Angles.cs" />
     <Compile Include="Utilities\Heap.cs" />
     <Compile Include="Utilities\KeyHeap.cs" />
@@ -165,12 +167,19 @@
   <ItemGroup>
     <Content Include="Game.ico" />
     <Content Include="GameThumbnail.png" />
+    <Content Include="Settings\global_settings.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Map\ascii_maps\map003.txt" />
     <Content Include="Map\ascii_maps\map002.txt" />
     <Content Include="Map\ascii_maps\map001.txt" />
     <Content Include="Map\ascii_maps\map004.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\AIFGP_Game_Data\AIFGP_Game_Data.csproj">
+      <Project>{C1BF6346-B741-468A-B5D5-BD273D10CC47}</Project>
+      <Name>AIFGP_Game_Data</Name>
+    </ProjectReference>
     <ProjectReference Include="..\AIFGP_GameContent\AIFGP_GameContent.contentproj">
       <Name>AIFGP_GameContent</Name>
       <XnaReferenceType>Content</XnaReferenceType>

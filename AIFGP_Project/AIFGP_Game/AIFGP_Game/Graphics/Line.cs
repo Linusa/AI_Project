@@ -14,7 +14,7 @@
         public Line(Vector2 position, int width, Color color)
         {
             Rectangle dimensions = new Rectangle(0, 0, width, defaultLineHeight);
-            LineSprite = new Sprite<byte>(AStarGame.SingleWhitePixel,
+            LineSprite = new Sprite<byte>(TextureManager.SingleWhitePixel,
                 position, dimensions);
             
             LineSprite.Color = color;

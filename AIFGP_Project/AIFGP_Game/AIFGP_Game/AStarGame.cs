@@ -98,7 +98,13 @@ namespace AIFGP_Game
 
             MouseState mouseState = Mouse.GetState();
             if (mouseState.MiddleButton == ButtonState.Pressed)
+            {
                 gameCamera.Position += new Vector2(prevMouseState.X - mouseState.X, prevMouseState.Y - mouseState.Y);
+
+                //Vector2 mouseVec = MousePositionInWorld();
+                //Window.Title = "Mouse: " + mouseVec + " | IsWorldPosWall("
+                //    + mouseVec.X + ", " + mouseVec.Y + "): " + GameMap.IsWorldPosWall(mouseVec); ;
+            }
             
             if (mouseState.ScrollWheelValue != prevMouseState.ScrollWheelValue)
             {

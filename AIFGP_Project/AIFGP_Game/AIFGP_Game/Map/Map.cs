@@ -30,8 +30,6 @@
 
         public NavigationGraph NavigationGraph = new NavigationGraph();
         private Dictionary<Vector2, int> nodeIndices = new Dictionary<Vector2, int>();
-        private Dictionary<Vector2, bool> positionsFilled = new Dictionary<Vector2, bool>();
-        private Vector2 seedStart;
 
         private GraphSearchViewer navGraphViewer;
 
@@ -59,6 +57,61 @@
             inputTimer.Start();
         }
 
+        public bool IsTilePosWall(int row, int col)
+        {
+            return TileInfoAtTilePos(row, col).Type == TileType.Wall;
+        }
+
+        public bool IsWorldPosWall(Vector2 worldPosition)
+        {
+            Vector2 tilePos = WorldPosToTilePos(worldPosition);
+            return IsTilePosWall((int)tilePos.Y, (int)tilePos.X);
+        }
+
+        public TileInfo TileInfoAtTilePos(int row, int col)
+        {
+            if (col < 0 || col >= TilesAcross)
+                throw new System.InvalidOperationException("There are "
+                    + TilesAcross + " tiles across and " + col + " was "
+                    + " passed in for col.");
+
+            if (row < 0 || row >= TilesDown)
+                throw new System.InvalidOperationException("There are "
+                    + TilesDown + " tiles down and " + row + " was "
+                    + " passed in for row.");
+
+            int tileIdx = (row * TilesAcross) + col;
+            return mapTiles[tileIdx];
+        }
+
+        public void SetTileInfoAtTilePos(int row, int col, TileInfo tileInfo)
+        {
+            if (col < 0 || col >= TilesAcross)
+                throw new System.InvalidOperationException("There are "
+                    + TilesAcross + " tiles across and " + col + " was "
+                    + " passed in for col.");
+
+            if (row < 0 || row >= TilesDown)
+                throw new System.InvalidOperationException("There are "
+                    + TilesDown + " tiles down and " + row + " was "
+                    + " passed in for row.");
+
+            int tileIdx = (row * TilesAcross) + col;
+            mapTiles[tileIdx] = tileInfo;
+        }
+
+        public TileInfo TileInfoAtWorldPos(Vector2 worldPosition)
+        {
+            Vector2 tilePos = WorldPosToTilePos(worldPosition);
+            return TileInfoAtTilePos((int)tilePos.Y, (int)tilePos.X);
+        }
+
+        public void SetTileInfoAtWorldPos(Vector2 worldPosition, TileInfo tileInfo)
+        {
+            Vector2 tilePos = WorldPosToTilePos(worldPosition);
+            SetTileInfoAtTilePos((int)tilePos.Y, (int)tilePos.X, tileInfo);
+        }
+
         public Vector2 TilePosToWorldPos(Vector2 tilePosition)
         {
             tilePosition.X *= TileSize.X;
@@ -66,57 +119,71 @@
             return tilePosition + TileSize / 2;
         }
 
+        public Vector2 WorldPosToTilePos(Vector2 worldPos)
+        {
+            int tileX = (int)(worldPos.X / TileSize.X);
+            int tileY = (int)(worldPos.Y / TileSize.Y);
+            return new Vector2(tileX, tileY);
+        }
+        
+        private void createTiles(int[] tileTypeIndices)
+        {
+            int xOffset = (AStarGame.WorldDimensions.Width - TilesAcross * (int)TileSize.X) / 2;
+            int yOffset = (AStarGame.WorldDimensions.Height - TilesDown * (int)TileSize.Y) / 2;
+            Vector2 offset = new Vector2(xOffset, yOffset);
+
+            for (int i = 0; i < TilesDown; i++)
+            {
+                for (int j = 0; j < TilesAcross; j++)
+                {
+                    TileInfo curTile = new TileInfo();
+                    curTile.Position = offset + new Vector2(j * TileSize.X, i * TileSize.Y);
+
+                    int curIdx = (i * TilesAcross) + j;
+                    TileType curTileType = (TileType)tileTypeIndices[curIdx];
+
+                    if (curTileType == TileType.Wall)
+                    {
+                        // Create a Wall and register it with the WallManager.
+                        Wall curWall = new Wall();
+                        curWall.TopLeftPixel = curTile.Position;
+                        curWall.BottomRightPixel = curTile.Position + TileSize;
+                        WallManager.Instance.AddWall(curWall);
+
+                        curTile.Type = TileType.Wall;
+                    }
+                    else
+                        curTile.Type = TileType.Ground;
+
+                    mapTiles.Add(curTile);
+                }
+            }
+        }
+
         // Map must be loaded before this is called!
         private void createNavigationGraph()
         {
             // GC may wreak havoc here, test this out.
             nodeIndices.Clear();
-            positionsFilled.Clear();
             NavigationGraph.Clear();
 
-            Vector2 toTileCenter = TileSize / 2;
-
-            positionsFilled.Clear();
-            foreach (TileInfo tileInfo in mapTiles)
-                positionsFilled.Add(tileInfo.Position + toTileCenter, false);
-            
-            seedStart = mapTiles[mapTiles.Count / 2].Position + toTileCenter;
-
-            computeNavGraphNodes(seedStart);
+            computeNavGraphNodes();
             computeNavGraphEdges();
         }
 
-        // Uses floodfill to auto-generate the navigation graph's nodes.
-        private void computeNavGraphNodes(Vector2 seedPosition)
+        private void computeNavGraphNodes()
         {
-            if (positionsFilled.ContainsKey(seedPosition) && !positionsFilled[seedPosition])
+            Vector2 toTileCenter = TileSize / 2;
+            
+            foreach (TileInfo mapTile in mapTiles)
             {
-                bool tileIsWall = false;
-                foreach (Wall wall in WallManager.Instance.Walls)
-                    if (wall.BoundingBox.Contains((int)seedPosition.X, (int)seedPosition.Y))
-                        tileIsWall = true;
-
-                if (!tileIsWall)
+                Vector2 tileCenterPos = mapTile.Position + toTileCenter;
+                if (!IsWorldPosWall(tileCenterPos))
                 {
                     int nodeIdx = NavigationGraph.AvailableNodeIndex;
-                    NavigationGraph.AddNode(new PositionalNode(nodeIdx, seedPosition));
-                    nodeIndices.Add(seedPosition, nodeIdx);
+                    NavigationGraph.AddNode(new PositionalNode(nodeIdx, tileCenterPos));
+                    nodeIndices.Add(tileCenterPos, nodeIdx);
                 }
-
-                positionsFilled[seedPosition] = true;
-                
-                Vector2 dx = new Vector2(TileSize.X, 0.0f);
-                Vector2 dy = new Vector2(0.0f, TileSize.Y);
-
-                Vector2 leftCellPos = seedPosition - dx;
-                Vector2 rightCellPos = seedPosition + dx;
-                Vector2 topCellPos = seedPosition - dy;
-                Vector2 bottomCellPos = seedPosition + dy;
-
-                computeNavGraphNodes(leftCellPos);
-                computeNavGraphNodes(rightCellPos);
-                computeNavGraphNodes(topCellPos);
-                computeNavGraphNodes(bottomCellPos);
             }
         }
 
@@ -165,40 +232,6 @@
             }
         }
 
-        private void createTiles(int[] tileTypeIndices)
-        {
-            int xOffset = (AStarGame.WorldDimensions.Width - TilesAcross * (int)TileSize.X) / 2;
-            int yOffset = (AStarGame.WorldDimensions.Height - TilesDown * (int)TileSize.Y) / 2;
-            Vector2 offset = new Vector2(xOffset, yOffset);
-
-            for (int i = 0; i < TilesDown; i++)
-            {
-                for (int j = 0; j < TilesAcross; j++)
-                {
-                    TileInfo curTile = new TileInfo();
-                    curTile.Position = offset + new Vector2(j * TileSize.X, i * TileSize.Y);
-
-                    int curIdx = (i * TilesAcross) + j;
-                    TileType curTileType = (TileType)tileTypeIndices[curIdx];
-
-                    if (curTileType == TileType.Wall)
-                    {
-                        // Create a Wall and register it with the WallManager.
-                        Wall curWall = new Wall();
-                        curWall.TopLeftPixel = curTile.Position;
-                        curWall.BottomRightPixel = curTile.Position + TileSize;
-                        WallManager.Instance.AddWall(curWall);
-
-                        curTile.Type = TileType.Wall;
-                    }
-                    else
-                        curTile.Type = TileType.Ground;
-
-                    mapTiles.Add(curTile);
-                }
-            }
-        }
-
         private void initSprites()
         {
             Rectangle tileFrame = new Rectangle(0, 0, (int)TileSize.X, (int)TileSize.Y);
@@ -227,20 +260,9 @@
                     bool rightMouseButton = mouseState.RightButton == ButtonState.Pressed;
                     if (leftMouseButton || rightMouseButton)
                     {
-                        int leftRightPad = (AStarGame.WorldDimensions.Width - (TilesAcross * (int)TileSize.X)) / 2;
-                        int topBottomPad = (AStarGame.WorldDimensions.Height - (TilesDown * (int)TileSize.Y)) / 2;
-
                         Vector2 mouseVec = AStarGame.MousePositionInWorld();
 
-                        int mapSquareX = ((int)mouseVec.X - leftRightPad) / (int)TileSize.X;
-                        int mapSquareY = ((int)mouseVec.Y - topBottomPad) / (int)TileSize.Y;
-
-                        mapSquareX = (int)MathHelper.Clamp(mapSquareX, 0, TilesAcross - 1);
-                        mapSquareY = (int)MathHelper.Clamp(mapSquareY, 0, TilesDown - 1);
-
-                        int mapSquareIndex = (mapSquareY * TilesAcross) + mapSquareX;
-
-                        TileInfo selectedTile = mapTiles[mapSquareIndex];
+                        TileInfo selectedTile = TileInfoAtWorldPos(mouseVec);
 
                         Wall wall = new Wall();
                         wall.TopLeftPixel = selectedTile.Position;
@@ -284,7 +306,7 @@
                             navGraphViewer.DisplayNodeIndices = indicesWereDisplayed;
                         }
 
-                        mapTiles[mapSquareIndex] = selectedTile;
+                        SetTileInfoAtWorldPos(mouseVec, selectedTile);
                     }
                 }
             }

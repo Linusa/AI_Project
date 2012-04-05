@@ -63,11 +63,7 @@
             if (!mergedWall)
                 Walls.Add(wall);
 
-            //Walls.Add(wall);
-            
-
-            //if (!Walls.Contains(wall))
-              //  Walls.Add(wall);
+            System.Diagnostics.Debug.WriteLine("Num walls: " + Walls.Count);
         }
 
         public void RemoveWall(Wall wall)

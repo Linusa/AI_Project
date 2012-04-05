@@ -35,7 +35,7 @@
             set;
         }
 
-        void FollowPath(List<Vector2> path);
+        void FollowPath(List<Vector2> path, bool patrol);
 
         Vector2 Seek(Vector2 target);
     }

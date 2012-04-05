@@ -5,31 +5,29 @@
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
 
+    using AIFGP_Game_Data;
+
     class EnemyManager : IUpdateable, IDrawable
     {
         public List<IGameEntity> Enemies = new List<IGameEntity>();
 
         private IGameEntity player;
 
-        private Random rng = new Random();
-
-        public EnemyManager()
+        public EnemyManager(EnemiesDescription enemiesDescription)
         {
             player = EntityManager.Instance.GetPlayer();
 
-            int xBasePad = 180;
-            int xPad = SimpleGameEntity.Dimensions.Width;
-            int yPad = SimpleGameEntity.Dimensions.Height;
-
-            Vector2 startLocation = new Vector2(xBasePad + xPad, yPad);
-            Vector2 curEnemyPosition = startLocation;
-
-            int numEnemies = 0;
-            for (int i = 0; i < numEnemies; i++)
+            foreach (EnemiesDescription.EnemyInfo curEnemyInfo in enemiesDescription.EnemiesInfo)
             {
-                Enemies.Add(new SimpleGameEntity(TextureManager.NpcSpriteSheet, curEnemyPosition));
-                Enemies[i].RotateInDegrees(rng.Next(360));
-                curEnemyPosition.X += xPad;
+                List<Vector2> curPatrolRoute = curEnemyInfo.PatrolTilePositions;
+                for (int i = 0; i < curPatrolRoute.Count; i++)
+                    curPatrolRoute[i] = AStarGame.GameMap.TilePosToWorldPos(curPatrolRoute[i]);
+
+                Vector2 curEnemyPosition = AStarGame.GameMap.TilePosToWorldPos(curEnemyInfo.StartingTilePosition);
+                IGameEntity curEnemy = new SimpleSensingGameEntity(TextureManager.NpcSpriteSheet, curEnemyPosition, curPatrolRoute);
+                curEnemy.MaxSpeed = curEnemyInfo.MaxSpeed;
+
+                Enemies.Add(curEnemy);
             }
         }
 

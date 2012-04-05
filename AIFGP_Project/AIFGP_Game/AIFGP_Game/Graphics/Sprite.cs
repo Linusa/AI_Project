@@ -21,6 +21,7 @@
         private int spriteWidth = 0;
         private int spriteHeight = 0;
         private Vector2 spriteScale = Vector2.One;
+        private float layerDepth = 0.0f;
 
         private Dictionary<T, List<Rectangle>> animationFrames = new Dictionary<T, List<Rectangle>>();
         private Timer animationTimer = new Timer(0.1f);
@@ -105,6 +106,12 @@
         public void Scale(float scale)
         {
             Scale(new Vector2(scale));
+        }
+
+        public float LayerDepth
+        {
+            get { return layerDepth; }
+            set { layerDepth = value; }
         }
 
         public Color Color
@@ -206,7 +213,7 @@
                 localOrigin,
                 spriteScale,
                 SpriteEffects.None,
-                0.0f
+                LayerDepth
             );
         }
     }

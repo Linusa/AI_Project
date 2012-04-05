@@ -8,7 +8,7 @@
 
     public class PlayerManager : IUpdateable, IDrawable
     {
-        public BaseGameEntity Player;
+        public Rabbit Player;
 
         private Vector2 oldVertical = Vector2.Zero;
         private Vector2 oldHorizontal = Vector2.Zero;
@@ -83,6 +83,11 @@
         {
             checkKeyboard(gameTime);
             Player.Update(gameTime);
+
+            if (AStarGame.GameMap.IsWorldPosBush(Player.Position))
+                Player.IsHidden = true;
+            else
+                Player.IsHidden = false;
         }
 
         public void Draw(SpriteBatch spriteBatch)

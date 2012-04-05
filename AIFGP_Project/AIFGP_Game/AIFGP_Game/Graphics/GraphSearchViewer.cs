@@ -170,10 +170,7 @@
                     for (int i = 0; i < path.Count; i++)
                         nodePositions.Add(g.GetNode(path[i]).Position);
 
-                    //if (nodePositions[0] == player.Position)
-                    //    nodePositions.RemoveAt(0);
-
-                    player.FollowPath(nodePositions);
+                    player.FollowPath(nodePositions, false);
                 }
             }
             else if (SourceNode != null && TargetNode != null)

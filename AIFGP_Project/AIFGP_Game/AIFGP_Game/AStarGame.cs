@@ -10,6 +10,14 @@ namespace AIFGP_Game
 
     public class AStarGame : Microsoft.Xna.Framework.Game
     {
+        public struct DrawingOrder
+        {
+            public const float Grass = 1.0f;
+            public const float Wall = 0.9f;
+            public const float Entities = 0.8f;
+            public const float Bush = 0.7f;
+        }
+
         private GraphicsDeviceManager graphics;
         private SpriteBatch spriteBatch;
 
@@ -75,7 +83,7 @@ namespace AIFGP_Game
 
             GameMap = new Map(currentScenario.MapDescription);
             playerManager = new PlayerManager(currentScenario.PlayerDescription);
-            enemyManager = new EnemyManager();
+            enemyManager = new EnemyManager(currentScenario.EnemiesDescription);
 
             gameCamera = new Camera(graphics.GraphicsDevice, playerManager.Player.Position);
             
@@ -118,6 +126,11 @@ namespace AIFGP_Game
             if (!playerManager.Player.Velocity.Equals(Vector2.Zero))
                 gameCamera.Position = playerManager.Player.Position;
 
+            if (playerManager.Player.IsHidden)
+                Window.Title = "Player is in a bush!";
+            else
+                Window.Title = "Player is NOT in a bush!";
+
             base.Update(gameTime);
         }
 
@@ -125,7 +138,7 @@ namespace AIFGP_Game
         {
             GraphicsDevice.Clear(Color.Black);
 
-            spriteBatch.Begin(SpriteSortMode.Deferred, null,
+            spriteBatch.Begin(SpriteSortMode.BackToFront, null,
                 null, null, null, null, gameCamera.Transformation);
                     GameMap.Draw(spriteBatch);
                     playerManager.Draw(spriteBatch);

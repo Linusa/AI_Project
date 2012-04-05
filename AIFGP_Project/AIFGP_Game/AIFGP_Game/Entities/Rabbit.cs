@@ -7,6 +7,8 @@
 
     public class Rabbit : BaseGameEntity
     {
+        public bool IsHidden = false;
+
         public enum AnimationIds
         {
             LookForward,
@@ -47,6 +49,8 @@
 
         protected override void configureSprite()
         {
+            EntitySprite.LayerDepth = AStarGame.DrawingOrder.Entities;
+
             int numCols = 4;
 
             Rectangle curFrame = dimensions;

@@ -15,52 +15,55 @@
         // and must be changed later.
         public void AddWall(Wall wall)
         {
-            /*
+            
             bool mergedWall = false;
 
             for (int i = 0; i < Walls.Count; i++)
             {
-                Wall wall = Walls[i];
+                Wall otherWall = Walls[i];
 
-                if (wall.BoundingBox.Right == wall.BoundingBox.Left
-                    && wall.BoundingBox.Width >= wall.BoundingBox.Height)
+                if (otherWall.BoundingBox.Right == wall.BoundingBox.Left
+                    && otherWall.BoundingBox.Width >= otherWall.BoundingBox.Height)
                 {
-                    wall.BottomRightPixel = wall.BottomRightPixel;
+                    otherWall.BottomRightPixel = wall.BottomRightPixel;
                     mergedWall = true;
                 }
-                else if (wall.BoundingBox.Left == wall.BoundingBox.Right
-                    && wall.BoundingBox.Width >= wall.BoundingBox.Height)
+                else if (otherWall.BoundingBox.Left == wall.BoundingBox.Right
+                    && otherWall.BoundingBox.Width >= otherWall.BoundingBox.Height)
                 {
-                    wall.TopLeftPixel = wall.TopLeftPixel;
+                    otherWall.TopLeftPixel = wall.TopLeftPixel;
                     mergedWall = true;
                 }
-                else if (wall.BoundingBox.Bottom == wall.BoundingBox.Top
+                else if (otherWall.BoundingBox.Bottom == wall.BoundingBox.Top
+                    && otherWall.BoundingBox.Height >= otherWall.BoundingBox.Width)
+                {
+                    otherWall.BottomRightPixel = wall.BottomRightPixel;
+                    mergedWall = true;
+                }
+                else if (otherWall.BoundingBox.Top == wall.BoundingBox.Bottom
                     && wall.BoundingBox.Height >= wall.BoundingBox.Width)
                 {
-                    wall.BottomRightPixel = wall.BottomRightPixel;
-                    mergedWall = true;
-                }
-                else if (wall.BoundingBox.Top == wall.BoundingBox.Bottom
-                    && wall.BoundingBox.Height >= wall.BoundingBox.Width)
-                {
-                    wall.TopLeftPixel = wall.TopLeftPixel;
+                    otherWall.TopLeftPixel = wall.TopLeftPixel;
                     mergedWall = true;
                 }
 
-                Walls[i] = wall;
+                //Walls[i] = wall;
 
                 if (mergedWall)
+                {
+                    Walls[i] = otherWall;
                     break;
+                }
             }
 
             if (!mergedWall)
                 Walls.Add(wall);
 
-            Walls.Add(wall);
-            */
+            //Walls.Add(wall);
+            
 
-            if (!Walls.Contains(wall))
-                Walls.Add(wall);
+            //if (!Walls.Contains(wall))
+              //  Walls.Add(wall);
         }
 
         public void RemoveWall(Wall wall)

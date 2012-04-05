@@ -7,7 +7,6 @@ namespace AIFGP_Game
     public class EntityManager
     {
         public Dictionary<Guid, IGameEntity> Entities = new Dictionary<Guid, IGameEntity>();
-
         public Guid PlayerID;
 
         public void RegisterEntity(IGameEntity entity)

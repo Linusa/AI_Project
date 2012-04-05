@@ -5,6 +5,6 @@
     public class PlayerDescription
     {
         public Vector2 StartingTilePosition = Vector2.Zero;
-        public float MaxSpeed = 225.0f;
+        public float MaxSpeed;
     }
 }

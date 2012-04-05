@@ -27,6 +27,7 @@
 
         private Sprite<byte> grassTile;
         private Sprite<byte> wallTile;
+        private Sprite<byte> bushTile;
 
         public NavigationGraph NavigationGraph = new NavigationGraph();
         private Dictionary<Vector2, int> nodeIndices = new Dictionary<Vector2, int>();
@@ -34,6 +35,7 @@
         private GraphSearchViewer navGraphViewer;
 
         private Timer inputTimer = new Timer(0.2f);
+        private List<Vector2> bushes = new List<Vector2>();
 
         public Map(MapDescription mapDescription)
         {
@@ -66,6 +68,17 @@
         {
             Vector2 tilePos = WorldPosToTilePos(worldPosition);
             return IsTilePosWall((int)tilePos.Y, (int)tilePos.X);
+        }
+
+        public bool IsTilePosBush(int row, int col)
+        {
+            return TileInfoAtTilePos(row, col).Type == TileType.Bush;
+        }
+        
+        public bool IsWorldPosBush(Vector2 worldPosition)
+        {
+            Vector2 tilePos = WorldPosToTilePos(worldPosition);
+            return IsTilePosBush((int)tilePos.Y, (int)tilePos.X);
         }
 
         public TileInfo TileInfoAtTilePos(int row, int col)
@@ -125,19 +138,20 @@
             int tileY = (int)(worldPos.Y / TileSize.Y);
             return new Vector2(tileX, tileY);
         }
+
+        public List<Vector2> BushLocations
+        {
+            get { return bushes; }
+        }
         
         private void createTiles(int[] tileTypeIndices)
         {
-            int xOffset = (AStarGame.WorldDimensions.Width - TilesAcross * (int)TileSize.X) / 2;
-            int yOffset = (AStarGame.WorldDimensions.Height - TilesDown * (int)TileSize.Y) / 2;
-            Vector2 offset = new Vector2(xOffset, yOffset);
-
             for (int i = 0; i < TilesDown; i++)
             {
                 for (int j = 0; j < TilesAcross; j++)
                 {
-                    TileInfo curTile = new TileInfo();
-                    curTile.Position = offset + new Vector2(j * TileSize.X, i * TileSize.Y);
+                    TileInfo curTileInfo = new TileInfo();
+                    curTileInfo.Position = new Vector2(j * TileSize.X, i * TileSize.Y);
 
                     int curIdx = (i * TilesAcross) + j;
                     TileType curTileType = (TileType)tileTypeIndices[curIdx];
@@ -146,16 +160,23 @@
                     {
                         // Create a Wall and register it with the WallManager.
                         Wall curWall = new Wall();
-                        curWall.TopLeftPixel = curTile.Position;
-                        curWall.BottomRightPixel = curTile.Position + TileSize;
+                        curWall.TopLeftPixel = curTileInfo.Position;
+                        curWall.BottomRightPixel = curTileInfo.Position + TileSize;
                         WallManager.Instance.AddWall(curWall);
 
-                        curTile.Type = TileType.Wall;
+                        curTileInfo.Type = TileType.Wall;
+                    }
+                    else if (curTileType == TileType.Bush)
+                    {
+                        Vector2 bushPos = curTileInfo.Position + TileSize / 2;
+                        bushes.Add(bushPos);
+
+                        curTileInfo.Type = TileType.Bush;
                     }
                     else
-                        curTile.Type = TileType.Ground;
+                        curTileInfo.Type = TileType.Ground;
 
-                    mapTiles.Add(curTile);
+                    mapTiles.Add(curTileInfo);
                 }
             }
         }
@@ -239,10 +260,17 @@
             grassTile = new Sprite<byte>(TextureManager.GrassTile, Vector2.Zero, tileFrame);
             grassTile.AddAnimationFrame(0, tileFrame);
             grassTile.ActiveAnimation = 0;
+            grassTile.LayerDepth = AStarGame.DrawingOrder.Grass;
 
             wallTile = new Sprite<byte>(TextureManager.WallTile, Vector2.Zero, tileFrame);
             wallTile.AddAnimationFrame(0, tileFrame);
             wallTile.ActiveAnimation = 0;
+            wallTile.LayerDepth = AStarGame.DrawingOrder.Wall;
+            
+            bushTile = new Sprite<byte>(TextureManager.BushTile, Vector2.Zero, tileFrame);
+            bushTile.AddAnimationFrame(0, tileFrame);
+            bushTile.ActiveAnimation = 0;
+            bushTile.LayerDepth = AStarGame.DrawingOrder.Bush;
         }
 
         public void Update(GameTime gameTime)
@@ -322,6 +350,16 @@
 
                 if (tileInfo.Type == TileType.Wall)
                     tile = wallTile;
+                else if (tileInfo.Type == TileType.Bush)
+                {
+                    // Hack for now so that the transparent parts
+                    // of bush do not show bg color.
+                    tile = grassTile;
+                    tile.Position = tileInfo.Position;
+                    tile.Draw(spriteBatch);
+
+                    tile = bushTile;
+                }
                 else
                     tile = grassTile;
 

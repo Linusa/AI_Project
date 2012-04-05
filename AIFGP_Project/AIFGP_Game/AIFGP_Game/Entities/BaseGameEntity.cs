@@ -18,10 +18,12 @@
 
         private Vector2 heading = Vector2.Zero;
         private Vector2 velocity = Vector2.Zero;
-        private float maxSpeed = 250.0f;
+        private float maxSpeed = 100.0f;
 
         private List<Vector2> path = new List<Vector2>();
+        private int pathIdx = 0;
         private bool followingPath = false;
+        private bool patrollingPath = false;
 
         public BaseGameEntity(Texture2D texture, Vector2 position, Rectangle dimensions)
         {
@@ -80,6 +82,17 @@
             }
         }
 
+        public bool PatrollingPath
+        {
+            get { return patrollingPath; }
+        }
+
+        public int NextPathIndex
+        {
+            get { return pathIdx; }
+            set { pathIdx = value % path.Count; }
+        }
+
         public virtual void Translate(Vector2 offset)
         {
             Position += offset;
@@ -112,16 +125,22 @@
             EntitySprite.Scale(scale);
         }
 
-        public void FollowPath(List<Vector2> p)
+        public void FollowPath(List<Vector2> p, bool patrol)
         {
             path = p;
             FollowingPath = true;
+            patrollingPath = patrol;
         }
 
         // Force needed to move to a target.
         public Vector2 Seek(Vector2 target)
         {
-            Vector2 toTarget = Vector2.Normalize(target - Position) * MaxSpeed;
+            Vector2 toTarget = Vector2.Normalize(target - Position);
+
+            if (Single.IsNaN(toTarget.X) || Single.IsNaN(toTarget.Y))
+                return Vector2.Zero;
+
+            toTarget *= MaxSpeed;
             return toTarget - Velocity;
         }
 
@@ -132,23 +151,23 @@
             if (FollowingPath)
             {
                 // For demo purposes, using acceleration of 0.
-                Velocity = Seek(path[0]);
-
-                // Little bit hackish, but rather keep these NaN checks
-                // for only when following path. That way just setting Velocity
-                // is as fast as possible.
-                if (Single.IsNaN(Velocity.X) || Single.IsNaN(Velocity.Y))
-                    Velocity = Vector2.Zero;
+                Velocity += Seek(path[NextPathIndex]);
 
                 // Update direction.
-                //RotateInRadians((float)Angles.AngleFromUToV(Heading,
-                //    Vector2.Normalize(path[0] - position)));
+                RotateInRadians((float)Angles.AngleFromUToV(Heading,
+                    Vector2.Normalize(path[NextPathIndex] - Position)));
 
                 if (nextNodeReached())
                 {
-                    path.RemoveAt(0);
+                    NextPathIndex++;
 
-                    if (path.Count == 0)
+                    if (patrollingPath && NextPathIndex == 0)
+                    {
+                        NextPathIndex = 0;
+                        path.Reverse();
+                    }
+
+                    if (!patrollingPath && NextPathIndex == 0)
                         FollowingPath = false;
                 }
             }
@@ -180,8 +199,8 @@
         {
             float epsilon = 10.0f;
 
-            bool xEqual = Math.Abs(path[0].X - Position.X) < epsilon;
-            bool yEqual = Math.Abs(path[0].Y - Position.Y) < epsilon;
+            bool xEqual = Math.Abs(path[NextPathIndex].X - Position.X) < epsilon;
+            bool yEqual = Math.Abs(path[NextPathIndex].Y - Position.Y) < epsilon;
 
             return xEqual && yEqual;
         }

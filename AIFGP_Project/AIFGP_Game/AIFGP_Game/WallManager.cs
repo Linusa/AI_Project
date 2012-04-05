@@ -23,25 +23,29 @@
                 Wall otherWall = Walls[i];
 
                 if (otherWall.BoundingBox.Right == wall.BoundingBox.Left
-                    && otherWall.BoundingBox.Width >= otherWall.BoundingBox.Height)
+                    && otherWall.BoundingBox.Width >= otherWall.BoundingBox.Height
+                    && otherWall.BoundingBox.Top == wall.BoundingBox.Top)
                 {
                     otherWall.BottomRightPixel = wall.BottomRightPixel;
                     mergedWall = true;
                 }
                 else if (otherWall.BoundingBox.Left == wall.BoundingBox.Right
-                    && otherWall.BoundingBox.Width >= otherWall.BoundingBox.Height)
+                    && otherWall.BoundingBox.Width >= otherWall.BoundingBox.Height
+                    && otherWall.BoundingBox.Top == wall.BoundingBox.Top)
                 {
                     otherWall.TopLeftPixel = wall.TopLeftPixel;
                     mergedWall = true;
                 }
                 else if (otherWall.BoundingBox.Bottom == wall.BoundingBox.Top
-                    && otherWall.BoundingBox.Height >= otherWall.BoundingBox.Width)
+                    && otherWall.BoundingBox.Height >= otherWall.BoundingBox.Width
+                    && otherWall.BoundingBox.Left == wall.BoundingBox.Left)
                 {
                     otherWall.BottomRightPixel = wall.BottomRightPixel;
                     mergedWall = true;
                 }
                 else if (otherWall.BoundingBox.Top == wall.BoundingBox.Bottom
-                    && wall.BoundingBox.Height >= wall.BoundingBox.Width)
+                    && otherWall.BoundingBox.Height >= otherWall.BoundingBox.Width
+                    && otherWall.BoundingBox.Left == wall.BoundingBox.Left)
                 {
                     otherWall.TopLeftPixel = wall.TopLeftPixel;
                     mergedWall = true;

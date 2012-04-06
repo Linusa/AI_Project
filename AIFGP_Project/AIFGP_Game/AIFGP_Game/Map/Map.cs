@@ -23,11 +23,11 @@
         public int TilesDown;
         public Vector2 TileSize;
         
-        private List<TileInfo> mapTiles = new List<TileInfo>();
+        protected List<TileInfo> mapTiles = new List<TileInfo>();
 
-        private Sprite<byte> grassTile;
-        private Sprite<byte> wallTile;
-        private Sprite<byte> bushTile;
+        protected Sprite<byte> grassTile;
+        protected Sprite<byte> wallTile;
+        protected Sprite<byte> bushTile;
 
         public NavigationGraph NavigationGraph = new NavigationGraph();
         private Dictionary<Vector2, int> nodeIndices = new Dictionary<Vector2, int>();
@@ -35,7 +35,8 @@
         private GraphSearchViewer navGraphViewer;
 
         private Timer inputTimer = new Timer(0.2f);
-        private List<Vector2> bushes = new List<Vector2>();
+        
+        protected List<Vector2> bushes = new List<Vector2>();
 
         public Map(MapDescription mapDescription)
         {
@@ -52,9 +53,8 @@
             createTiles(mapDescription.MapTiles);
             
             createNavigationGraph();
-            navGraphViewer = new GraphSearchViewer(NavigationGraph);
             
-            initSprites();
+            initializeSprites();
 
             inputTimer.Start();
         }
@@ -182,7 +182,7 @@
         }
 
         // Map must be loaded before this is called!
-        private void createNavigationGraph()
+        protected virtual void createNavigationGraph()
         {
             // GC may wreak havoc here, test this out.
             nodeIndices.Clear();
@@ -190,6 +190,8 @@
 
             computeNavGraphNodes();
             computeNavGraphEdges();
+            
+            navGraphViewer = new GraphSearchViewer(NavigationGraph);
         }
 
         private void computeNavGraphNodes()
@@ -253,7 +255,7 @@
             }
         }
 
-        private void initSprites()
+        protected virtual void initializeSprites()
         {
             Rectangle tileFrame = new Rectangle(0, 0, (int)TileSize.X, (int)TileSize.Y);
             
@@ -273,7 +275,7 @@
             bushTile.LayerDepth = AStarGame.DrawingOrder.Bush;
         }
 
-        public void Update(GameTime gameTime)
+        public virtual void Update(GameTime gameTime)
         {
             // If left-shift is held down, the user can left-click to put
             // walls down and right-click to remove them. This looks messy,
@@ -342,7 +344,7 @@
             navGraphViewer.Update(gameTime);
         }
 
-        public void Draw(SpriteBatch spriteBatch)
+        public virtual void Draw(SpriteBatch spriteBatch)
         {
             foreach (TileInfo tileInfo in mapTiles)
             {

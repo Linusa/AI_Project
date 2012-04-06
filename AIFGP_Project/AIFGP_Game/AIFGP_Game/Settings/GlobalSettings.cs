@@ -32,18 +32,18 @@
 
 
         #region Save and Load
-        public static void Save(string filename, GlobalSettings settings)
+        public static void Save(string fileName, GlobalSettings settings)
         {
-            Stream stream = File.Create(filename);
+            Stream stream = File.Create(fileName);
 
             XmlSerializer serializer = new XmlSerializer(typeof(GlobalSettings));
             serializer.Serialize(stream, settings);
             stream.Close();
         }
 
-        public static void Load(string filename, out GlobalSettings settings)
+        public static void Load(string fileName, out GlobalSettings settings)
         {
-            Stream stream = File.OpenRead(filename);
+            Stream stream = File.OpenRead(fileName);
             XmlSerializer serializer = new XmlSerializer(typeof(GlobalSettings));
             settings = (GlobalSettings)serializer.Deserialize(stream);
         }

@@ -108,9 +108,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MapCreator.cs" />
+    <Compile Include="MapCreatorCamera.cs" />
+    <Compile Include="MapCreatorGui.cs" />
+    <Compile Include="MapGridlines.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="MapCreatorGame.cs" />
+    <Compile Include="EditorMap.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

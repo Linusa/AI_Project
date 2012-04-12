@@ -134,8 +134,15 @@
 
         public Vector2 WorldPosToTilePos(Vector2 worldPos)
         {
+            bool xNeg = worldPos.X < 0;
+            bool yNeg = worldPos.Y < 0;
+
             int tileX = (int)(worldPos.X / TileSize.X);
             int tileY = (int)(worldPos.Y / TileSize.Y);
+
+            tileX = xNeg ? tileX - 1 : tileX;
+            tileY = yNeg ? tileY - 1 : tileY;
+
             return new Vector2(tileX, tileY);
         }
 

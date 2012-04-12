@@ -17,17 +17,20 @@
         {
             player = EntityManager.Instance.GetPlayer();
 
-            foreach (EnemiesDescription.EnemyInfo curEnemyInfo in enemiesDescription.EnemiesInfo)
+            if (enemiesDescription.EnemiesInfo != null)
             {
-                List<Vector2> curPatrolRoute = curEnemyInfo.PatrolTilePositions;
-                for (int i = 0; i < curPatrolRoute.Count; i++)
-                    curPatrolRoute[i] = AStarGame.GameMap.TilePosToWorldPos(curPatrolRoute[i]);
+                foreach (EnemiesDescription.EnemyInfo curEnemyInfo in enemiesDescription.EnemiesInfo)
+                {
+                    List<Vector2> curPatrolRoute = curEnemyInfo.PatrolTilePositions;
+                    for (int i = 0; i < curPatrolRoute.Count; i++)
+                        curPatrolRoute[i] = AStarGame.GameMap.TilePosToWorldPos(curPatrolRoute[i]);
 
-                Vector2 curEnemyPosition = AStarGame.GameMap.TilePosToWorldPos(curEnemyInfo.StartingTilePosition);
-                IGameEntity curEnemy = new SimpleSensingGameEntity(TextureManager.NpcSpriteSheet, curEnemyPosition, curPatrolRoute);
-                curEnemy.MaxSpeed = curEnemyInfo.MaxSpeed;
+                    Vector2 curEnemyPosition = AStarGame.GameMap.TilePosToWorldPos(curEnemyInfo.StartingTilePosition);
+                    IGameEntity curEnemy = new SimpleSensingGameEntity(TextureManager.NpcSpriteSheet, curEnemyPosition, curPatrolRoute);
+                    curEnemy.MaxSpeed = curEnemyInfo.MaxSpeed;
 
-                Enemies.Add(curEnemy);
+                    Enemies.Add(curEnemy);
+                }
             }
         }
 

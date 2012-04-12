@@ -1,26 +1,25 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
-using Microsoft.Xna.Framework.GamerServices;
-using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
-using Microsoft.Xna.Framework.Media;
-using AIFGP_Game;
-
 namespace AIFGP_Game_MapCreation
 {
+    using System;
+    using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Graphics;
+    using Microsoft.Xna.Framework.Input;
+    using AIFGP_Game;
+
     public class MapCreatorGame : Microsoft.Xna.Framework.Game
     {
         private MapCreator mapCreator;
-        private MapCreatorGui gui;
         
         private SpriteBatch spriteBatch;
         private GraphicsDeviceManager graphics;
 
         private static Camera gameCamera;
+
+        private int screenWidth = 1280;
+        private int screenHeight = 720;
+
+        private string windowTitle = "R:{0,4:000}, C:{0,4:000}, | " +
+            "Toggle Gridlines: G | Toggle Headers: H";
 
         public MapCreatorGame()
         {
@@ -30,8 +29,8 @@ namespace AIFGP_Game_MapCreation
 
         protected override void Initialize()
         {
-            graphics.PreferredBackBufferWidth = 1280;
-            graphics.PreferredBackBufferHeight = 720;
+            graphics.PreferredBackBufferWidth = screenWidth;
+            graphics.PreferredBackBufferHeight = screenHeight;
             graphics.ApplyChanges();
 
             IsMouseVisible = true;
@@ -47,8 +46,8 @@ namespace AIFGP_Game_MapCreation
             
             spriteBatch = new SpriteBatch(GraphicsDevice);
             
-            mapCreator = new MapCreator(this, 60, 80, new Vector2(28.0f, 28.0f));
-            gui = new MapCreatorGui();
+            mapCreator = new MapCreator(this, "Scenario002.xml", 60, 80,
+                new Vector2(28.0f, 28.0f));
 
             gameCamera = mapCreator.Camera;
         }
@@ -73,14 +72,15 @@ namespace AIFGP_Game_MapCreation
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.Black);
-            
+
             spriteBatch.Begin(SpriteSortMode.Deferred, null,
                 null, null, null, null, mapCreator.Camera.Transformation);
             mapCreator.Draw(spriteBatch);
             spriteBatch.End();
 
+            // Hack. The MapCreator should draw its own gui.
             spriteBatch.Begin();
-            gui.Draw(spriteBatch);
+            mapCreator.Gui.Draw(spriteBatch);
             spriteBatch.End();
 
             base.Draw(gameTime);
@@ -115,7 +115,13 @@ namespace AIFGP_Game_MapCreation
             Vector2 mouse = MousePositionInWorld();
             mouse = mapCreator.Map.WorldPosToTilePos(mouse);
 
-            Window.Title = "R:" + mouse.Y + " C:" + mouse.X;
+            int x = (int)mouse.X;
+            int y = (int)mouse.Y;
+
+            if (mapCreator.Map.TilePosWithinMapBounds(y, x))
+                Window.Title = String.Format(windowTitle, mouse.Y, mouse.X);
+            else
+                Window.Title = String.Format(windowTitle, 0, 0);
         }
     }
 }

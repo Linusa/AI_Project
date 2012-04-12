@@ -73,7 +73,8 @@ namespace AIFGP_Game
             
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            currentScenario = Content.Load<Scenario>(GlobalGameSettings.Game.Scenario);
+            //currentScenario = Content.Load<Scenario>(GlobalGameSettings.Game.Scenario);
+            currentScenario = Content.Load<Scenario>(@"Scenarios\Scenario002");
 
             // This could go in a little method.
             WorldDimensions = new Rectangle(0, 0,

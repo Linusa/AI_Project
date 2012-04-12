@@ -26,6 +26,17 @@
             mapGridlines = new MapGridlines(this);
         }
 
+        public bool TilePosWithinMapBounds(int row, int col)
+        {
+            return col >= 0 && col < TilesAcross &&
+                row >= 0 && row < TilesDown;
+        }
+
+        public bool WorldPosWithinMapBounds(Vector2 worldPos)
+        {
+            Vector2 tilePos = WorldPosToTilePos(worldPos);
+            return TilePosWithinMapBounds((int)tilePos.Y, (int)tilePos.X);
+        }
 
         public override void Update(GameTime gameTime)
         {

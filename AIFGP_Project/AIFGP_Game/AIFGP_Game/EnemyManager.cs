@@ -9,6 +9,8 @@
 
     class EnemyManager : IUpdateable, IDrawable
     {
+        public bool FarmerCaughtRabbit = false;
+
         public List<IGameEntity> Enemies = new List<IGameEntity>();
 
         private IGameEntity player;
@@ -36,13 +38,18 @@
 
         public void Update(GameTime gameTime)
         {
+            bool caughtRabbit = false;
+
             foreach (IGameEntity entity in Enemies)
             {
                 float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
-                //entity.Velocity += entity.Seek(player.Position) * dt;
-
                 entity.Update(gameTime);
+
+                if (Vector2.DistanceSquared(entity.Position, player.Position) < 200.0f)
+                    caughtRabbit = true;
             }
+
+            FarmerCaughtRabbit = caughtRabbit;
         }
 
         public void Draw(SpriteBatch spriteBatch)

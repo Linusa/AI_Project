@@ -62,6 +62,37 @@
             }
         }
 
+        public void Translate(Vector2 offset)
+        {
+            int x = (int)offset.X;
+            int y = (int)offset.Y;
+
+            rectangle.X += x;
+            rectangle.Y += y;
+
+            Vector2 pos;
+
+            pos = topLine.Position;
+            pos.X += x;
+            pos.Y += y;
+            topLine.Position = pos;
+            
+            pos = bottomLine.Position;
+            pos.X += x;
+            pos.Y += y;
+            bottomLine.Position = pos;
+            
+            pos = leftLine.Position;
+            pos.X += x;
+            pos.Y += y;
+            leftLine.Position = pos;
+            
+            pos = rightLine.Position;
+            pos.X += x;
+            pos.Y += y;
+            rightLine.Position = pos;
+        }
+
         public Color FillColor
         {
             set { backgroundRectSprite.Color = value; }

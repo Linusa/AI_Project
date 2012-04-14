@@ -18,7 +18,7 @@ namespace AIFGP_Game_MapCreation
         private int screenWidth = 1280;
         private int screenHeight = 720;
 
-        private string windowTitle = "R:{0,4:000}, C:{0,4:000}, | " +
+        private string windowTitle = "R:{0,4:000}, C:{1,4:000}, | " +
             "Toggle Gridlines: G | Toggle Headers: H";
 
         public MapCreatorGame()
@@ -46,7 +46,7 @@ namespace AIFGP_Game_MapCreation
             
             spriteBatch = new SpriteBatch(GraphicsDevice);
             
-            mapCreator = new MapCreator(this, "Scenario002.xml", 60, 80,
+            mapCreator = new MapCreator(this, "Scenario000.xml", 60, 80,
                 new Vector2(28.0f, 28.0f));
 
             gameCamera = mapCreator.Camera;

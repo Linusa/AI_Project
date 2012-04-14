@@ -17,6 +17,8 @@
             Wall,
             Bush,
             Player_Position,
+            Carrot_Position,
+            Enemies,
             Save
         }
 
@@ -53,6 +55,8 @@
             addButton(Button.Wall, "Wall");
             addButton(Button.Bush, "Bush");
             addButton(Button.Player_Position, "Player Position");
+            addButton(Button.Carrot_Position, "Carrot Position");
+            addButton(Button.Enemies, "Enemies");
             addButton(Button.Save, "Save");
 
             toggleButton(toggledButton);

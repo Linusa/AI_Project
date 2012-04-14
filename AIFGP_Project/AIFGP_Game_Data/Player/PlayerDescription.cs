@@ -6,5 +6,7 @@
     {
         public Vector2 StartingTilePosition = Vector2.Zero;
         public float MaxSpeed;
+
+        public Vector2 CarrotTilePosition = Vector2.Zero;
     }
 }

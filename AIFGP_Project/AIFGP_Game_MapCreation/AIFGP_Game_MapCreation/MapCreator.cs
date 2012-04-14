@@ -2,8 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using System.IO;
     using System.Xml;
     using Microsoft.Xna.Framework;
@@ -43,6 +41,12 @@
         private Vector2 clickedTile = Vector2.Zero;
 
         private Rabbit playerSprite = new Rabbit(TextureManager.RabbitSpriteSheet, Vector2.Zero);
+        private SimpleSensingGameEntity enemySprite =
+            new SimpleSensingGameEntity(TextureManager.NpcSpriteSheet, Vector2.Zero, new List<Vector2>());
+        private VisualRectangle selectionSprite;
+        private Carrot carrotSprite = new Carrot(TextureManager.CarrotSprite, Vector2.Zero);
+
+        private int selectedEnemy;
 
         public MapCreator(Game game, string outFileName, int numRows, int numCols, Vector2 tileSize)
         {
@@ -56,18 +60,29 @@
             for (int i = 0; i < numRows * numCols; i++)
                 tileTypeIndices[i] = (int)TileType.Ground;
 
-            scenario = new Scenario();
-            
-            scenario.MapDescription = new MapDescription();
-            scenario.MapDescription.TilesDown = numRows;
-            scenario.MapDescription.TilesAcross = numCols;
-            scenario.MapDescription.TileSize = tileSize;
-            scenario.MapDescription.MapTiles = tileTypeIndices;
+            string[] fileNames = Directory.GetFiles(".", "Scenario*.xml", SearchOption.TopDirectoryOnly);
 
-            scenario.PlayerDescription = new PlayerDescription();
-            scenario.PlayerDescription.MaxSpeed = 200.0f;
+            if (fileNames.Length > 0)
+            {
+                this.outFileName = fileNames[0];
+                Load(this.outFileName);
+            }
+            else
+            {
+                scenario = new Scenario();
 
-            scenario.EnemiesDescription = new EnemiesDescription();
+                scenario.MapDescription = new MapDescription();
+                scenario.MapDescription.TilesDown = numRows;
+                scenario.MapDescription.TilesAcross = numCols;
+                scenario.MapDescription.TileSize = tileSize;
+                scenario.MapDescription.MapTiles = tileTypeIndices;
+
+                scenario.PlayerDescription = new PlayerDescription();
+                scenario.PlayerDescription.MaxSpeed = 200.0f;
+
+                scenario.EnemiesDescription = new EnemiesDescription();
+                scenario.EnemiesDescription.EnemiesInfo = new List<EnemiesDescription.EnemyInfo>();
+            }
 
             Map = new EditorMap(scenario.MapDescription);
             
@@ -78,17 +93,23 @@
             buttonActions.Add(MapCreatorGui.Button.Wall, handleWallEditing);
             buttonActions.Add(MapCreatorGui.Button.Bush, handleBushEditing);
             buttonActions.Add(MapCreatorGui.Button.Player_Position, handlePlayerEditing);
+            buttonActions.Add(MapCreatorGui.Button.Carrot_Position, handleCarrotEditing);
+            buttonActions.Add(MapCreatorGui.Button.Enemies, handleEnemyEditing);
             buttonActions.Add(MapCreatorGui.Button.Save, Save);
+
+            selectionSprite = new VisualRectangle(enemySprite.BoundingBox);
+            selectionSprite.FillColor = Color.Transparent;
+            selectionSprite.EdgeColor = Color.Transparent;
+
+            // Handle updating anything in the editor if scenario XML was loaded.
+            playerSprite.Position = Map.TilePosToWorldPos(scenario.PlayerDescription.StartingTilePosition);
+            carrotSprite.Position = Map.TilePosToWorldPos(scenario.PlayerDescription.CarrotTilePosition);
         }
 
         public void Save()
         {
             if (minTimeBetweenSaves < timeSinceLastSave)
             {
-                updateMapDescription();
-                scenario.PlayerDescription.StartingTilePosition =
-                    Map.WorldPosToTilePos(playerSprite.Position);
-
                 XmlWriterSettings settings = new XmlWriterSettings();
                 settings.Indent = true;
 
@@ -101,15 +122,11 @@
             }
         }
 
-        private void updateMapDescription()
+        public void Load(string file)
         {
-            for (int i = 0; i < scenario.MapDescription.TilesDown; i++)
+            using (XmlReader reader = XmlReader.Create(file))
             {
-                for (int j = 0; j < scenario.MapDescription.TilesAcross; j++)
-                {
-                    int idx = (i * scenario.MapDescription.TilesAcross) + j;
-                    scenario.MapDescription.MapTiles[idx] = (int)Map.TileInfoAtTilePos(i, j).Type;
-                }
+                scenario = IntermediateSerializer.Deserialize<Scenario>(reader, null);
             }
         }
 
@@ -127,6 +144,31 @@
         {
             Map.Draw(spriteBatch);
             playerSprite.Draw(spriteBatch);
+            carrotSprite.Draw(spriteBatch);
+
+            foreach (EnemiesDescription.EnemyInfo enemy in scenario.EnemiesDescription.EnemiesInfo)
+            {
+                enemySprite.Position = Map.TilePosToWorldPos(enemy.StartingTilePosition);
+                enemySprite.Draw(spriteBatch);
+            }
+
+            if (Gui.ToggledButton == MapCreatorGui.Button.Enemies)
+            {
+                selectionSprite.Draw(spriteBatch);
+
+                if (scenario.EnemiesDescription.EnemiesInfo.Count > 0)
+                {
+                    // Longest line ever.
+                    int patrolCount = 1;
+                    foreach (Vector2 patrolPos in scenario.EnemiesDescription.EnemiesInfo[selectedEnemy].PatrolTilePositions)
+                    {
+                        string patCountStr = patrolCount.ToString();
+                        Vector2 patrolWorld = Map.TilePosToWorldPos(patrolPos) - FontManager.DebugFont.MeasureString(patCountStr) / 2;
+                        spriteBatch.DrawString(FontManager.DebugFont, patrolCount.ToString(), patrolWorld, Color.Orange);
+                        patrolCount++;
+                    }
+                }
+            }
         }
 
         private void handleUserInput(GameTime gameTime)
@@ -153,6 +195,20 @@
                         }
                     }
                 }
+
+                if (scenario.EnemiesDescription.EnemiesInfo.Count > 0 &&
+                    Gui.ToggledButton == MapCreatorGui.Button.Enemies &&
+                    Mouse.GetState().RightButton == ButtonState.Pressed)
+                {
+                    Vector2 mouse = MapCreatorGame.MousePositionInWorld();
+                    if (Map.WorldPosWithinMapBounds(mouse))
+                    {
+                        clickedTile = Map.WorldPosToTilePos(mouse);
+                        addEnemyPatrolPath();
+
+                        timeSinceLastClick = 0.0f;
+                    }
+                }
             }
 
             if (minTimeBetweenKeys < timeSinceLastKey)
@@ -175,6 +231,40 @@
         private void handlePlayerEditing()
         {
             playerSprite.Position = Map.TilePosToWorldPos(clickedTile);
+            scenario.PlayerDescription.StartingTilePosition = clickedTile;
+        }
+
+        private void handleCarrotEditing()
+        {
+            carrotSprite.Position = Map.TilePosToWorldPos(clickedTile);
+            scenario.PlayerDescription.CarrotTilePosition = clickedTile;
+        }
+
+        private void handleEnemyEditing()
+        {
+            Vector2 rectInWorld = new Vector2(selectionSprite.Rectangle.X, selectionSprite.Rectangle.Y);
+            Vector2 rectCenter = new Vector2(selectionSprite.Rectangle.Width, selectionSprite.Rectangle.Height) / 2;
+            Vector2 tileInWorld = Map.TilePosToWorldPos(clickedTile);
+            
+            selectionSprite.Translate(tileInWorld - rectInWorld - rectCenter);
+            selectionSprite.EdgeColor = Color.Orange;
+
+            for (int i = 0; i < scenario.EnemiesDescription.EnemiesInfo.Count; i++)
+            {
+                if (scenario.EnemiesDescription.EnemiesInfo[i].StartingTilePosition == clickedTile)
+                {
+                    selectedEnemy = i;
+                    return;
+                }
+            }
+
+            EnemiesDescription.EnemyInfo info = new EnemiesDescription.EnemyInfo();
+            info.StartingTilePosition = clickedTile;
+            info.MaxSpeed = 200.0f;
+            info.PatrolTilePositions = new List<Vector2>();
+
+            scenario.EnemiesDescription.EnemiesInfo.Add(info);
+            selectedEnemy = scenario.EnemiesDescription.EnemiesInfo.Count - 1;
         }
 
         private void handleGrassEditing()
@@ -194,10 +284,21 @@
 
         private void changeTile(TileType tileType)
         {
-            TileInfo tileInfo = Map.TileInfoAtTilePos((int)clickedTile.Y, (int)clickedTile.X);
+            int row = (int)clickedTile.Y;
+            int col = (int)clickedTile.X;
+
+            TileInfo tileInfo = Map.TileInfoAtTilePos(row, col);
             tileInfo.Type = tileType;
 
-            Map.SetTileInfoAtTilePos((int)clickedTile.Y, (int)clickedTile.X, tileInfo);
+            Map.SetTileInfoAtTilePos(row, col, tileInfo);
+            
+            int idx = (row * scenario.MapDescription.TilesAcross) + col;
+            scenario.MapDescription.MapTiles[idx] = (int)tileType;
+        }
+
+        private void addEnemyPatrolPath()
+        {
+            scenario.EnemiesDescription.EnemiesInfo[selectedEnemy].PatrolTilePositions.Add(clickedTile);
         }
     }
 }

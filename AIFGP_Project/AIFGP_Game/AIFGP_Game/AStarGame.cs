@@ -3,6 +3,7 @@ namespace AIFGP_Game
     using System;
     using System.Collections.Generic;
     using Microsoft.Xna.Framework;
+    using Microsoft.Xna.Framework.Content;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
 
@@ -25,9 +26,10 @@ namespace AIFGP_Game
 
         private Scenario currentScenario;
 
-        public static Rectangle WorldDimensions;// = new Rectangle(0, 0, 1932, 1120);
-        public static Vector2 WorldCenter;// = new Vector2(WorldDimensions.Width,
-            //WorldDimensions.Height) / 2;
+        public static Rectangle WorldDimensions;
+        public static Vector2 WorldCenter;
+
+        public static Vector2 ScreenCenter;
 
         private static Camera gameCamera;
 
@@ -36,6 +38,31 @@ namespace AIFGP_Game
         private PlayerManager playerManager;
         private EnemyManager enemyManager;
 
+        private GameState gameState = GameState.Play;
+        private enum GameState
+        {
+            Play,
+            BeatLevel,
+            LostLevel,
+            WonGame
+        }
+
+        private string scenarioName = @"Scenarios\Scenario{0:000}";
+        private int scenarioNumber = 1;
+
+        private string beatLvlMsg = "Congratulations!\nYou got the carrot!!!\n\n"
+            + "Next level starting soon...";
+        private Vector2 beatLvlMsgCenter;
+        private Timer beatLvlMsgDisplayTimer = new Timer(3.5f);
+
+        private string lostLvlMsg = "You let a farmer catch you!\n\n"
+            + "Use bushes to hide.";
+        private Vector2 lostLvlMsgCenter;
+        private Timer lostLvlMsgDisplayTimer = new Timer(3.5f);
+
+        private string wonGameMsg = "You beat the game!\nThanks for playing!\n\n"
+            + "Press 'Esc' to quit.";
+        private Vector2 wonGameMsgCenter;
         
         private MouseState prevMouseState;
 
@@ -58,6 +85,9 @@ namespace AIFGP_Game
             graphics.IsFullScreen = GlobalGameSettings.Screen.IsFullScreen;
             graphics.ApplyChanges();
 
+            ScreenCenter = new Vector2(graphics.PreferredBackBufferWidth,
+                graphics.PreferredBackBufferHeight) / 2;
+
             // BEGIN Testing
             System.Diagnostics.Debug.WriteLine("------- BEGIN TESTING! -------");
             System.Diagnostics.Debug.WriteLine("------- DONE TESTING! -------");
@@ -72,22 +102,12 @@ namespace AIFGP_Game
             TextureManager.LoadTextures(this);
             
             spriteBatch = new SpriteBatch(GraphicsDevice);
-
-            //currentScenario = Content.Load<Scenario>(GlobalGameSettings.Game.Scenario);
-            currentScenario = Content.Load<Scenario>(@"Scenarios\Scenario002");
-
-            // This could go in a little method.
-            WorldDimensions = new Rectangle(0, 0,
-                currentScenario.MapDescription.TilesAcross * (int)currentScenario.MapDescription.TileSize.X,
-                currentScenario.MapDescription.TilesDown * (int)currentScenario.MapDescription.TileSize.Y);
-            WorldCenter = new Vector2(WorldDimensions.Width, WorldDimensions.Height) / 2;
-
-            GameMap = new Map(currentScenario.MapDescription);
-            playerManager = new PlayerManager(currentScenario.PlayerDescription);
-            enemyManager = new EnemyManager(currentScenario.EnemiesDescription);
-
-            gameCamera = new Camera(graphics.GraphicsDevice, playerManager.Player.Position);
             
+            beatLvlMsgCenter = FontManager.BigFont.MeasureString(beatLvlMsg) / 2;
+            lostLvlMsgCenter = FontManager.BigFont.MeasureString(lostLvlMsg) / 2;
+            wonGameMsgCenter = FontManager.BigFont.MeasureString(wonGameMsg) / 2;
+
+            loadScenario(String.Format(scenarioName, scenarioNumber));
         }
 
         protected override void UnloadContent()
@@ -101,52 +121,142 @@ namespace AIFGP_Game
                 || Keyboard.GetState().IsKeyDown(Keys.Escape))
                 this.Exit();
 
-            GameMap.Update(gameTime);
-            playerManager.Update(gameTime);
-            enemyManager.Update(gameTime);
-
-            MouseState mouseState = Mouse.GetState();
-            if (mouseState.MiddleButton == ButtonState.Pressed)
+            switch (gameState)
             {
-                gameCamera.Position += new Vector2(prevMouseState.X - mouseState.X, prevMouseState.Y - mouseState.Y);
+                case GameState.Play:
+                    GameMap.Update(gameTime);
+                    playerManager.Update(gameTime);
+                    enemyManager.Update(gameTime);
 
-                //Vector2 mouseVec = MousePositionInWorld();
-                //Window.Title = "Mouse: " + mouseVec + " | IsWorldPosWall("
-                //    + mouseVec.X + ", " + mouseVec.Y + "): " + GameMap.IsWorldPosWall(mouseVec); ;
+                    if (playerManager.PlayerReachedCarrot)
+                    {
+                        gameState = GameState.BeatLevel;
+                        
+                        scenarioNumber++;
+                        loadScenario(String.Format(scenarioName, scenarioNumber));
+                        
+                        beatLvlMsgDisplayTimer.Restart();
+                    }
+
+                    if (enemyManager.FarmerCaughtRabbit)
+                    {
+                        gameState = GameState.LostLevel;
+
+                        playerManager.ResetPlayerPosition();
+                        gameCamera.Position = playerManager.Player.Position;
+
+                        lostLvlMsgDisplayTimer.Restart();
+                    }
+        
+                    MouseState mouseState = Mouse.GetState();
+                    if (mouseState.MiddleButton == ButtonState.Pressed)
+                        gameCamera.Position += new Vector2(prevMouseState.X - mouseState.X, prevMouseState.Y - mouseState.Y);
+                    
+                    if (mouseState.ScrollWheelValue != prevMouseState.ScrollWheelValue)
+                    {
+                        // magFactor assigned either 1.1 or 0.9 depending on direction of scroll.
+                        float magFactor = (mouseState.ScrollWheelValue - prevMouseState.ScrollWheelValue) / 1200.0f + 1;
+                        gameCamera.Magnification *= magFactor;
+                    }
+         
+                    prevMouseState = mouseState;
+        
+                    if (!playerManager.Player.Velocity.Equals(Vector2.Zero))
+                        gameCamera.Position = playerManager.Player.Position;
+        
+                    if (playerManager.Player.IsHidden)
+                        Window.Title = "Player is in a bush!";
+                    else
+                        Window.Title = "Player is NOT in a bush!";
+                    
+                        break;
+
+                case GameState.BeatLevel:
+                    if (beatLvlMsgDisplayTimer.Expired(gameTime))
+                        gameState = GameState.Play;
+
+                    break;
+
+                case GameState.LostLevel:
+                    if (lostLvlMsgDisplayTimer.Expired(gameTime))
+                        gameState = GameState.Play;
+
+                    break;
             }
-            
-            if (mouseState.ScrollWheelValue != prevMouseState.ScrollWheelValue)
-            {
-                // magFactor assigned either 1.1 or 0.9 depending on direction of scroll.
-                float magFactor = (mouseState.ScrollWheelValue - prevMouseState.ScrollWheelValue) / 1200.0f + 1;
-                gameCamera.Magnification *= magFactor;
-            }
- 
-            prevMouseState = mouseState;
-
-            if (!playerManager.Player.Velocity.Equals(Vector2.Zero))
-                gameCamera.Position = playerManager.Player.Position;
-
-            if (playerManager.Player.IsHidden)
-                Window.Title = "Player is in a bush!";
-            else
-                Window.Title = "Player is NOT in a bush!";
 
             base.Update(gameTime);
         }
 
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.Black);
-
-            spriteBatch.Begin(SpriteSortMode.BackToFront, null,
-                null, null, null, null, gameCamera.Transformation);
+            switch (gameState)
+            {
+                case GameState.Play:
+                    GraphicsDevice.Clear(Color.Black);
+        
+                    spriteBatch.Begin(SpriteSortMode.BackToFront, null,
+                        null, null, null, null, gameCamera.Transformation);
                     GameMap.Draw(spriteBatch);
                     playerManager.Draw(spriteBatch);
                     enemyManager.Draw(spriteBatch);
-            spriteBatch.End();
+                    spriteBatch.End();
+                    break;
+
+                case GameState.BeatLevel:
+                    GraphicsDevice.Clear(Color.Black);
+
+                    spriteBatch.Begin();
+                    spriteBatch.DrawString(FontManager.BigFont, beatLvlMsg, ScreenCenter,
+                        Color.Yellow, 0.0f, beatLvlMsgCenter, 1.0f, SpriteEffects.None, 0.5f);
+                    spriteBatch.End();
+                    break;
+
+                case GameState.LostLevel:
+                    GraphicsDevice.Clear(Color.Black);
+
+                    spriteBatch.Begin();
+                    spriteBatch.DrawString(FontManager.BigFont, lostLvlMsg, ScreenCenter,
+                        Color.Yellow, 0.0f, lostLvlMsgCenter, 1.0f, SpriteEffects.None, 0.5f);
+                    spriteBatch.End();
+                    break;
+
+                case GameState.WonGame:
+                    GraphicsDevice.Clear(Color.Black);
+
+                    spriteBatch.Begin();
+                    spriteBatch.DrawString(FontManager.BigFont, wonGameMsg, ScreenCenter,
+                        Color.Green, 0.0f, wonGameMsgCenter, 1.0f, SpriteEffects.None, 0.5f);
+                    spriteBatch.End();
+                    break;
+            }
 
             base.Draw(gameTime);
+        }
+
+        private void loadScenario(string scenarioName)
+        {
+            try
+            {
+                //currentScenario = Content.Load<Scenario>(GlobalGameSettings.Game.Scenario);
+                currentScenario = Content.Load<Scenario>(scenarioName);
+
+                WorldDimensions = new Rectangle(0, 0,
+                    currentScenario.MapDescription.TilesAcross * (int)currentScenario.MapDescription.TileSize.X,
+                    currentScenario.MapDescription.TilesDown * (int)currentScenario.MapDescription.TileSize.Y);
+                WorldCenter = new Vector2(WorldDimensions.Width, WorldDimensions.Height) / 2;
+
+                GameMap = new Map(currentScenario.MapDescription);
+                playerManager = new PlayerManager(currentScenario.PlayerDescription);
+                enemyManager = new EnemyManager(currentScenario.EnemiesDescription);
+
+                gameCamera = new Camera(graphics.GraphicsDevice, playerManager.Player.Position);
+                gameCamera.Magnification = 1.5f;
+            }
+            // Super hack for when scenarioNumber becomes larger than the number of scenarios.
+            catch (ContentLoadException)
+            {
+                gameState = GameState.WonGame;
+            }
         }
 
         public static Vector2 MousePositionInWorld()
@@ -155,56 +265,14 @@ namespace AIFGP_Game
             return PositionInWorld(new Vector2(mouse.X, mouse.Y));
         }
 
-        /// <summary>
-        /// This should be stored in some utilities class, but for now,
-        /// this is fine.
-        /// </summary>
         public static Vector2 PositionInWorld(Vector2 position)
         {
             return Vector2.Transform(position, Matrix.Invert(gameCamera.Transformation));
         }
 
-        /// <summary>
-        /// This should be stored in some utilities class, but for now,
-        /// this is fine.
-        /// </summary>
         public static Vector2 PositionInView(Vector2 position)
         {
             return Vector2.Transform(position, gameCamera.Transformation);
         }
-
-#if false
-        /// <summary>
-        /// This should be stored in some utilities class, but for now,
-        /// this is fine.
-        /// </summary>
-        /// <param name="entity"></param>
-        public static void WrapPosition(ref IGameEntity entity)
-        {
-            Vector2 position = entity.Position;
-
-            int spriteWidth = entity.BoundingBox.Width;
-            int spriteHeight = entity.BoundingBox.Height;
-
-            Rectangle bounds = ScreenDimensions;
-            bounds.X -= spriteWidth;
-            bounds.Y -= spriteHeight;
-            bounds.Width += spriteWidth;
-            bounds.Height += spriteHeight;
-
-            if (position.X < bounds.X)
-                position.X = bounds.Width;
-            else if (position.X > bounds.Width)
-                position.X = bounds.X;
-
-            if (position.Y < bounds.Y)
-                position.Y = bounds.Height;
-            else if (position.Y > bounds.Height)
-                position.Y = bounds.Y;
-
-            if (entity.Position != position)
-                entity.Position = position;
-        }
-#endif
     }
 }

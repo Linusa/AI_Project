@@ -123,6 +123,7 @@
     <Compile Include="Debugging\RadarDebugger.cs" />
     <Compile Include="Debugging\PropertyDebugger.cs" />
     <Compile Include="Debugging\RangefinderDebugger.cs" />
+    <Compile Include="Entities\Carrot.cs" />
     <Compile Include="Entities\Rabbit.cs" />
     <Compile Include="FontManager.cs" />
     <Compile Include="Graphics\VisualRectangle.cs" />

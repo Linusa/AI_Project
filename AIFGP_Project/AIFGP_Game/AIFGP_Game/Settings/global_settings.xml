@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0"?>
 <GlobalSettings>
   <Game>
-    <Name>Farmed Robbery</Name>
+    <Name>Farm Robbery</Name>
     <Scenario>Scenarios\Scenario001</Scenario>
     <IsMouseVisible>true</IsMouseVisible>
     <IsFixedTimeStep>false</IsFixedTimeStep>

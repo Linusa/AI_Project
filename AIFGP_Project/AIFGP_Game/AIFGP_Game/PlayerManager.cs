@@ -9,6 +9,9 @@
     public class PlayerManager : IUpdateable, IDrawable
     {
         public Rabbit Player;
+        private Carrot carrot;
+
+        private Vector2 playerStartPos;
 
         private Vector2 oldVertical = Vector2.Zero;
         private Vector2 oldHorizontal = Vector2.Zero;
@@ -18,10 +21,24 @@
             Player = new Rabbit(TextureManager.RabbitSpriteSheet, Vector2.Zero);
             EntityManager.Instance.PlayerID = Player.ID;
             
-            Vector2 playerPos = AStarGame.GameMap.TilePosToWorldPos(playerDescription.StartingTilePosition);
-            Player.Position = playerPos;
+            playerStartPos = AStarGame.GameMap.TilePosToWorldPos(playerDescription.StartingTilePosition);
+            ResetPlayerPosition();
 
             Player.MaxSpeed = playerDescription.MaxSpeed;
+
+            carrot = new Carrot(TextureManager.CarrotSprite, Vector2.Zero);
+            Vector2 carrotPos = AStarGame.GameMap.TilePosToWorldPos(playerDescription.CarrotTilePosition);
+            carrot.Position = carrotPos;
+        }
+
+        public bool PlayerReachedCarrot
+        {
+            get { return Vector2.DistanceSquared(Player.Position, carrot.Position) < 200.0f; }
+        }
+
+        public void ResetPlayerPosition()
+        {
+            Player.Position = playerStartPos;
         }
 
         private void checkKeyboard(GameTime gameTime)
@@ -93,6 +110,7 @@
         public void Draw(SpriteBatch spriteBatch)
         {
             Player.Draw(spriteBatch);
+            carrot.Draw(spriteBatch);
         }
     }
 }

@@ -14,6 +14,61 @@
             BottomRightPixel = bottomRightPixel;
         }
 
+        public float Width
+        {
+            get { return (BottomRightPixel - TopLeftPixel).X; }
+        }
+
+        public float Height
+        {
+            get { return (BottomRightPixel - TopLeftPixel).Y; }
+        }
+
+        public Vector2 Center
+        {
+            get { return TopLeftPixel + (BottomRightPixel - TopLeftPixel) / 2; }
+        }
+
+        public Vector2 TopCenter
+        {
+            get { return Center + TopNormal * (Height / 2); }
+        }
+
+        public Vector2 BottomCenter
+        {
+            get { return Center + BottomNormal * (Height / 2); }
+        }
+
+        public Vector2 LeftCenter
+        {
+            get { return Center + LeftNormal * (Width / 2); }
+        }
+
+        public Vector2 RightCenter
+        {
+            get { return Center + RightNormal * (Width / 2); }
+        }
+
+        public Vector2 TopNormal
+        {
+            get { return -Vector2.UnitY; }
+        }
+
+        public Vector2 BottomNormal
+        {
+            get { return Vector2.UnitY; }
+        }
+
+        public Vector2 LeftNormal
+        {
+            get { return -Vector2.UnitX; }
+        }
+
+        public Vector2 RightNormal
+        {
+            get { return Vector2.UnitX; }
+        }
+
         public Rectangle BoundingBox
         {
             get

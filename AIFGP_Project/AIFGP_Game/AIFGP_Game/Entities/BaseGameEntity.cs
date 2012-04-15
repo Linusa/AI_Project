@@ -25,6 +25,8 @@
         private bool followingPath = false;
         private bool patrollingPath = false;
 
+        private Vector2 oldVelocity = Vector2.Zero;
+
         public BaseGameEntity(Texture2D texture, Vector2 position, Rectangle dimensions)
         {
             EntitySprite = new Sprite<byte>(texture, position, dimensions);
@@ -106,7 +108,7 @@
 
         public virtual void RotateInRadians(float radians)
         {
-            EntitySprite.RotateInRadians(radians);
+            //EntitySprite.RotateInRadians(radians);
             Heading = Vector2.Transform(heading, Matrix.CreateRotationZ(radians));
         }
 
@@ -154,8 +156,8 @@
                 Velocity += Seek(path[NextPathIndex]);
 
                 // Update direction.
-                RotateInRadians((float)Angles.AngleFromUToV(Heading,
-                    Vector2.Normalize(path[NextPathIndex] - Position)));
+                //RotateInRadians((float)Angles.AngleFromUToV(Heading,
+                //    Vector2.Normalize(path[NextPathIndex] - Position)));
 
                 if (nextNodeReached())
                 {
@@ -171,6 +173,11 @@
                         FollowingPath = false;
                 }
             }
+            
+            CollisionManager.Instance.CheckWalls(this);
+            
+            // Update heading even though sprite will not be rotated.
+            RotateInRadians((float)Angles.AngleFromUToV(Heading, Velocity));
 
             Position += Velocity * dt;
 

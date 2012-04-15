@@ -115,6 +115,7 @@
     <Compile Include="AI\Sensors\Specializations\BushRadar.cs" />
     <Compile Include="AI\Sensors\Specializations\LoS.cs" />
     <Compile Include="AI\Sensors\Specializations\PathNodeRadar.cs" />
+    <Compile Include="CollisionManager.cs" />
     <Compile Include="Debugging\BaseGameEntityDebugger.cs" />
     <Compile Include="Debugging\BFSDebugger.cs" />
     <Compile Include="Debugging\DFSDebugger.cs" />

@@ -9,8 +9,6 @@
         /// Compute the angle in radians needed to rotate U in the direction
         /// of V.
         /// </summary>
-        /// <param name="U">Must be normalized.</param>
-        /// <param name="V">Must be normalized.</param>
         /// <returns>
         /// Angle from U to V. Result will be from 0 to pi if the closest
         /// rotation of U to V is clockwise. Result will be from 0 to -pi

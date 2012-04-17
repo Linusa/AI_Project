@@ -40,6 +40,8 @@
 
         public Map(MapDescription mapDescription)
         {
+            WallManager.Instance.Walls.Clear();
+
             TilesAcross = mapDescription.TilesAcross;
             TilesDown = mapDescription.TilesDown;
             TileSize = mapDescription.TileSize;

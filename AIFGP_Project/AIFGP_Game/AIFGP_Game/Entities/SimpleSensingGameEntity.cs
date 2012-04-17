@@ -10,7 +10,7 @@
     /// </summary>
     public class SimpleSensingGameEntity : SimpleGameEntity
     {
-        private enum stateType
+        public enum stateType
         {
             Searching,
             Patrolling,
@@ -22,9 +22,9 @@
         public List<Vector2> patrolRoute;
         public int nextPatrol;
         private List<ISensor> sensors = new List<ISensor>();
-        State curState;
+        public State curState;
         public Vector2 lastSpotted;
-        private LoS sight;
+        public LoS sight;
 
         public SimpleSensingGameEntity(Texture2D texture, Vector2 position, List<Vector2> route)
             : base(texture, position)

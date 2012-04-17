@@ -18,6 +18,12 @@
             if (i.patrolRoute.Count > 0)
                 if (!i.FollowingPath)
                     i.FollowPath(i.patrolRoute, true);
+            if (i.sight.canSee())
+            {
+                i.curState.Exit(i);
+                i.curState = new ChaseState();
+                i.curState.Enter(i);
+            }
             
             return;
         }

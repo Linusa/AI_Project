@@ -7,7 +7,7 @@
 
     //This interface is used for states, to
     //start, execute, or end
-    interface State
+    public interface State
     {
         void Enter(SimpleSensingGameEntity i);
 

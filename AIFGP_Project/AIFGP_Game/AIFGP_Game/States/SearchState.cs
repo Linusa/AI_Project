@@ -27,13 +27,24 @@ namespace AIFGP_Game
             if (done)
             {
                 i.Velocity = Vector2.Zero;
+                i.curState.Exit(i);
+                i.curState = new PatrolState();
+                i.curState.Enter(i);
                 return;
+            }
+            if (i.sight.canSee())
+            {
+                i.Velocity = Vector2.Zero;
+                i.curState.Exit(i);
+                i.curState = new ChaseState();
+                i.curState.Enter(i);
             }
             if (Vector2.Subtract(bushes[nextBush], i.Position).LengthSquared() < 100)
             {
                 if (nextBush == bushes.Count - 1)
                 {
                     done = true;
+                   
                     i.doneSearching = true;
                 }
                 nextBush = (nextBush + 1) % bushes.Count;

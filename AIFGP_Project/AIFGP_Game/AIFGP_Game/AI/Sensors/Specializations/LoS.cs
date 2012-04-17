@@ -8,10 +8,11 @@ namespace AIFGP_Game
     using System.Text;
     using Microsoft.Xna.Framework;
 
-    class LoS
+    public class LoS
     {
         SimpleSensingGameEntity agent;
         private const int rangeSqrd = 40000;
+        private const int range = 200;
         private const float angleWidth = (float)Math.PI/6;
 
         public LoS(SimpleSensingGameEntity i)
@@ -29,7 +30,20 @@ namespace AIFGP_Game
                 vecToRabbit.Normalize();
                 float relativeAngle = (float)Angles.AngleFromUToV(agent.Heading, vecToRabbit);
                 if (relativeAngle < angleWidth && relativeAngle > angleWidth * -1)
+                {
+                    foreach (Wall wall in WallManager.Instance.Walls)
+                    {
+                        float? inter = new Ray(new Vector3(agent.Position, 0),
+                            new Vector3(vecToRabbit, 0)).Intersects(
+                                new BoundingBox(new Vector3(wall.BoundingBox.Left,wall.BoundingBox.Top,-10),
+                                                new Vector3(wall.BoundingBox.Right,wall.BoundingBox.Bottom,10)
+                                                ));
+                        if (inter != null && (float)inter
+                            < range)
+                            return false;
+                    }
                     return true;
+                }
             }
 
             return false;

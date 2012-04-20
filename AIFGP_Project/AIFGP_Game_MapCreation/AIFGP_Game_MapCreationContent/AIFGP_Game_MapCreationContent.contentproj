@@ -63,20 +63,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Images\npc_arrow_with_effects.png">
-      <Name>npc_arrow_with_effects</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Images\player_arrow_with_effects.png">
-      <Name>player_arrow_with_effects</Name>
-      <Importer>TextureImporter</Importer>
-      <Processor>TextureProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="Images\rabbit_136x360_ea34x36.png">
       <Name>rabbit_136x360_ea34x36</Name>
       <Importer>TextureImporter</Importer>

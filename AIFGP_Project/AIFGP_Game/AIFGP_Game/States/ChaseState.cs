@@ -12,12 +12,12 @@ namespace AIFGP_Game
     {
         Random rng = new Random();
         private int chanceUpdate = 16;
-        public void Enter(SimpleSensingGameEntity i)
+        public void Enter(SmartFarmer i)
         {
             return;
         }
 
-        public void Execute(SimpleSensingGameEntity i)
+        public void Execute(SmartFarmer i)
         {
             if (Vector2.Subtract(i.lastSpotted, i.Position).LengthSquared() < 100)
             {
@@ -36,7 +36,7 @@ namespace AIFGP_Game
             i.Velocity += force;
         }
 
-        public void Exit(SimpleSensingGameEntity i)
+        public void Exit(SmartFarmer i)
         {
             return;
         }

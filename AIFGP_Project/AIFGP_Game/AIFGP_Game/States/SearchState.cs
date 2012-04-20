@@ -14,7 +14,7 @@ namespace AIFGP_Game
         int nextBush = 0;
         bool done;
 
-        public void Enter(SimpleSensingGameEntity i)
+        public void Enter(SmartFarmer i)
         {
             bushes = BushRadar.getBushes();
             if (bushes.Count == 0)
@@ -22,7 +22,7 @@ namespace AIFGP_Game
             return;
         }
 
-        public void Execute(SimpleSensingGameEntity i)
+        public void Execute(SmartFarmer i)
         {
             if (done)
             {
@@ -54,7 +54,7 @@ namespace AIFGP_Game
             return;
         }
 
-        public void Exit(SimpleSensingGameEntity i)
+        public void Exit(SmartFarmer i)
         {
             return;
         }

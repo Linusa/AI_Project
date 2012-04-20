@@ -8,12 +8,12 @@
     
     class PatrolState : State
     {
-        public void Enter(SimpleSensingGameEntity i)
+        public void Enter(SmartFarmer i)
         {
             return;
         }
 
-        public void Execute(SimpleSensingGameEntity i)
+        public void Execute(SmartFarmer i)
         {
             if (i.patrolRoute.Count > 0)
                 if (!i.FollowingPath)
@@ -28,7 +28,7 @@
             return;
         }
 
-        public void Exit(SimpleSensingGameEntity i)
+        public void Exit(SmartFarmer i)
         {
             return;
         }

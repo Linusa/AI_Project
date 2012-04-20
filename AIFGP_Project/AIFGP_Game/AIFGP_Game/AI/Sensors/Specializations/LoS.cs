@@ -10,12 +10,12 @@ namespace AIFGP_Game
 
     public class LoS
     {
-        SimpleSensingGameEntity agent;
+        SmartFarmer agent;
         private const int rangeSqrd = 40000;
         private const int range = 200;
         private const float angleWidth = (float)Math.PI/6;
 
-        public LoS(SimpleSensingGameEntity i)
+        public LoS(SmartFarmer i)
         {
             agent = i;
         }

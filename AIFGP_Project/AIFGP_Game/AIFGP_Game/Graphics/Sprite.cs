@@ -22,6 +22,7 @@
         private int spriteHeight = 0;
         private Vector2 spriteScale = Vector2.One;
         private float layerDepth = 0.0f;
+        private SpriteEffects spriteEffects = SpriteEffects.None;
 
         private Dictionary<T, List<Rectangle>> animationFrames = new Dictionary<T, List<Rectangle>>();
         private Timer animationTimer = new Timer(0.1f);
@@ -120,6 +121,12 @@
             set { tint = value; }
         }
 
+        public SpriteEffects SpriteEffects
+        {
+            get { return spriteEffects; }
+            set { spriteEffects = value; }
+        }
+
         public float AnimationRate
         {
             get { return animationTimer.Timeout; }
@@ -212,7 +219,7 @@
                 rotation,
                 localOrigin,
                 spriteScale,
-                SpriteEffects.None,
+                SpriteEffects,
                 LayerDepth
             );
         }

@@ -50,32 +50,42 @@
 
             if (keyboardState.IsKeyDown(Keys.Up))
             {
-                vertical.Y = -Player.MaxSpeed;
+                vertical = -Vector2.UnitY;
                 Player.EntitySprite.ActiveAnimation = (byte)Rabbit.AnimationIds.HopBack;
+                Player.EntitySprite.SpriteEffects = SpriteEffects.None;
             }
             
             if (keyboardState.IsKeyDown(Keys.Down))
             {
-                vertical.Y = Player.MaxSpeed;
+                vertical = Vector2.UnitY;
                 Player.EntitySprite.ActiveAnimation = (byte)Rabbit.AnimationIds.HopForward;
+                Player.EntitySprite.SpriteEffects = SpriteEffects.None;
             }
 
             if (keyboardState.IsKeyDown(Keys.Left))
             {
-                horizontal.X = -Player.MaxSpeed;
+                horizontal = -Vector2.UnitX;
                 Player.EntitySprite.ActiveAnimation = (byte)Rabbit.AnimationIds.HopLeft;
+                Player.EntitySprite.SpriteEffects = SpriteEffects.None;
             }
             
             if (keyboardState.IsKeyDown(Keys.Right))
             {
-                horizontal.X = Player.MaxSpeed;
+                horizontal = Vector2.UnitX;
                 Player.EntitySprite.ActiveAnimation = (byte)Rabbit.AnimationIds.HopRight;
+                Player.EntitySprite.SpriteEffects = SpriteEffects.FlipHorizontally;
             }
 
-            Player.Velocity = vertical + horizontal;
+            Vector2 unitVel = vertical + horizontal;
+            if (unitVel.X != 0.0f && unitVel.Y != 0.0f)
+                unitVel.Normalize();
+
+            Player.Velocity = Player.MaxSpeed * unitVel;
 
             if (Player.Velocity.Equals(Vector2.Zero))
             {
+                Player.EntitySprite.SpriteEffects = SpriteEffects.None;
+
                 bool wasMovingUp = oldVertical.Y < 0.0f;
                 bool wasMovingDown = oldVertical.Y > 0.0f;
                 bool wasMovingLeft = oldHorizontal.X < 0.0f;

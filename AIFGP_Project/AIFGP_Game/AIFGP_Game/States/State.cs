@@ -9,10 +9,10 @@
     //start, execute, or end
     public interface State
     {
-        void Enter(SimpleSensingGameEntity i);
+        void Enter(SmartFarmer i);
 
-        void Execute(SimpleSensingGameEntity i);
+        void Execute(SmartFarmer i);
 
-        void Exit(SimpleSensingGameEntity i);
+        void Exit(SmartFarmer i);
     }
 }

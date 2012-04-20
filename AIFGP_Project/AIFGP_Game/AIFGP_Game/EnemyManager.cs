@@ -28,7 +28,7 @@
                         curPatrolRoute[i] = AStarGame.GameMap.TilePosToWorldPos(curPatrolRoute[i]);
 
                     Vector2 curEnemyPosition = AStarGame.GameMap.TilePosToWorldPos(curEnemyInfo.StartingTilePosition);
-                    IGameEntity curEnemy = new SimpleSensingGameEntity(TextureManager.NpcSpriteSheet, curEnemyPosition, curPatrolRoute);
+                    IGameEntity curEnemy = new SmartFarmer(TextureManager.FarmerSprite, curEnemyPosition, curPatrolRoute);
                     curEnemy.MaxSpeed = curEnemyInfo.MaxSpeed;
 
                     Enemies.Add(curEnemy);

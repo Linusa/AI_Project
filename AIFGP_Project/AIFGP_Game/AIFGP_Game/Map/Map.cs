@@ -61,6 +61,11 @@
             inputTimer.Start();
         }
 
+        public bool WithinMapBounds(int row, int col)
+        {
+            return row >= 0 && row < TilesDown && col >= 0 && col < TilesAcross;
+        }
+
         public bool IsTilePosWall(int row, int col)
         {
             return TileInfoAtTilePos(row, col).Type == TileType.Wall;
@@ -70,6 +75,28 @@
         {
             Vector2 tilePos = WorldPosToTilePos(worldPosition);
             return IsTilePosWall((int)tilePos.Y, (int)tilePos.X);
+        }
+
+        public bool AdjacentToWall(Vector2 worldPosition)
+        {
+            Vector2 tilePos = WorldPosToTilePos(worldPosition);
+            int row = (int)tilePos.Y;
+            int col = (int)tilePos.X;
+
+            int numAdjWalls = 0;
+            for (int i = row - 1; i <= row + 1; i++)
+            {
+                for (int j = col - 1; j <= col + 1; j++)
+                {
+                    if (!WithinMapBounds(i, j) || (i == row && j == col))
+                        continue;
+
+                    if (IsTilePosWall(i, j))
+                        numAdjWalls++;
+                }
+            }
+
+            return numAdjWalls > 0;
         }
 
         public bool IsTilePosBush(int row, int col)
@@ -210,7 +237,7 @@
             foreach (TileInfo mapTile in mapTiles)
             {
                 Vector2 tileCenterPos = mapTile.Position + toTileCenter;
-                if (!IsWorldPosWall(tileCenterPos))
+                if (!IsWorldPosWall(tileCenterPos) && !AdjacentToWall(tileCenterPos))
                 {
                     int nodeIdx = NavigationGraph.AvailableNodeIndex;
                     NavigationGraph.AddNode(new PositionalNode(nodeIdx, tileCenterPos));

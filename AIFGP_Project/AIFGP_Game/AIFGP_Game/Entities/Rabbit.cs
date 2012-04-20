@@ -15,18 +15,10 @@
             LookLeft,
             LookBack,
             LookRight,
-            ExcitedLookForward,
-            ExcitedLookLeft,
-            ExcitedLookBack,
-            ExcitedLookRight,
             HopForward,
             HopLeft,
             HopBack,
             HopRight,
-            ExcitedHopForward,
-            ExcitedHopLeft,
-            ExcitedHopBack,
-            ExcitedHopRight
         }
 
         private static Rectangle dimensions = new Rectangle(0, 0, 34, 36);
@@ -66,17 +58,6 @@
             curFrame.X = 0;
             curFrame.Y += curFrame.Height;
 
-            EntitySprite.AddAnimationFrame((byte)AnimationIds.ExcitedLookForward, curFrame);
-            curFrame.X += curFrame.Width;
-            EntitySprite.AddAnimationFrame((byte)AnimationIds.ExcitedLookLeft, curFrame);
-            curFrame.X += curFrame.Width;
-            EntitySprite.AddAnimationFrame((byte)AnimationIds.ExcitedLookBack, curFrame);
-            curFrame.X += curFrame.Width;
-            EntitySprite.AddAnimationFrame((byte)AnimationIds.ExcitedLookRight, curFrame);
-
-            curFrame.X = 0;
-            curFrame.Y += curFrame.Height;
-
             for (int i = 0; i < numCols; i++)
             {
                 EntitySprite.AddAnimationFrame((byte)AnimationIds.HopForward, curFrame);
@@ -84,11 +65,12 @@
             }
             
             curFrame.X = 0;
-            curFrame.Y += curFrame.Height;
+            curFrame.Y += curFrame.Height + 1;
 
             for (int i = 0; i < numCols; i++)
             {
                 EntitySprite.AddAnimationFrame((byte)AnimationIds.HopLeft, curFrame);
+                EntitySprite.AddAnimationFrame((byte)AnimationIds.HopRight, curFrame);
                 curFrame.X += curFrame.Width;
             }
             
@@ -101,52 +83,7 @@
                 curFrame.X += curFrame.Width;
             }
             
-            curFrame.X = 0;
-            curFrame.Y += curFrame.Height;
-
-            for (int i = 0; i < numCols; i++)
-            {
-                EntitySprite.AddAnimationFrame((byte)AnimationIds.HopRight, curFrame);
-                curFrame.X += curFrame.Width;
-            }
-            
-            curFrame.X = 0;
-            curFrame.Y += curFrame.Height;
-
-            for (int i = 0; i < numCols; i++)
-            {
-                EntitySprite.AddAnimationFrame((byte)AnimationIds.ExcitedHopForward, curFrame);
-                curFrame.X += curFrame.Width;
-            }
-            
-            curFrame.X = 0;
-            curFrame.Y += curFrame.Height;
-
-            for (int i = 0; i < numCols; i++)
-            {
-                EntitySprite.AddAnimationFrame((byte)AnimationIds.ExcitedHopLeft, curFrame);
-                curFrame.X += curFrame.Width;
-            }
-            
-            curFrame.X = 0;
-            curFrame.Y += curFrame.Height;
-
-            for (int i = 0; i < numCols; i++)
-            {
-                EntitySprite.AddAnimationFrame((byte)AnimationIds.ExcitedHopBack, curFrame);
-                curFrame.X += curFrame.Width;
-            }
-            
-            curFrame.X = 0;
-            curFrame.Y += curFrame.Height;
-
-            for (int i = 0; i < numCols; i++)
-            {
-                EntitySprite.AddAnimationFrame((byte)AnimationIds.ExcitedHopRight, curFrame);
-                curFrame.X += curFrame.Width;
-            }
-
-            EntitySprite.ActiveAnimation = (byte)AnimationIds.ExcitedLookForward;
+            EntitySprite.ActiveAnimation = (byte)AnimationIds.LookForward;
             EntitySprite.PlayAnimation();
         }
     }

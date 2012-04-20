@@ -14,6 +14,7 @@
         public static Texture2D SingleWhitePixel;
         public static Texture2D RabbitSpriteSheet;
         public static Texture2D CarrotSprite;
+        public static Texture2D FarmerSprite;
 
         public static void LoadTextures(Game game)
         {
@@ -23,8 +24,9 @@
             WallTile = game.Content.Load<Texture2D>(@"Images\wall_tile");
             BushTile = game.Content.Load<Texture2D>(@"Images\bush_tile");
             RadarCircle = game.Content.Load<Texture2D>(@"Images\circle");
-            RabbitSpriteSheet = game.Content.Load<Texture2D>(@"Images\rabbit_136x360_ea34x36");
+            RabbitSpriteSheet = game.Content.Load<Texture2D>(@"Images\rabbit_brown");
             CarrotSprite = game.Content.Load<Texture2D>(@"Images\carrot");
+            FarmerSprite = game.Content.Load<Texture2D>(@"Images\farmerbrown_fitted");
 
             SingleWhitePixel = new Texture2D(game.GraphicsDevice, 1, 1, false, SurfaceFormat.Color);
             SingleWhitePixel.SetData<Color>(new Color[1] { Color.White }); 

@@ -41,8 +41,8 @@
         private Vector2 clickedTile = Vector2.Zero;
 
         private Rabbit playerSprite = new Rabbit(TextureManager.RabbitSpriteSheet, Vector2.Zero);
-        private SimpleSensingGameEntity enemySprite =
-            new SimpleSensingGameEntity(TextureManager.NpcSpriteSheet, Vector2.Zero, new List<Vector2>());
+        private SmartFarmer enemySprite =
+            new SmartFarmer(TextureManager.FarmerSprite, Vector2.Zero, new List<Vector2>());
         private VisualRectangle selectionSprite;
         private Carrot carrotSprite = new Carrot(TextureManager.CarrotSprite, Vector2.Zero);
 

@@ -8,7 +8,7 @@
     /// <summary>
     /// SimpleSensingGameEntity is a SimpleGameEntity with sensors. :D
     /// </summary>
-    public class SimpleSensingGameEntity : SimpleGameEntity
+    public class SmartFarmer : Farmer
     {
         public enum stateType
         {
@@ -26,11 +26,10 @@
         public Vector2 lastSpotted;
         public LoS sight;
 
-        public SimpleSensingGameEntity(Texture2D texture, Vector2 position, List<Vector2> route)
+
+        public SmartFarmer(Texture2D texture, Vector2 position, List<Vector2> route)
             : base(texture, position)
         {
-            EntitySprite.LayerDepth = AStarGame.DrawingOrder.Entities;
-
             // If these Adds are modified, make sure to update the PieSlice
             // one to get the correct index for the Radar instance.
             sensors.Add(new Rangefinder(this));
@@ -45,7 +44,7 @@
 
         public override void RotateInRadians(float radians)
         {
-            EntitySprite.RotateInRadians(radians);
+            //EntitySprite.RotateInRadians(radians);
             Heading = Vector2.Transform(Heading, Matrix.CreateRotationZ(radians));
 
             foreach (ISensor sensor in sensors)
@@ -67,6 +66,7 @@
                 sensor.Update(gameTime);
             }
 
+            updateSpriteDirection();
 
             curState.Execute(this);
             if (sight.canSee() && stateEnum != (int)stateType.Chasing)
@@ -109,5 +109,6 @@
 
             EntitySprite.Draw(spriteBatch);
         }
+
     }
 }

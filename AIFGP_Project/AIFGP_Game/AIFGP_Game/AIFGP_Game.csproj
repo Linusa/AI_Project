@@ -13,7 +13,7 @@
     <TargetFrameworkProfile>Client</TargetFrameworkProfile>
     <XnaFrameworkVersion>v4.0</XnaFrameworkVersion>
     <XnaPlatform>Windows</XnaPlatform>
-    <XnaProfile>HiDef</XnaProfile>
+    <XnaProfile>Reach</XnaProfile>
     <XnaCrossPlatformGroupID>b0fa95f0-81da-4a45-8444-8fb8be75f2f9</XnaCrossPlatformGroupID>
     <XnaOutputType>Game</XnaOutputType>
     <ApplicationIcon>Game.ico</ApplicationIcon>
@@ -135,7 +135,7 @@
     <Compile Include="Entities\BaseGameEntity.cs" />
     <Compile Include="EnemyManager.cs" />
     <Compile Include="Entities\Interfaces\ICollidable.cs" />
-    <Compile Include="Entities\SimpleSensingGameEntity.cs" />
+    <Compile Include="Entities\Farmer.cs" />
     <Compile Include="EntityManager.cs" />
     <Compile Include="Graphics\Interfaces\IDrawable.cs" />
     <Compile Include="Entities\Interfaces\IGameEntity.cs" />
@@ -157,7 +157,7 @@
     <Compile Include="Map\Map.cs" />
     <Compile Include="Map\Wall.cs" />
     <Compile Include="PlayerManager.cs" />
-    <Compile Include="Entities\SimpleGameEntity.cs" />
+    <Compile Include="Entities\StatelessFarmer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="AStarGame.cs" />

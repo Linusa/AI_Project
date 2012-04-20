@@ -155,10 +155,6 @@
                 // For demo purposes, using acceleration of 0.
                 Velocity += Seek(path[NextPathIndex]);
 
-                // Update direction.
-                //RotateInRadians((float)Angles.AngleFromUToV(Heading,
-                //    Vector2.Normalize(path[NextPathIndex] - Position)));
-
                 if (nextNodeReached())
                 {
                     NextPathIndex++;

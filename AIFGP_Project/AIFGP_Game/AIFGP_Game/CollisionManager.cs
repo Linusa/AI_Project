@@ -49,7 +49,7 @@
 
                     entity.Velocity = newVel;
 
-                    break;
+                    //break;
                 }
             }
 

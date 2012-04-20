@@ -27,10 +27,10 @@ namespace AIFGP_Game
                 i.curState.Enter(i);
                 return;
             }
-            if (rng.Next(1000) < chanceUpdate)
+            /*if (rng.Next(1000) < chanceUpdate)
             {
                 i.lastSpotted = EntityManager.Instance.GetPlayer().Position;
-            }
+            }*/
 
             Vector2 force = i.Seek(i.lastSpotted);
             i.Velocity += force;

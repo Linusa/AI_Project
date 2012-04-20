@@ -89,7 +89,7 @@
                 curState.Enter(this);
                 curState.Execute(this);
             }
-            else if (stateEnum == (int)stateType.Chasing && rng.Next(1000) < 16)
+            else if (sight.canSee() || (stateEnum == (int)stateType.Chasing && rng.Next(1000) < 5))
             {
                 lastSpotted = EntityManager.Instance.GetPlayer().Position;
             }

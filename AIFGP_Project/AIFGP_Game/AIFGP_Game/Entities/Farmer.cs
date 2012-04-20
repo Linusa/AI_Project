@@ -1,114 +1,104 @@
 ﻿namespace AIFGP_Game
 {
-    using System.Collections.Generic;
+    using System;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
-    using System;
 
-    /// <summary>
-    /// SimpleSensingGameEntity is a SimpleGameEntity with sensors. :D
-    /// </summary>
-    public class SmartFarmer : Farmer
+    public class Farmer : BaseGameEntity
     {
-        public enum stateType
+        public enum AnimationIds
         {
-            Searching,
-            Patrolling,
-            Chasing
-        }
-        private Random rng = new Random();
-        public bool doneSearching = false;
-        private int stateEnum;
-        public List<Vector2> patrolRoute;
-        public int nextPatrol;
-        private List<ISensor> sensors = new List<ISensor>();
-        public State curState;
-        public Vector2 lastSpotted;
-        public LoS sight;
-
-
-        public SmartFarmer(Texture2D texture, Vector2 position, List<Vector2> route)
-            : base(texture, position)
-        {
-            // If these Adds are modified, make sure to update the PieSlice
-            // one to get the correct index for the Radar instance.
-            sensors.Add(new Rangefinder(this));
-            sensors.Add(new Radar(this));
-            sensors.Add(new PieSlice(sensors[1] as Radar));
-            patrolRoute = route;
-            curState = new PatrolState();
-            stateEnum = (int)stateType.Patrolling;
-            lastSpotted = new Vector2(500, 500);
-            sight = new LoS(this);
-        }
-
-        public override void RotateInRadians(float radians)
-        {
-            //EntitySprite.RotateInRadians(radians);
-            Heading = Vector2.Transform(Heading, Matrix.CreateRotationZ(radians));
-
-            foreach (ISensor sensor in sensors)
-                sensor.RotateInRadians(radians);
-        }
-
-        public override void RotateInDegrees(float degrees)
-        {
-            RotateInRadians(MathHelper.ToRadians(degrees));
+            MoveForward,
+            MoveLeft,
+            MoveBack,
+            MoveRight,
         }
         
-        public override void Update(GameTime gameTime)
+        private const float aheadQuadrantStart = -45.0f;
+        private const float rightQuadrantStart = 45.0f;
+        private const float behindQuadrantStart = 135.0f;
+        private const float leftQuadrantStart = -135.0f;
+
+        // NOTE: Hard-coded.
+        private static Rectangle dimensions = new Rectangle(0, 0, 36, 36);
+
+        public Farmer(Texture2D texture, Vector2 position)
+            : base(texture, position, dimensions)
         {
-            base.Update(gameTime);
-
-            foreach (ISensor sensor in sensors)
-            {
-                sensor.Position = Position;
-                sensor.Update(gameTime);
-            }
-
-            updateSpriteDirection();
-
-            curState.Execute(this);
-            if (sight.canSee() && stateEnum != (int)stateType.Chasing)
-            {
-                curState = new ChaseState();
-                stateEnum = (int)stateType.Chasing;
-                lastSpotted = EntityManager.Instance.GetPlayer().Position;
-
-                if (FollowingPath)
-                    FollowingPath = false;
-
-                curState.Enter(this);
-                curState.Execute(this);
-            }
-            else if (stateEnum == (int)stateType.Chasing && (Position - lastSpotted).LengthSquared() < 100)
-            {
-                curState = new SearchState();
-                stateEnum = (int)stateType.Searching;
-                doneSearching = false;
-                curState.Enter(this);
-                curState.Execute(this);
-            }
-            else if (sight.canSee() || (stateEnum == (int)stateType.Chasing && rng.Next(1000) < 5))
-            {
-                lastSpotted = EntityManager.Instance.GetPlayer().Position;
-            }
-            else if (stateEnum == (int)stateType.Searching && doneSearching)
-            {
-                curState = new PatrolState();
-                stateEnum = (int)stateType.Patrolling;
-                curState.Execute(this);
-            }
-
+            Heading = new Vector2(1.0f, 0.0f);
         }
 
-        public override void Draw(SpriteBatch spriteBatch)
+        public override Rectangle BoundingBox
         {
-            foreach (ISensor sensor in sensors)
-                sensor.Draw(spriteBatch);
-
-            EntitySprite.Draw(spriteBatch);
+            get { return EntitySprite.BoundingBox; }
         }
 
+        public override Nullable<float> BoundingRadius
+        {
+            get { return null; }
+        }
+
+        protected override void configureSprite()
+        {
+            EntitySprite.LayerDepth = AStarGame.DrawingOrder.Entities;
+
+            int numCols = 4;
+
+            Rectangle curFrame = dimensions;
+
+            for (int i = 0; i < numCols; i++)
+            {
+                EntitySprite.AddAnimationFrame((byte)AnimationIds.MoveBack, curFrame);
+                curFrame.X += curFrame.Width;
+            }
+            
+            curFrame.X = 0;
+            curFrame.Y += curFrame.Height;
+            
+            for (int i = 0; i < numCols; i++)
+            {
+                EntitySprite.AddAnimationFrame((byte)AnimationIds.MoveForward, curFrame);
+                curFrame.X += curFrame.Width;
+            }
+            
+            curFrame.X = 0;
+            curFrame.Y += curFrame.Height;
+            
+            for (int i = 0; i < numCols; i++)
+            {
+                EntitySprite.AddAnimationFrame((byte)AnimationIds.MoveLeft, curFrame);
+                EntitySprite.AddAnimationFrame((byte)AnimationIds.MoveRight, curFrame);
+                curFrame.X += curFrame.Width;
+            }
+
+            EntitySprite.ActiveAnimation = (byte)AnimationIds.MoveForward;
+            EntitySprite.PlayAnimation();
+        }
+        
+        protected void updateSpriteDirection()
+        {
+            float angle = MathHelper.ToDegrees((float)Angles.AngleFromUToV(Heading, Vector2.UnitY));
+
+            if (angle > aheadQuadrantStart && angle <= rightQuadrantStart)
+            {
+                EntitySprite.ActiveAnimation = (byte)AnimationIds.MoveBack;
+                EntitySprite.SpriteEffects = SpriteEffects.None;
+            }
+            else if (angle > rightQuadrantStart && angle <= behindQuadrantStart)
+            {
+                EntitySprite.ActiveAnimation = (byte)AnimationIds.MoveRight;
+                EntitySprite.SpriteEffects = SpriteEffects.None;
+            }
+            else if (angle > leftQuadrantStart && angle <= aheadQuadrantStart)
+            {
+                EntitySprite.ActiveAnimation = (byte)AnimationIds.MoveLeft;
+                EntitySprite.SpriteEffects = SpriteEffects.FlipHorizontally;
+            }
+            else if (angle > behindQuadrantStart || angle <= leftQuadrantStart)
+            {
+                EntitySprite.ActiveAnimation = (byte)AnimationIds.MoveForward;
+                EntitySprite.SpriteEffects = SpriteEffects.None;
+            }
+        }
     }
 }

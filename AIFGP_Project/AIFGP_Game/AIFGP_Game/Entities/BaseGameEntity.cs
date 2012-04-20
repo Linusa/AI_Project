@@ -134,7 +134,7 @@
             patrollingPath = patrol;
         }
 
-        // Force needed to move to a target.
+        // Force needed to move towards a target.
         public Vector2 Seek(Vector2 target)
         {
             Vector2 toTarget = Vector2.Normalize(target - Position);
@@ -152,7 +152,6 @@
 
             if (FollowingPath)
             {
-                // For demo purposes, using acceleration of 0.
                 Velocity += Seek(path[NextPathIndex]);
 
                 if (nextNodeReached())
@@ -172,7 +171,6 @@
             
             CollisionManager.Instance.CheckWalls(this);
             
-            // Update heading even though sprite will not be rotated.
             RotateInRadians((float)Angles.AngleFromUToV(Heading, Velocity));
 
             Position += Velocity * dt;

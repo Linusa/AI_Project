@@ -175,6 +175,72 @@
             return new Vector2(tileX, tileY);
         }
 
+        public int ClosestNodeIndex(Vector2 worldPosition)
+        {
+            Vector2 tilePos = WorldPosToTilePos(worldPosition);
+            Vector2 tileCenterWorld = TilePosToWorldPos(tilePos);
+
+            int closestIdx;
+
+            if (!nodeIndices.TryGetValue(tileCenterWorld, out closestIdx))
+            {
+                int row = (int)tilePos.Y;
+                int col = (int)tilePos.X;
+
+                int curIdx = -1;
+                float closestDistSquared = float.MaxValue;
+
+                for (int iters = 1; closestDistSquared == float.MaxValue; iters++)
+                {
+                    for (int i = row - iters; i <= row + iters; i++)
+                    {
+                        for (int j = col - iters; j <= col + iters; j++)
+                        {
+                            if ((i > row - iters && i < row + iters && j > col - iters && j < col + iters)
+                                || !WithinMapBounds(i, j))
+                                continue;
+
+                            Vector2 curTileCenterWorld = TilePosToWorldPos(new Vector2(j, i));
+                            if (nodeIndices.TryGetValue(curTileCenterWorld, out curIdx))
+                            {
+                                Vector2 origTileToCurTile = curTileCenterWorld - tileCenterWorld;
+                                float curDistSquared = origTileToCurTile.LengthSquared();
+                                if (curDistSquared < closestDistSquared)
+                                {
+                                    bool occluded = false;
+
+                                    float origTileToCurTileLen = origTileToCurTile.Length();
+                                    origTileToCurTile /= origTileToCurTileLen;
+                                    Ray ray = new Ray(new Vector3(tileCenterWorld, 0.0f), new Vector3(origTileToCurTile, 0.0f));
+
+                                    foreach (Wall wall in WallManager.Instance.Walls)
+                                    {
+                                        BoundingBox wallBox = WallManager.Instance.WallExtentsIn3D(wall);
+                                        float curIntersectDist = ray.Intersects(wallBox) ?? float.MaxValue;
+
+                                        // Intersection.
+                                        if (curIntersectDist < origTileToCurTileLen)
+                                        {
+                                            occluded = true;
+                                            break;
+                                        }
+                                    }
+
+                                    if (!occluded)
+                                    {
+                                        closestDistSquared = curDistSquared;
+                                        closestIdx = curIdx;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            
+            return closestIdx;
+        }
+
         public List<Vector2> BushLocations
         {
             get { return bushes; }

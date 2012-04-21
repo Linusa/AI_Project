@@ -1,7 +1,5 @@
 ﻿namespace AIFGP_Game
 {
-    using System;
-    using System.Collections.Generic;
     using Microsoft.Xna.Framework;
 
     // CollisionManager is a singleton. Access it with Instance property.

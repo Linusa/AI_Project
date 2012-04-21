@@ -1,10 +1,9 @@
 ﻿namespace AIFGP_Game
 {
+    using AIFGP_Game_Data;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
-
-    using AIFGP_Game_Data;
 
     public class PlayerManager : IUpdateable, IDrawable
     {

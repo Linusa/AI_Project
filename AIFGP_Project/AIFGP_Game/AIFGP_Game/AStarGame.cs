@@ -1,13 +1,11 @@
 namespace AIFGP_Game
 {
     using System;
-    using System.Collections.Generic;
+    using AIFGP_Game_Data;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Content;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
-
-    using AIFGP_Game_Data;
 
     public class AStarGame : Microsoft.Xna.Framework.Game
     {

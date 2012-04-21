@@ -2,13 +2,10 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
+    using AIFGP_Game_Data;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
-
-    using AIFGP_Game_Data;
-
     using NavigationGraph = Graph<PositionalNode, Edge>;
 
     /// <summary>
@@ -379,70 +376,6 @@
 
         public virtual void Update(GameTime gameTime)
         {
-            // If left-shift is held down, the user can left-click to put
-            // walls down and right-click to remove them. This looks messy,
-            // but it's really just handling input.
-            if (inputTimer.Expired(gameTime))
-            {
-                KeyboardState keyboardState = Keyboard.GetState();
-                if (keyboardState.IsKeyDown(Keys.LeftShift))
-                {
-                    MouseState mouseState = Mouse.GetState();
-                    bool leftMouseButton = mouseState.LeftButton == ButtonState.Pressed;
-                    bool rightMouseButton = mouseState.RightButton == ButtonState.Pressed;
-                    if (leftMouseButton || rightMouseButton)
-                    {
-                        Vector2 mouseVec = AStarGame.MousePositionInWorld();
-
-                        TileInfo selectedTile = TileInfoAtWorldPos(mouseVec);
-
-                        Wall wall = new Wall();
-                        wall.TopLeftPixel = selectedTile.Position;
-                        wall.BottomRightPixel = selectedTile.Position + TileSize;
-
-                        // Update the GameMap, walls, and navigation graph if a wall was
-                        // placed/removed.
-                        if (leftMouseButton)
-                        {
-                            Vector2 nodePos = selectedTile.Position + TileSize / 2;
-                            if (nodeIndices.ContainsKey(nodePos))
-                            {
-                                int selectedNodeIdx = nodeIndices[nodePos];
-                                PositionalNode selectedNode = NavigationGraph.GetNode(selectedNodeIdx);
-
-                                selectedTile.Type = TileType.Wall;
-                                WallManager.Instance.AddWall(wall);
-
-                                bool graphWasDisplayed = navGraphViewer.DisplayGraph;
-                                bool indicesWereDisplayed = navGraphViewer.DisplayNodeIndices;
-
-                                createNavigationGraph();
-                                navGraphViewer = new GraphSearchViewer(NavigationGraph);
-
-                                navGraphViewer.DisplayGraph = graphWasDisplayed;
-                                navGraphViewer.DisplayNodeIndices = indicesWereDisplayed;
-                            }
-                        }
-                        else if (rightMouseButton)
-                        {
-                            selectedTile.Type = TileType.Ground;
-                            WallManager.Instance.RemoveWall(wall);
-                            
-                            bool graphWasDisplayed = navGraphViewer.DisplayGraph;
-                            bool indicesWereDisplayed = navGraphViewer.DisplayNodeIndices;
-
-                            createNavigationGraph();
-                            navGraphViewer = new GraphSearchViewer(NavigationGraph);
-
-                            navGraphViewer.DisplayGraph = graphWasDisplayed;
-                            navGraphViewer.DisplayNodeIndices = indicesWereDisplayed;
-                        }
-
-                        SetTileInfoAtWorldPos(mouseVec, selectedTile);
-                    }
-                }
-            }
-
             navGraphViewer.Update(gameTime);
         }
 
@@ -457,7 +390,7 @@
                 else if (tileInfo.Type == TileType.Bush)
                 {
                     // Hack for now so that the transparent parts
-                    // of bush do not show bg color.
+                    // of tall grass do not show bg color.
                     tile = grassTile;
                     tile.Position = tileInfo.Position;
                     tile.Draw(spriteBatch);

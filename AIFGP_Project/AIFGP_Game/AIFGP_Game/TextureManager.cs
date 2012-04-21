@@ -16,9 +16,9 @@
 
         public static void LoadTextures(Game game)
         {
-            GrassTile = game.Content.Load<Texture2D>(@"Images\grass_tile");
-            WallTile = game.Content.Load<Texture2D>(@"Images\wall_tile");
-            BushTile = game.Content.Load<Texture2D>(@"Images\bush_tile");
+            GrassTile = game.Content.Load<Texture2D>(@"Images\Grass");
+            WallTile = game.Content.Load<Texture2D>(@"Images\Hedge");
+            BushTile = game.Content.Load<Texture2D>(@"Images\Bush");
             RadarCircle = game.Content.Load<Texture2D>(@"Images\circle");
             RabbitSpriteSheet = game.Content.Load<Texture2D>(@"Images\rabbit_brown");
             CarrotSprite = game.Content.Load<Texture2D>(@"Images\carrot");

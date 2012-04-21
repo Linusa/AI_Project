@@ -1,11 +1,9 @@
-﻿
-namespace AIFGP_Game_MapCreation
+﻿namespace AIFGP_Game_MapCreation
 {
-    using System;
     using System.Collections.Generic;
+    using AIFGP_Game;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
-    using AIFGP_Game;
 
     public class MapGridlines : AIFGP_Game.IDrawable
     {

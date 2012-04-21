@@ -1,9 +1,5 @@
 ﻿namespace AIFGP_Game_MapCreation
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
     using AIFGP_Game;
     using AIFGP_Game_Data;
     using Microsoft.Xna.Framework;

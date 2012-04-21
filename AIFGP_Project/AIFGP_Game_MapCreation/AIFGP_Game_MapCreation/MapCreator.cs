@@ -4,12 +4,12 @@
     using System.Collections.Generic;
     using System.IO;
     using System.Xml;
+    using AIFGP_Game;
+    using AIFGP_Game_Data;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Content.Pipeline.Serialization.Intermediate;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
-    using AIFGP_Game;
-    using AIFGP_Game_Data;
 
     public class MapCreator : AIFGP_Game.IUpdateable, AIFGP_Game.IDrawable
     {

@@ -7,7 +7,7 @@
 
     /// <summary>
     /// BaseGameEntity is an abstract class that provides most of the
-    /// implementation to get an entity vertical and running.
+    /// implementation to get an entity up and running.
     /// </summary>
     public abstract class BaseGameEntity : IGameEntity
     {

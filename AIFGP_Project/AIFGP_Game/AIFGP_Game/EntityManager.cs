@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace AIFGP_Game
+﻿namespace AIFGP_Game
 {
+    using System;
+    using System.Collections.Generic;
+
     // EntityManager is a singleton. Access it with Instance property.
     public class EntityManager
     {

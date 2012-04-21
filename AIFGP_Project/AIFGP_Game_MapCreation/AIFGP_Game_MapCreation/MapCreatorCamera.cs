@@ -1,13 +1,9 @@
 ﻿namespace AIFGP_Game_MapCreation
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
+    using AIFGP_Game;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
-    using AIFGP_Game;
 
     public class MapCreatorCamera : Camera, AIFGP_Game.IUpdateable
     {

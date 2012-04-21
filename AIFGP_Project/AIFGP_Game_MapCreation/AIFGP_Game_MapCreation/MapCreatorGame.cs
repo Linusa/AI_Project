@@ -1,10 +1,10 @@
 namespace AIFGP_Game_MapCreation
 {
     using System;
+    using AIFGP_Game;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
     using Microsoft.Xna.Framework.Input;
-    using AIFGP_Game;
 
     public class MapCreatorGame : Microsoft.Xna.Framework.Game
     {
@@ -47,7 +47,7 @@ namespace AIFGP_Game_MapCreation
             spriteBatch = new SpriteBatch(GraphicsDevice);
             
             mapCreator = new MapCreator(this, "Scenario000.xml", 60, 80,
-                new Vector2(28.0f, 28.0f));
+                new Vector2(36.0f, 36.0f));
 
             gameCamera = mapCreator.Camera;
         }

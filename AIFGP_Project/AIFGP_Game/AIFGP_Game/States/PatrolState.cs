@@ -1,11 +1,5 @@
 ﻿namespace AIFGP_Game
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using Microsoft.Xna.Framework;
-    
     class PatrolState : State
     {
         public void Enter(SmartFarmer i)

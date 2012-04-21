@@ -1,11 +1,9 @@
 ﻿namespace AIFGP_Game
 {
-    using System;
     using System.Collections.Generic;
+    using AIFGP_Game_Data;
     using Microsoft.Xna.Framework;
     using Microsoft.Xna.Framework.Graphics;
-
-    using AIFGP_Game_Data;
 
     class EnemyManager : IUpdateable, IDrawable
     {

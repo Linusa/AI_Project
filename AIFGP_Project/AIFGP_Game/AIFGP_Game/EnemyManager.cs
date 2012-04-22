@@ -43,7 +43,7 @@
                 float dt = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 entity.Update(gameTime);
 
-                if (Vector2.DistanceSquared(entity.Position, player.Position) < 200.0f)
+                if (Vector2.DistanceSquared(entity.Position, player.Position) < 324.0f)
                     caughtRabbit = true;
             }
 

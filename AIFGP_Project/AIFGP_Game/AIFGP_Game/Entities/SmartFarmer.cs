@@ -51,7 +51,8 @@
                 curState.Enter(this);
                 curState.Execute(this);
             }
-            else if (stateEnum == (int)stateType.Chasing && (Position - lastSpotted).LengthSquared() < 100)
+            else if (stateEnum == (int)stateType.Chasing && 
+                        AStarGame.GameMap.ClosestNodeIndex(Position) == AStarGame.GameMap.ClosestNodeIndex(lastSpotted))
             {
                 curState = new SearchState();
                 stateEnum = (int)stateType.Searching;
@@ -59,15 +60,17 @@
                 curState.Enter(this);
                 curState.Execute(this);
             }
-            else if (sight.canSee() || (stateEnum == (int)stateType.Chasing && rng.Next(1000) < 5))
+            /*else if (sight.canSee() || (stateEnum == (int)stateType.Chasing && rng.Next(1000) < 5))
             {
                 lastSpotted = EntityManager.Instance.GetPlayer().Position;
-            }
+            }*/
             else if (stateEnum == (int)stateType.Searching && doneSearching)
             {
+                FollowingPath = false;
                 curState = new PatrolState();
                 stateEnum = (int)stateType.Patrolling;
                 curState.Execute(this);
+                
             }
 
         }

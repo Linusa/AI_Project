@@ -29,6 +29,22 @@
         public NavigationGraph NavigationGraph = new NavigationGraph();
         private Dictionary<Vector2, int> nodeIndices = new Dictionary<Vector2, int>();
 
+        public List<Vector2> getWorldfromNodes(List<int> lookups)
+        {
+            List<Vector2> temp = new List<Vector2>();
+
+            foreach (int x in lookups)
+            {
+                foreach (Vector2 key in nodeIndices.Keys)
+                {
+                    if (nodeIndices[key] == x)
+                        temp.Add(key);
+                }
+            }
+
+            return temp;
+        }
+
         private GraphSearchViewer navGraphViewer;
 
         private Timer inputTimer = new Timer(0.2f);

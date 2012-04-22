@@ -132,6 +132,7 @@
             path = p;
             FollowingPath = true;
             patrollingPath = patrol;
+            NextPathIndex = 0;
         }
 
         // Force needed to move towards a target.

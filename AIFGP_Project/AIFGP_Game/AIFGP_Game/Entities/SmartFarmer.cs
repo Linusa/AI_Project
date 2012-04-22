@@ -39,7 +39,10 @@
             updateSpriteDirection();
 
             curState.Execute(this);
-            if (sight.canSee() && stateEnum != (int)stateType.Chasing)
+
+            bool rabbitVisible = sight.canSee();
+
+            if (rabbitVisible && stateEnum != (int)stateType.Chasing)
             {
                 curState = new ChaseState();
                 stateEnum = (int)stateType.Chasing;
@@ -51,8 +54,7 @@
                 curState.Enter(this);
                 curState.Execute(this);
             }
-            else if (stateEnum == (int)stateType.Chasing && 
-                        AStarGame.GameMap.ClosestNodeIndex(Position) == AStarGame.GameMap.ClosestNodeIndex(lastSpotted))
+            else if (stateEnum == (int)stateType.Chasing && !rabbitVisible)
             {
                 curState = new SearchState();
                 stateEnum = (int)stateType.Searching;
@@ -60,19 +62,14 @@
                 curState.Enter(this);
                 curState.Execute(this);
             }
-            /*else if (sight.canSee() || (stateEnum == (int)stateType.Chasing && rng.Next(1000) < 5))
-            {
-                lastSpotted = EntityManager.Instance.GetPlayer().Position;
-            }*/
             else if (stateEnum == (int)stateType.Searching && doneSearching)
             {
                 FollowingPath = false;
                 curState = new PatrolState();
                 stateEnum = (int)stateType.Patrolling;
+                curState.Enter(this);
                 curState.Execute(this);
-                
             }
-
         }
 
         public override void Draw(SpriteBatch spriteBatch)

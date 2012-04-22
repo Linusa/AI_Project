@@ -31,16 +31,10 @@
 
         public List<Vector2> getWorldfromNodes(List<int> lookups)
         {
-            List<Vector2> temp = new List<Vector2>();
+            List<Vector2> temp = new List<Vector2>(lookups.Count);
 
-            foreach (int x in lookups)
-            {
-                foreach (Vector2 key in nodeIndices.Keys)
-                {
-                    if (nodeIndices[key] == x)
-                        temp.Add(key);
-                }
-            }
+            for (int i = 0; i < lookups.Count; i++)
+                temp.Add(NavigationGraph.GetNode(lookups[i]).Position);
 
             return temp;
         }
@@ -252,6 +246,34 @@
             }
             
             return closestIdx;
+        }
+
+        public bool WallsBetween(Vector2 p1, Vector2 p2)
+        {
+            bool occluded = false;
+
+            Vector2 v = p2 - p1;
+            float length = v.Length();
+
+            v /= length;
+            Ray ray = new Ray(new Vector3(p1, 0.0f), new Vector3(v, 0.0f));
+
+            if (Single.IsNaN(v.X) || Single.IsNaN(v.Y))
+                System.Diagnostics.Debug.WriteLine("V: " + v);
+
+            foreach (Wall wall in WallManager.Instance.Walls)
+            {
+                BoundingBox wallBox = WallManager.Instance.WallExtentsIn3D(wall);
+                float curIntersectDist = ray.Intersects(wallBox) ?? float.MaxValue;
+
+                if (curIntersectDist < length)
+                {
+                    occluded = true;
+                    break;
+                }
+            }
+
+            return occluded;
         }
 
         public List<Vector2> BushLocations

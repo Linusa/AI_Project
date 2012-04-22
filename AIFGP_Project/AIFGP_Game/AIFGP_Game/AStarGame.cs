@@ -272,5 +272,25 @@ namespace AIFGP_Game
         {
             return Vector2.Transform(position, gameCamera.Transformation);
         }
+        
+        public static bool ApproximatelyEqual(Vector2 v1, Vector2 v2)
+        {
+            float epsilon = 15.0f;
+
+            bool xEqual = Math.Abs(v1.X - v2.X) < epsilon;
+            bool yEqual = Math.Abs(v1.Y - v2.Y) < epsilon;
+
+            return xEqual && yEqual;
+        }
+        
+        public static bool ApproximatelyZero(Vector2 v)
+        {
+            float epsilon = 0.5f;
+
+            bool xEqual = Math.Abs(v.X) < epsilon;
+            bool yEqual = Math.Abs(v.Y) < epsilon;
+
+            return xEqual && yEqual;
+        }
     }
 }

@@ -40,32 +40,35 @@
                 if (reachedBush)
                 {
                     nextBush++;
+                    i.FollowingPath = false;
     
-                    if (nextBush == bushes.Count - 1)
+                    if (nextBush >= bushes.Count)
                     {
-                        i.FollowingPath = false;
                         i.doneSearching = true;
                         return;
                     }
                 }
 
-                if (!AStarGame.GameMap.WallsBetween(i.Position, bushes[nextBush]))
+                if (!i.FollowingPath)
                 {
-                    Vector2 force = i.Seek(bushes[nextBush]);
-                    i.Velocity += force;
-                }
-                else
-                {
-                    bushSearch = new AStarSearch(
-                        AStarGame.GameMap.NavigationGraph,
-                        AStarGame.GameMap.ClosestNodeIndex(i.Position),
-                        AStarGame.GameMap.ClosestNodeIndex(bushes[nextBush]),
-                        AStarHeuristics.Distance);
+                    if (!AStarGame.GameMap.WallsBetween(i.Position, bushes[nextBush]))
+                    {
+                        Vector2 force = i.Seek(bushes[nextBush]);
+                        i.Velocity += force;
+                    }
+                    else
+                    {
+                        bushSearch = new AStarSearch(
+                            AStarGame.GameMap.NavigationGraph,
+                            AStarGame.GameMap.ClosestNodeIndex(i.Position),
+                            AStarGame.GameMap.ClosestNodeIndex(bushes[nextBush]),
+                            AStarHeuristics.Distance);
 
-                    bushSearch.PathToTarget(out bushSearchNodes);
-                    bushSearchPos = AStarGame.GameMap.getWorldfromNodes(bushSearchNodes);
+                        bushSearch.PathToTarget(out bushSearchNodes);
+                        bushSearchPos = AStarGame.GameMap.getWorldfromNodes(bushSearchNodes);
 
-                    i.FollowPath(bushSearchPos, false);
+                        i.FollowPath(bushSearchPos, false);
+                    }
                 }
             }
         }

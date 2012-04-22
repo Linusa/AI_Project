@@ -14,6 +14,7 @@ namespace AIFGP_Game
             public const float Grass = 1.0f;
             public const float Wall = 0.9f;
             public const float Entities = 0.8f;
+            public const float Farmers = 0.6f;
             public const float Bush = 0.7f;
         }
 

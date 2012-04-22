@@ -160,10 +160,7 @@
                     NextPathIndex++;
 
                     if (patrollingPath && NextPathIndex == 0)
-                    {
-                        NextPathIndex = 0;
                         path.Reverse();
-                    }
 
                     if (!patrollingPath && NextPathIndex == 0)
                         FollowingPath = false;

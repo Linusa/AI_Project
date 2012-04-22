@@ -40,7 +40,7 @@
 
         protected override void configureSprite()
         {
-            EntitySprite.LayerDepth = AStarGame.DrawingOrder.Entities;
+            EntitySprite.LayerDepth = AStarGame.DrawingOrder.Farmers;
 
             int numCols = 4;
 

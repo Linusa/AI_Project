@@ -13,7 +13,7 @@ namespace AIFGP_Game
         SmartFarmer agent;
         private const int rangeSqrd = 40000;
         private const int range = 200;
-        private const float angleWidth = (float)Math.PI/6;
+        private const float angleWidth = (float)Math.PI / 4;
 
         public LoS(SmartFarmer i)
         {

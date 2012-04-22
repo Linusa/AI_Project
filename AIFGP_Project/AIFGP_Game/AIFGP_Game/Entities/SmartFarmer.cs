@@ -21,6 +21,7 @@
         public State curState;
         public Vector2 lastSpotted;
         public LoS sight;
+        public bool rabbitVisible = false;
 
         public SmartFarmer(Texture2D texture, Vector2 position, List<Vector2> route)
             : base(texture, position)
@@ -38,9 +39,9 @@
 
             updateSpriteDirection();
 
-            curState.Execute(this);
+            rabbitVisible = sight.canSee();
 
-            bool rabbitVisible = sight.canSee();
+            curState.Execute(this);
 
             if (rabbitVisible && stateEnum != (int)stateType.Chasing)
             {
@@ -52,7 +53,7 @@
                     FollowingPath = false;
 
                 curState.Enter(this);
-                curState.Execute(this);
+                //curState.Execute(this);
             }
             else if (stateEnum == (int)stateType.Chasing && !rabbitVisible)
             {
@@ -60,7 +61,7 @@
                 stateEnum = (int)stateType.Searching;
                 doneSearching = false;
                 curState.Enter(this);
-                curState.Execute(this);
+                //curState.Execute(this);
             }
             else if (stateEnum == (int)stateType.Searching && doneSearching)
             {
@@ -68,7 +69,7 @@
                 curState = new PatrolState();
                 stateEnum = (int)stateType.Patrolling;
                 curState.Enter(this);
-                curState.Execute(this);
+                //curState.Execute(this);
             }
         }
 

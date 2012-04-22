@@ -16,37 +16,37 @@
       <EnemiesInfo>
         <Item>
           <StartingTilePosition>3 4</StartingTilePosition>
-          <MaxSpeed>190</MaxSpeed>
+          <MaxSpeed>220</MaxSpeed>
           <PatrolTilePositions>76 4 3 4</PatrolTilePositions>
         </Item>
         <Item>
           <StartingTilePosition>76 15</StartingTilePosition>
-          <MaxSpeed>190</MaxSpeed>
+          <MaxSpeed>220</MaxSpeed>
           <PatrolTilePositions>3 15 76 15</PatrolTilePositions>
         </Item>
         <Item>
           <StartingTilePosition>3 26</StartingTilePosition>
-          <MaxSpeed>190</MaxSpeed>
+          <MaxSpeed>220</MaxSpeed>
           <PatrolTilePositions>76 26 3 26</PatrolTilePositions>
         </Item>
         <Item>
           <StartingTilePosition>76 37</StartingTilePosition>
-          <MaxSpeed>190</MaxSpeed>
+          <MaxSpeed>220</MaxSpeed>
           <PatrolTilePositions>3 37 76 37</PatrolTilePositions>
         </Item>
         <Item>
           <StartingTilePosition>60 56</StartingTilePosition>
-          <MaxSpeed>190</MaxSpeed>
+          <MaxSpeed>220</MaxSpeed>
           <PatrolTilePositions>60 3 60 56</PatrolTilePositions>
         </Item>
         <Item>
           <StartingTilePosition>44 3</StartingTilePosition>
-          <MaxSpeed>190</MaxSpeed>
+          <MaxSpeed>220</MaxSpeed>
           <PatrolTilePositions>44 56 44 3</PatrolTilePositions>
         </Item>
         <Item>
           <StartingTilePosition>3 11</StartingTilePosition>
-          <MaxSpeed>190</MaxSpeed>
+          <MaxSpeed>220</MaxSpeed>
           <PatrolTilePositions>3 11 12 11 12 2</PatrolTilePositions>
         </Item>
       </EnemiesInfo>

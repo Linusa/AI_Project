@@ -55,7 +55,13 @@
                 curState.Enter(this);
                 //curState.Execute(this);
             }
-            else if (stateEnum == (int)stateType.Chasing && !rabbitVisible)
+            else if (stateEnum == (int)stateType.Chasing && !rabbitVisible &&
+                        Position != lastSpotted)
+            {
+
+            }
+            else if (stateEnum == (int)stateType.Chasing && !rabbitVisible &&
+                        AStarGame.ApproximatelyEqual(Position, lastSpotted))
             {
                 curState = new SearchState();
                 stateEnum = (int)stateType.Searching;
